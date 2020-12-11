@@ -39,7 +39,7 @@ export class SearchService {
     constructor(private fetchService: FetchService,
         private locationService: LocationService,
         private electronService: ElectronService,
-        private settingsService: SettingsService,
+        private settings: SettingsService,
         private tocService: TocService
     ) {
         this.buildIndex();
@@ -66,9 +66,12 @@ export class SearchService {
         });
     }
 
+    get bookLoc() {
+        return join(this.settings.rootLoc, this.settings.bookPath);
+    }
+
     loadSummary() {
-        const bookPath = this.settingsService.bookPath;
-        return of(this.electronService.ipcRenderer.sendSync('summary-request', bookPath)).pipe(
+        return of(this.electronService.ipcRenderer.sendSync('summary-request', this.bookLoc)).pipe(
             catchError((err: any) => Observable.throw(err.json))
         );
     }

@@ -23,19 +23,8 @@ export class LocationService {
         return this.settings.sharedPath;
     }
 
-    get rootPath() {
-        return this.settings.rootPath;
-    }
-
-    get bookPath() {
-        return this.settings.bookPath;
-    }
-
-    get currentWorkingPath(): string {
-        const url = parse(this.router.url);
-        const regex = new RegExp(/.md/)
-        // 测试 url 中是否有 .md, 没有则为首页，vfile.cwd 就是 /:writer/:name, 否则 vfile.cwd 为后面构造的路径
-        return extname(url.pathname) === '' ? this.bookPath : join(this.rootPath, dirname(url.pathname));
+    get bookLoc() {
+        return join(this.settings.rootLoc, this.settings.bookPath);
     }
 
     get ext() {
@@ -73,7 +62,7 @@ export class LocationService {
         }
 
         // 测试 page 是本地还是远程的 md 文件，以加入对远程 md 文件的支持
-        const vfile = VFILE({ path: page, cwd: REGEXP_ABS_URL.test(page) ? '' : this.currentWorkingPath});
+        const vfile = VFILE({ path: page, cwd: REGEXP_ABS_URL.test(page) ? '' : this.bookLoc});
 
         const isHomepage = page.slice(-1) === '/';
         if (isHomepage) {
@@ -112,7 +101,7 @@ export class LocationService {
      */
     prepareSrc(src: string, base: string = '') {
         if (isAbsolutePath(src)) { return src; }
-        return join(this.currentWorkingPath, resolve(base, src));
+        return join(this.bookLoc, resolve(base, src));
     }
 
     /**
@@ -120,6 +109,6 @@ export class LocationService {
      */
     stripBasePath(url: string): string {
         if (!url) { return null; }
-        return stripBaseHref(this.bookPath, url);
+        return stripBaseHref(this.bookLoc, url);
     }
 }

@@ -89,7 +89,6 @@ export class TOCPaginationComponent implements OnInit, OnChanges {
         // If path === '/'
         path = (path === '/') ? 'README' : path;
 
-        console.log(path, this.files)
         // The original regexp is wrong
         // const re = new RegExp(`^\.?/?${path}$`);
 

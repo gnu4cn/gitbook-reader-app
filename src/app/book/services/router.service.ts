@@ -1,9 +1,10 @@
 import { Injectable, EventEmitter, SimpleChange, SimpleChanges } from '@angular/core';
-import { Router, ActivatedRouteSnapshot } from '@angular/router';
-const Path = require('path');
+//import { Router, ActivatedRouteSnapshot } from '@angular/router';
+import { Router } from '@angular/router';
 
 import { goExternal, isAbsolutePath } from '../shared/utils';
 import { getFullPath } from '../shared/vfile-utils';
+import { parse } from 'url';
 
 import { SettingsService } from './settings.service';
 import { FetchService } from './fetch.service';
@@ -39,20 +40,28 @@ export class RouterService {
         private fetchService: FetchService,
         private locationService: LocationService,
         private router: Router
-    ) {
+    ) {}
+
+    get bookPath () {
+        return this.settings.bookPath;
+    }
+
+    get _url () {
+        return parse(this.router.url);
     }
 
     activateRoute() {
-        let [ path, fragment ] = this.router.url.split(/[#\?]/);
-        fragment = fragment ? `#${decodeURI(fragment)}` : '';
+        let path = this._url.pathname;
+        const fragment = this._url.hash ? decodeURI(this._url.hash) : '';
 
         const notHomePage = path.endsWith(this.settings.ext);
 
         let url: string;
         let root: string;
         if(notHomePage){
-            url = Path.basename(path);
+            url = path.replace(this.bookPath, '');
             root = path.replace(url, '');
+            root = root.endsWith('/') ? root : root+'/';
         }
         else{
             url = '';

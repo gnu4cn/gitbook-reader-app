@@ -46,7 +46,7 @@ export class ReadPage implements OnInit, AfterViewInit, OnDestroy {
     searchResults: any[];
     private isElectron: boolean;
     book: string;
-    private bookLoc: string;
+    private bookPath: string;
 
     private sidebarClose = false;
 
@@ -104,16 +104,15 @@ export class ReadPage implements OnInit, AfterViewInit, OnDestroy {
             const website = params.get('website');
             const writer = params.get('writer');
             this.book = params.get('book');
-            this.bookLoc = `${website}/${writer}/${this.book}`;
-            this.settings.bookPath = `${this.settings.rootPath}/${this.bookLoc}`;
+            this.settings.bookPath = this.bookPath = `/${website}/${writer}/${this.book}`;
         })
 
         this.activatedRoute.queryParamMap.subscribe(params => {
             const commit = params.get('commit');
-            const _commit = localStorage.getItem(this.bookLoc) || '';
+            const _commit = localStorage.getItem(this.bookPath) || '';
             if (commit !== _commit) {
                 this.settings.updated = true;
-                localStorage.setItem(this.bookLoc, commit);
+                localStorage.setItem(this.bookPath, commit);
             }
             else this.settings.updated = false;
         });

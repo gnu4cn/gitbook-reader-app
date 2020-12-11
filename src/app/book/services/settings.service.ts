@@ -21,7 +21,7 @@ export class SettingsService {
     ext = '.md';
     notFoundPage = '_404.md';
     maxPageCacheSize = 100;
-    private readonly _rootPath: string = 'assets';
+    private readonly _rootLoc: string = 'assets';
     private _sharedPath: string = 'assets/shared';
     private _updated: boolean = false;
 
@@ -51,8 +51,8 @@ export class SettingsService {
         this._updated = s;
     }
 
-    get rootPath(): string {
-        return this._rootPath;
+    get rootLoc(): string {
+        return this._rootLoc;
     }
 
     get sharedPath(): string {
