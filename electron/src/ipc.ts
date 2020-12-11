@@ -12,9 +12,7 @@ import { addItem, updateItem, getItems } from './crud';
 import { getList } from './fsOps';
 
 export const onRequestSummary = ipcMain.on('summary-request', async (event, bookPath) => {
-    const list = getList(`../app/${bookPath}`) 
-    console.log(list)
-    event.returnValue = list; 
+    event.returnValue = getList(`../app/${bookPath}`) 
 })
 
 export const onAddItem = ipcMain.on('add-item', async (event, item) =>{

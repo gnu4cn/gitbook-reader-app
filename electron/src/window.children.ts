@@ -8,16 +8,17 @@ export function bookWindow(parentWin: Electron.BrowserWindow, loadingWin: Electr
     let bookWindow: Electron.BrowserWindow;
 
     bookWindow = new BrowserWindow({ 
-        minWidth: 800,
-        minHeight: 600,
+        width: 1024,
+        height: 768,
         center: true,
         darkTheme: true,
+        resizable: true,
+        backgroundColor: '#2e2c29',
+        fullscreen: true,
+        fullscreenable: true,
         parent: parentWin,
         webPreferences: { nodeIntegration: true }
     });
-
-    bookWindow.fullScreenable = true;
-    bookWindow.maximizable = true;
 
     const webContents = bookWindow.webContents;
 

@@ -32,6 +32,11 @@
 
 ## Gitbook 阅读器开发日志
 
++ 2020-12-11
+
+    - 重写了 `router.service.ts`，解决了多处同名文件的bug。
+    - 尚需实现 `home.page` 的书籍类别管理、删除书籍。
+
 + 2020-12-10
 
     - 重写 `loadSummary` 方法，由后端提供书籍的全部 `.md` 文件，提升加载速度。后期将 `summary-toc` 与 `search-index`在数据库中持久化，以进一步提升加载速度 
