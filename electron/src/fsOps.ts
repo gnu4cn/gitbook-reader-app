@@ -70,12 +70,24 @@ const lookupMdFiles = (dir: string): Array<string> => {
 
 }
 
+const sortFn = (a: string, b: string) => {
+    const regex = new RegExp(/[0-9][0-9]?[0-9]?/)
+    const testA = a.match(regex);
+    const testB = b.match(regex);
+    const aN: number = testA ? parseInt(testA[0]) : 0;
+    const bN: number = testB ? parseInt(testB[0]) : 0;
+
+    return aN-bN;
+}
+
 export const getList = (dir: string): Array<string> => {
     const resolvedPath = resolve(__dirname, dir);
 
-    return lookupMdFiles(dir).reduce((acc: Array<string>, i: string): Array<string> => {
+    const list = lookupMdFiles(dir).reduce((acc: Array<string>, i: string): Array<string> => {
         return i ? [...acc, i.replace(resolvedPath, '')] : acc;
     }, []);
+
+    return list.sort(sortFn);
 }
 
 //getList('../app/assets/lmdy/CTF-All-In-One').map(i => console.log(i))

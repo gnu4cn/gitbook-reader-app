@@ -17,11 +17,6 @@ import { VFile } from 'vfile';
     providedIn: 'root'
 })
 export class RouterService {
-    homepage: string;
-    loadNavbar: string;
-    loadSidebar: string;
-    coverpage: string;
-
     url: string;
     page: string;
     anchor: string;
