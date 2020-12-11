@@ -1,0 +1,29 @@
+{
+    "compileOnSave": true,
+    "include": [
+        "./src/*"
+    ],
+    "compilerOptions": {
+        "outDir": "./build",
+        "target": "ES5",
+        "esModuleInterop": true,
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "sourceMap": false,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "removeComments": false,
+        "noImplicitAny": false,
+        "noImplicitReturns": true,
+        "stripInternal": true,
+        "pretty": true,
+        "downlevelIteration": true,
+        "suppressImplicitAnyIndexErrors": true,
+        "types": [
+            "@types/node",
+            "@types/nodegit",
+            "@types/filesystem"
+        ]
+    },
+    "exclude": [ "node_modules" ] 
+}

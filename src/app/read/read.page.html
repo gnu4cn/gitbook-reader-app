@@ -1,0 +1,90 @@
+<a id="page-top"></a>
+
+<nav
+        id="main-nav"
+        *ngIf="navbarPage"
+        class="app-nav no-badge">
+    <docspa-md-include [path]="navbarPage" [safe]="true"></docspa-md-include>
+</nav>
+
+<a id="cover-top"></a>
+<section
+            id="cover"
+            #coverMain
+            *ngIf="coverPage"
+            class="cover show">
+    <docspa-md-include class="cover-main" [path]="coverPage" [safe]="true">
+    </docspa-md-include>
+</section>
+
+<main class="sticky">
+    <button vertical="bottom" 
+            horizontal="start" 
+            slot="fixed"
+            *ngIf="sidebarPage" 
+            class="sidebar-toggle" aria-hidden="true" (click)="toggleSidebar()">
+        <div class="sidebar-toggle-button"><span></span><span></span><span></span></div>
+    </button>
+
+    <aside *ngIf="sidebarPage" class="sidebar left-sidebar" [listCollapse]="inScrollHashes">
+        <h1><a class="app-name-link" href="javascript:void(0)">{{ book | uppercase }}</a></h1>
+
+        <div class="search">
+            <div class="input-wrap">
+                <input
+                    #searchInput
+                    type="search"
+                    value=""
+                    (searchOutput)="searchResults = $event"
+                    placeholder="搜索项"
+                    class="form-control"
+                    id="search-input"
+                    aria-label="Search topics">
+                <ion-icon class="clear-button" name="close" size="large" (click)="searchInput.value=''; searchResults = null">
+                </ion-icon>
+                <label for="search-input">
+                    <ion-button color="light">
+                        <i class="material-icons md-24">search</i>
+                    </ion-button>
+                </label>
+            </div>
+
+            <div class="results-panel" [class.show]="searchResults">
+                <p class="empty" *ngIf="searchResults?.length === 0">未找到!</p>
+                <div class="matching-post" *ngFor="let result of searchResults | slice:0:9">
+                    <a [routerLink]="result.link" [fragment]="result.fragment" (click)="clearSearchResults()">
+                        <h2 [innerHTML]="result.name"></h2>
+                        <p [innerHTML]="result.content"></p>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <docspa-md-include class="sidebar-nav" [path]="sidebarPage" [safe]="true"></docspa-md-include>
+    </aside>
+
+    <a id="content-top"></a>
+    <ion-content>
+        <section id="content" class="content">
+            <article *ngIf="contentPage"
+                              class="markdown-section"
+                              id="main"
+                              (sectionScrollSpy)="inScrollHashes = $event">
+                <docspa-md-include [path]="contentPage" [isPageContent]="true" [scrollTo]="anchor"></docspa-md-include>
+            </article>
+            <footer *ngIf="footerPage">
+                <docspa-md-include [path]="footerPage" [safe]="true"></docspa-md-include>
+            </footer>
+        </section>
+    </ion-content>
+
+    <aside *ngIf="rightSidebarPage" class="sidebar right-sidebar" [listCollapse]="inScrollHashes">
+        <a href="javascript: void(0)" (click)="print()">
+            <small><ion-icon name="print-outline" size="small"></ion-icon> 打印此页面</small>
+        </a>
+        <docspa-md-include class="sidebar-nav" [path]="rightSidebarPage" [safe]="true"></docspa-md-include>
+    </aside>
+
+</main>
+
+<iframe name="print-frame" id="print-frame" style="visibility: hidden; position: absolute" elementInput ></iframe>

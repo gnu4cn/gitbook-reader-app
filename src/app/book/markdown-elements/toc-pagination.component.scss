@@ -1,0 +1,54 @@
+.docsify-pagination-container {
+    width: 80%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    overflow: hidden;
+    margin: 5em auto 1em;
+    border-top: 1px solid rgba(0, 0, 0, 0.07);
+}
+.pagination-item {
+    margin-top: 2.5em;
+    max-width: 50%;
+}
+.pagination-item a,
+.pagination-item a:hover {
+    text-decoration: none;
+}
+.pagination-item a {
+    color: currentColor;
+}
+.pagination-item a:hover .pagination-item-title {
+    text-decoration: underline;
+}
+.pagination-item:not(:last-child) a .pagination-item-label,
+.pagination-item:not(:last-child) a .pagination-item-title {
+    opacity: 0.3;
+    transition: all 200ms;
+}
+.pagination-item:last-child .pagination-item-label,
+.pagination-item:not(:last-child) a:hover .pagination-item-label {
+    opacity: 0.6;
+}
+.pagination-item:not(:last-child) a:hover .pagination-item-title {
+    opacity: 1;
+}
+.pagination-item-label {
+    font-size: 0.8em;
+}
+.pagination-item-label > * {
+    line-height: 1;
+    vertical-align: middle;
+}
+.pagination-item--next {
+    margin-left: auto;
+    text-align: right;
+}
+.pagination-item--previous {
+    margin-right: auto;
+    text-align: left;
+}
+.pagination-item-title {
+    font-size: 1.6em;
+}
+

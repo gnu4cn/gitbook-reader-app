@@ -1,0 +1,39 @@
+ion-card {
+    display: flex;
+    flex-direction: column;
+    width: 100% !important;
+    margin: 5 !important;
+    --background: #f2f2f2;
+}
+
+ion-card:hover {
+    --background: white;
+}
+
+ion-card-header {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-60%, -50%);
+}
+
+ion-card-title {
+    width: 100%
+}
+
+ion-item.actions {
+    position: absolute; bottom: 0px; width: 100%
+}
+
+[size="small"] {
+    height: 20px;
+    font-size: 12px;
+}
+
+div.downloading-progress {
+    display: block;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}

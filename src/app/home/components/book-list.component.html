@@ -1,0 +1,88 @@
+<ion-grid>
+    <ion-row>
+        <ion-col sizeSm="12" sizeLg="6" sizeXl="4" class="new-book">
+            <ion-card>
+                <ion-fab vertical="center" horizontal="center">
+                    <ion-fab-button color="light" (click)="openAddBookDialog()">
+                        <ion-icon name="add-outline" size="large"></ion-icon>
+                    </ion-fab-button>
+                </ion-fab>
+
+                <ion-grid>
+                    <ion-row class="ion-align-items-stretch ion-no-padding">
+                        <ion-col size="4">
+                            <img src="assets/images/blank-ebook-cover-png-book-cover-transparent-background.png">
+                        </ion-col>
+                    </ion-row>
+                </ion-grid>
+            </ion-card>
+        </ion-col>
+
+        <!-- Books added already -->
+        <ion-col *ngFor="let book of sortBy(bookListDisplay, 'name')" sizeSm="12" sizeLg="6" sizeXl="4">
+            <ion-card>
+                <ion-fab vertical="top" horizontal="end">
+                    <ion-button color="danger" size="small">
+                        <ion-icon name="close-outline" sizme="small"></ion-icon>
+                    </ion-button>
+                </ion-fab>
+
+                <ion-grid>
+                    <ion-row class="ion-align-items-stretch ion-no-padding">
+                        <ion-col size="4">
+                            <img src="assets/images/blank-ebook-cover-png-book-cover-transparent-background.png">
+                            <!--Book title-->
+                            <ion-card-header>
+                                <ion-card-title style="font-size: 12px;">{{ book.name }}</ion-card-title>
+                            </ion-card-header>
+
+                            <ion-fab vertical="center" horizontal="center" *ngIf="book.downloaded === 100">
+                                <ion-fab-button color="light" (click)="openBook(book)">
+                                        <ion-icon name="book-outline" size="large"></ion-icon>
+                                </ion-fab-button>
+                            </ion-fab>
+
+                            <ion-fab vertical="center" horizontal="center" *ngIf="book.downloaded === 0">
+                                <ion-fab-button color="light" (click)="startDownload(book)">
+                                    <ion-icon name="cloud-download-outline"></ion-icon>
+                                </ion-fab-button>
+                            </ion-fab>
+
+                            <div *ngIf="book.downloaded>0 && book.downloaded<100" class="downloading-progress">
+                                下载中...{{book.downloaded}}%
+                            </div>
+                        </ion-col>
+
+                        <ion-col class="ion-no-margin">
+                            <ion-item-divider>
+                                <ion-label>作者</ion-label>
+                            </ion-item-divider>
+
+                            <!-- Book writer-->
+                            <ion-item class="ion-activated" lines="none">
+                                <ion-avatar>
+                                    <img src="assets/images/avatar.png" />
+                                </ion-avatar>
+                                <ion-title>{{ book.writer.name }}</ion-title>
+                            </ion-item>
+
+                            <ion-item-divider>
+                                <ion-label>类别</ion-label>
+                            </ion-item-divider>
+
+                            <!-- Book categories-->
+                            <ion-item lines="none">
+                                <ion-chip *ngFor="let cat of book.cateList" size="small">
+                                    <ion-label (click)="queryCatName()">{{ cat.name }}</ion-label>
+                                    <ion-icon *ngIf="book.cateList.length > 1" name="close-circle" (click)="removeCate()">
+                                    </ion-icon>
+                                </ion-chip>
+                            </ion-item>
+
+                        </ion-col>
+                    </ion-row>
+                </ion-grid>
+            </ion-card>
+        </ion-col>
+    </ion-row>
+</ion-grid>
