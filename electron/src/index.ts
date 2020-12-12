@@ -1,12 +1,13 @@
 import { app, Menu, BrowserWindow, ipcMain } from "electron";
 import { createCapacitorElectronApp } from "@capacitor-community/electron";
 
+import { join } from 'path';
+
 import { loadingWindow, bookWindow } from './window.children';
 import { bookClone } from './bookOps';
 //import { createMenuTemplate } from './menu_template';
-
-import {  conn } from './crud';
-import {  onGetItems, onAddItem, } from './ipc';
+import { conn } from './crud';
+import { onGetItems, onAddItem, } from './ipc';
 // The MainWindow object can be accessed via myCapacitorApp.getMainWindow()
 
 const myCapacitorApp = createCapacitorElectronApp();
@@ -15,7 +16,10 @@ const winChildren: Array<Electron.BrowserWindow> = [];
 // initialization and is ready to create browser windows.
 // Some Electron APIs can only be used after this event occurs.
 app.on("ready", () => {
+
     myCapacitorApp.init();
+
+    const booksDir = join(app.getPath('appData'), 'gbr_books'); 
 
     const mainWindow = myCapacitorApp.getMainWindow();
     const webContents = mainWindow.webContents;
@@ -42,7 +46,7 @@ app.on("ready", () => {
     });
 
     ipcMain.on('download-book', (event, book) => {
-        bookClone(book, webContents);
+        bookClone(book, webContents, booksDir);
     });
 
     //const menuTemplate = createMenuTemplate(app);
@@ -65,6 +69,7 @@ app.on("window-all-closed", async () => {
     }
     return 0
 });
+
 
 app.on("activate", function () {
     // On OS X it's common to re-create a window in the app when the

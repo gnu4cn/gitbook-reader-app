@@ -1,18 +1,18 @@
 const Git = require('nodegit');
 
-import { remove } from 'fs-extra';
+import { remove, ensureDirSync } from 'fs-extra';
 import { resolve } from 'path';
 
 import { WebContents } from "electron";
 import { updateItem } from './crud';
+import { join } from 'path';
 
 import { IBookDownloading } from './vendor';
 import { Book } from './models';
 import { escapeFileNames } from './fsOps';
 
-export const bookClone = async (book: Book, web: WebContents) => {
-    const repoDir = `../app/assets/${book.website.uri}/${book.writer.name}/${book.name}`;
-    const bookPath = resolve(__dirname, repoDir);
+export const bookClone = async (book: Book, web: WebContents, booksDir: string) => {
+    const bookPath = join(booksDir, book.website.uri, book.writer.name, book.name);
 
     const bookUri = `https://${book.website.uri}/${book.writer.name}/${book.name}.git`; 
 
@@ -43,6 +43,8 @@ export const bookClone = async (book: Book, web: WebContents) => {
     };
 
     await remove(bookPath).then(async () => {
+        await ensureDirSync(bookPath);
+
         Git.Clone.clone(bookUri, bookPath, opts)
             .then(repo => {
                 return repo.getMasterCommit();

@@ -8,7 +8,7 @@ export function bookWindow(parentWin: Electron.BrowserWindow, loadingWin: Electr
     let bookWindow: Electron.BrowserWindow;
 
     bookWindow = new BrowserWindow({ 
-        width: 1024,
+        width: 1366,
         height: 768,
         center: true,
         darkTheme: true,
@@ -27,7 +27,7 @@ export function bookWindow(parentWin: Electron.BrowserWindow, loadingWin: Electr
     const bookUrl = `capacitor-electron://-/#/${book.website.uri}/${book.writer.name}/${book.name}?commit=${book.commit}`; 
     bookWindow.loadURL(bookUrl);
 
-    webContents.openDevTools();
+    //webContents.openDevTools();
 
     ipcMain.on('book-loading', () =>{
         loadingWin.show();
