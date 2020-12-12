@@ -1,25 +1,66 @@
-import { app, Menu, BrowserWindow, ipcMain } from "electron";
+import { app, Menu, BrowserWindow, ipcMain, session } from "electron";
 import { createCapacitorElectronApp } from "@capacitor-community/electron";
+import { fork, ChildProcess } from 'child_process';
 
 import { join } from 'path';
+
+import { TableName, 
+    IpcChannel, 
+    ItemType, 
+    IWhereItem,
+    IItem,
+    IFindStatement,
+    IFindCondition, } from './vendor';
+
+import { conn, addItem, updateItem, getItems } from './crud';
 
 import { loadingWindow, bookWindow } from './window.children';
 import { bookClone } from './bookOps';
 //import { createMenuTemplate } from './menu_template';
-import { conn } from './crud';
-import { onGetItems, onAddItem, } from './ipc';
+
 // The MainWindow object can be accessed via myCapacitorApp.getMainWindow()
 
 const myCapacitorApp = createCapacitorElectronApp();
+
 const winChildren: Array<Electron.BrowserWindow> = [];
+const processChildren: Array<ChildProcess> = [];
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some Electron APIs can only be used after this event occurs.
 app.on("ready", () => {
 
+    const filter = {
+        urls: [
+            'http://localhost:10080/*',
+        ]
+    };
+
+    session.defaultSession.webRequest.onBeforeSendHeaders(
+        filter,
+        (details, callback) => {
+            console.log(details);
+            details.requestHeaders['Origin'] = 'http://localhost:10080';
+            callback({ requestHeaders: details.requestHeaders });
+        }
+    );
+
+    session.defaultSession.webRequest.onHeadersReceived(
+        filter,
+        (details, callback) => {
+            console.log(details);
+            details.responseHeaders['Access-Control-Allow-Origin'] = [
+                'capacitor-electron://-'
+            ];
+            callback({ responseHeaders: details.responseHeaders });
+        }
+    );
+
     myCapacitorApp.init();
 
     const booksDir = join(app.getPath('appData'), 'gbr_books'); 
+    const serverProcess: ChildProcess = fork(join(__dirname, 'server.js'), ['-d', booksDir]);
+    processChildren.push(serverProcess);
 
     const mainWindow = myCapacitorApp.getMainWindow();
     const webContents = mainWindow.webContents;
@@ -40,7 +81,7 @@ app.on("ready", () => {
     });
 
     ipcMain.on('open-book', (event, book) => {
-        bookWindow(mainWindow, loadingWin, book, (win) => {
+        bookWindow(mainWindow, loadingWin, book, booksDir, (win) => {
             winChildren.push(win);
         })
     });
@@ -65,6 +106,11 @@ app.on("window-all-closed", async () => {
         if(winChildren.length > 0){
             winChildren.map(w => w =null);
         }
+        if(processChildren.length > 0){
+            processChildren.map(p => {
+                p.kill('SIGINT');
+            });
+        }
         app.quit();
     }
     return 0
@@ -78,5 +124,27 @@ app.on("activate", function () {
 });
 
 // Define any IPC or other custom functionality below here
-onGetItems;
-onAddItem;
+ipcMain.on('add-item', async (event, item) =>{
+    const table = item.table;
+    let _item: ItemType;
+    await addItem(item).then(_ => _item = _);
+
+    event.returnValue = _item;
+});
+
+ipcMain.on('update-item', async (event, _item) =>{
+    const table = _item.table;
+
+    let item: ItemType;
+    await updateItem(_item).then(_ => item = _);
+
+    event.returnValue = item;
+});
+
+ipcMain.on('get-items', async (event, getParam) => {
+    const table = getParam.table;
+
+    let items: Array<ItemType>;
+    await getItems(getParam).then(_ => items = _);
+    event.returnValue = items;
+});

@@ -17,7 +17,6 @@ import frontmatter from 'remark-frontmatter';
 import { getTitle } from '@swimlane/docspa-remark-preset';
 
 import { ElectronService } from 'ngx-electron';
-import { join } from '../shared/utils';
 
 import { FetchService } from './fetch.service';
 import { SettingsService } from './settings.service';
@@ -26,7 +25,7 @@ import { TocService } from '../markdown-elements/toc.service';
 
 import { VFile } from '../book.vendor';
 import { REGEXP_ZH } from '../../vendor';
-
+import { join } from '../shared/utils';
 
 @Injectable({
     providedIn: 'root'
@@ -41,9 +40,7 @@ export class SearchService {
         private electronService: ElectronService,
         private settings: SettingsService,
         private tocService: TocService
-    ) {
-        this.buildIndex();
-    }
+    ) {}
 
     // search segment
     private get processor() {
@@ -60,18 +57,13 @@ export class SearchService {
             .use(stringify);
     }
 
-    private buildIndex() {
-        this.loadSummary().subscribe(paths => {
-            this.generateSearchIndex(paths);
-        });
-    }
 
-    get bookLoc() {
-        return join(this.settings.rootLoc, this.settings.bookPath);
+    get bookPath() {
+        return this.settings.bookPath;
     }
 
     loadSummary() {
-        return of(this.electronService.ipcRenderer.sendSync('summary-request', this.bookLoc)).pipe(
+        return of(this.electronService.ipcRenderer.sendSync('summary-request', this.bookPath)).pipe(
             catchError((err: any) => Observable.throw(err.json))
         );
     }
@@ -104,6 +96,12 @@ export class SearchService {
     }
 
     async search(query: string) {
+        if(this._searchIndex){
+            await this.loadSummary().subscribe(paths => {
+                this.generateSearchIndex(paths);
+            });
+        }
+
         if (typeof query !== 'string' || query.trim() === '') {
             return null;
         }

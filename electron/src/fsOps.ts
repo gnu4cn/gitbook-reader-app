@@ -81,10 +81,8 @@ const sortFn = (a: string, b: string) => {
 }
 
 export const getList = (dir: string): Array<string> => {
-    const resolvedPath = resolve(__dirname, dir);
-
     const list = lookupMdFiles(dir).reduce((acc: Array<string>, i: string): Array<string> => {
-        return i ? [...acc, i.replace(resolvedPath, '')] : acc;
+        return i ? [...acc, i.replace(dir, '')] : acc;
     }, []);
 
     return list.sort(sortFn);

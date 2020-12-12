@@ -2,14 +2,15 @@ import { Injectable } from '@angular/core';
 import { LocationStrategy, PlatformLocation } from '@angular/common';
 import { Router } from '@angular/router';
 
-import { extname, dirname } from 'path';
+import { extname, dirname, join as _join, } from 'path';
 import VFILE from 'vfile';
-import { resolve, parse } from 'url';
 
-import { join, isAbsolutePath, stripBaseHref  } from '../shared/utils';
+import { isAbsolutePath, stripBaseHref  } from '../shared/utils';
+import { join } from '../shared/utils';
 
 import { SettingsService } from './settings.service';
 import { REGEXP_ABS_URL } from '../../vendor';
+
 
 @Injectable({
     providedIn: 'root'
@@ -23,8 +24,16 @@ export class LocationService {
         return this.settings.sharedPath;
     }
 
+    get bookPath() {
+        return this.settings.bookPath;
+    }
+
+    get rootLoc() {
+        return this.settings.rootLoc;
+    }
+
     get bookLoc() {
-        return join(this.settings.rootLoc, this.settings.bookPath);
+        return join(this.settings.rootLoc, this.bookPath);
     }
 
     get ext() {
@@ -55,6 +64,7 @@ export class LocationService {
         return index >= 0;
     }
 
+
     pageToFile(page: string = ''): VFILE.VFile {
         page = page.replace(/^#/, '');
         if (page === '') {
@@ -64,11 +74,6 @@ export class LocationService {
         // 测试 page 是本地还是远程的 md 文件，以加入对远程 md 文件的支持
         const vfile = VFILE({ path: page, cwd: REGEXP_ABS_URL.test(page) ? '' : this.bookLoc});
 
-        const isHomepage = page.slice(-1) === '/';
-        if (isHomepage) {
-            vfile.path = join(vfile.path, this.settings.homepage);
-        }
-
         if (vfile.basename === '') {
             vfile.basename = this.settings.homepage;
         }
@@ -77,7 +82,7 @@ export class LocationService {
             vfile.extname = this.settings.ext;
         }
 
-        const _url = join(this.isShared(vfile.basename) ? '' : vfile.cwd, vfile.path);
+        const _url = this.isShared(vfile.basename) ? vfile.path : join(vfile.cwd, vfile.path === '/' ? this.settings.homepage : vfile.path);
 
         vfile.data = {
             gbr: {
@@ -93,7 +98,7 @@ export class LocationService {
      */
     prepareLink(href: string, base: string = '/') {
         if (isAbsolutePath(href)) { return href; }
-        return resolve(base, stripBaseHref(this.baseHref, href));
+        return join(base, stripBaseHref(this.baseHref, href));
     }
 
     /**
@@ -101,7 +106,10 @@ export class LocationService {
      */
     prepareSrc(src: string, base: string = '') {
         if (isAbsolutePath(src)) { return src; }
-        return join(this.bookLoc, resolve(base, src));
+
+        const _re = new RegExp(/[\.][\/]/)
+        const re = new RegExp(/[\.][\.]/)
+        return join(this.bookLoc, re.test(src) ?  _join(base, src) : src.replace(_re, ''));
     }
 
     /**
@@ -109,6 +117,6 @@ export class LocationService {
      */
     stripBasePath(url: string): string {
         if (!url) { return null; }
-        return stripBaseHref(this.bookLoc, url);
+        return stripBaseHref(this.rootLoc, url);
     }
 }

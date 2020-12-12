@@ -1,10 +1,15 @@
 import { BrowserWindow, ipcMain } from 'electron';
 import * as url from 'url';
-import * as path from 'path';
+import { join } from 'path';
 
 import { Book } from './models';
+import { getList } from './fsOps';
 
-export function bookWindow(parentWin: Electron.BrowserWindow, loadingWin: Electron.BrowserWindow, book: Book, cb) {
+export function bookWindow(parentWin: Electron.BrowserWindow, 
+    loadingWin: Electron.BrowserWindow, 
+    book: Book, 
+    booksDir: string,
+    cb) {
     let bookWindow: Electron.BrowserWindow;
 
     bookWindow = new BrowserWindow({ 
@@ -27,11 +32,16 @@ export function bookWindow(parentWin: Electron.BrowserWindow, loadingWin: Electr
     const bookUrl = `capacitor-electron://-/#/${book.website.uri}/${book.writer.name}/${book.name}?commit=${book.commit}`; 
     bookWindow.loadURL(bookUrl);
 
-    //webContents.openDevTools();
+    webContents.openDevTools();
 
     ipcMain.on('book-loading', () =>{
         loadingWin.show();
     });
+
+    ipcMain.on('summary-request', async (event, bookPath) => {
+        const bookDir = join(booksDir, bookPath); 
+        event.returnValue = getList(bookDir); 
+    })
 
     webContents.on('did-finish-load', () => {
         loadingWin.hide();
@@ -41,6 +51,7 @@ export function bookWindow(parentWin: Electron.BrowserWindow, loadingWin: Electr
     // set to null
     bookWindow.on('close', () => {
         bookWindow = null;
+        loadingWin.hide();
     });
 
     // set to null
@@ -62,7 +73,7 @@ export function loadingWindow(parentWin, cb) {
     });
 
     loadingWindow.loadURL(url.format({
-        pathname: path.join(__dirname, 'resources/loading.html'), // important
+        pathname: join(__dirname, 'resources/loading.html'), // important
         protocol: 'file:',
         slashes: true,
         // baseUrl: 'dist'

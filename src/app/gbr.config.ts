@@ -1,5 +1,5 @@
 export const config = {
-    _rootLoc: 'assets',
+    _rootLoc: 'http://localhost:10080',
     homepage: 'README.md',
     notFoundPage: '_404.md',
     sideLoad: {

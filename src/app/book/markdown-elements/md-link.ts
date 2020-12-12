@@ -48,9 +48,11 @@ export class MdLinkComponent implements OnChanges, AfterContentInit {
         private locationService: LocationService,
         private readonly vcRef: ViewContainerRef,
         private readonly routerService: RouterService
-    ) {
-    }
+    ) {}
 
+    get rootPath () {
+        return this.routerService.root;
+    }
     ngAfterContentInit() {
         // Moving link outside of component
         this.vcRef.createEmbeddedView(this.template);
@@ -64,7 +66,7 @@ export class MdLinkComponent implements OnChanges, AfterContentInit {
      */
     ngOnChanges() {
         // resolve path relative to component
-        let routerLink: string | string[] = this.locationService.prepareLink(this.link, this.routerService.root);
+        let routerLink: string | string[] = this.locationService.prepareLink(this.link, this.rootPath);
 
         // Hack to preserve trailing slash
         if (typeof routerLink === 'string' && routerLink.length > 1 && routerLink.endsWith('/')) {

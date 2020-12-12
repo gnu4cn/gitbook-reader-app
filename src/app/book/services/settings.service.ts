@@ -21,7 +21,7 @@ export class SettingsService {
     ext = '.md';
     notFoundPage = '_404.md';
     maxPageCacheSize = 100;
-    private readonly _rootLoc: string = 'assets';
+    private readonly _rootLoc: string = 'http://localhost:10080';
     private _sharedPath: string = 'assets/shared';
     private _updated: boolean = false;
 
