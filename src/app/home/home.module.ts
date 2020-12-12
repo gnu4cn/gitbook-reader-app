@@ -6,10 +6,9 @@ import { IonicModule } from '@ionic/angular';
 
 import { MaterialModule } from '../material.module';
 
-import { HomePageRoutingModule } from './home-routing.module';
-
 import { BookListComponent, NewBookDialog } from './components/book-list.component';
 
+import { HomePageRoutingModule } from './home-routing.module';
 import { HomePage } from './home.page';
 
 @NgModule({

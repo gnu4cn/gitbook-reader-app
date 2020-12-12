@@ -13,8 +13,6 @@ import frontmatter from 'remark-frontmatter';
 import rehypeStringify from 'rehype-stringify';
 import remark2rehype from 'remark-rehype';
 import raw from 'rehype-raw';
-const fromMarkdown = require('mdast-util-from-markdown');
-
 
 import { images } from '../shared/links';
 import { LocationService } from '../services/location.service';

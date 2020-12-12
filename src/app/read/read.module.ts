@@ -7,7 +7,6 @@ import { IonicModule } from '@ionic/angular';
 import { BookPageModule } from '../book/book.module';
 
 import { ReadPageRoutingModule } from './read-routing.module';
-
 import { ReadPage } from './read.page';
 
 @NgModule({

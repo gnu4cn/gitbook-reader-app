@@ -36,7 +36,6 @@ const updateCCNA60D = async () => {
     }
 }
 
-updateCCNA60D();
 
 export const addItem = async (_item: IItem): Promise<ItemType> => {
     if (!conn.isConnected) await conn.connect();

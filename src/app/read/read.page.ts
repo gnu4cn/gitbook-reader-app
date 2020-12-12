@@ -8,10 +8,9 @@ import {
 
 import { Title, Meta, SafeHtml } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
+import { combineLatest } from 'rxjs';
 
 import { Platform } from '@ionic/angular';
-
-import { combineLatest } from 'rxjs';
 
 import { ElectronService } from 'ngx-electron';
 
