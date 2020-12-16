@@ -1,0 +1,20 @@
+<div class="docsify-pagination-container">
+    <div class="pagination-item pagination-item--previous" *ngIf="prev">
+        <a class="prev" [routerLink]="prev.link" [fragment]="prev.fragment">
+
+            <div class="pagination-item-label">
+                <span>« 上个部分</span>
+            </div>
+            <div class="pagination-item-title">{{prev.title}}</div>
+        </a>
+    </div>
+    <div class="pagination-item pagination-item--next" *ngIf="next">
+        <a class="next" [routerLink]="next.link" [fragment]="next.fragment">
+            <div class="pagination-item-label">
+                <span>下一部分 »</span>
+            </div>
+            <div class="pagination-item-title">{{next.title}}</div>
+        </a>
+    </div>
+</div>
+

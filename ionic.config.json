@@ -1,0 +1,7 @@
+{
+  "name": "ionic-cap-ng-app-starter",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

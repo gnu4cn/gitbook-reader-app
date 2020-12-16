@@ -1,0 +1,13 @@
+{
+    "appId": "com.xfoss.ccna60d",
+    "appName": "Gitbook-Reader-CCNA60D",
+    "bundledWebRuntime": false,
+    "npmClient": "npm",
+    "webDir": "www",
+    "plugins": {
+        "SplashScreen": {
+            "launchShowDuration": 0
+        }
+    },
+    "cordova": {}
+}
