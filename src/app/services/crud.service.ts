@@ -4,7 +4,7 @@ import { ElectronService } from 'ngx-electron';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { Tables, ItemType, IFind, IItem } from '../vendor';
+import { Tables, IItem, IFind, IQuery } from '../vendor';
 
 @Injectable({
     providedIn: 'root'
@@ -16,25 +16,25 @@ export class CrudService {
 
     constructor(private electronService: ElectronService) { }
 
-    getItems(findParam: IFind): Observable<Array<ItemType>> {
+    getItems(findParam: IFind): Observable<IItem[]> {
         return of(this.ipcRenderer.sendSync('get-items', findParam)).pipe(
             catchError((err: any) => Observable.throw(err.json))
         );
     }
 
-    addItem(item: IItem): Observable<ItemType> {
+    addItem(item: IQuery): Observable<IItem> {
         return of(this.ipcRenderer.sendSync('add-item', item)).pipe(
             catchError((err: any) => Observable.throw(err.json))
         );
     }
 
-    updateItem(item: IItem): Observable<ItemType> {
+    updateItem(item: IQuery): Observable<IItem> {
         return of(this.ipcRenderer.sendSync('update-item', item)).pipe(
             catchError((err: any) => Observable.throw(err.json))
         );
     }
 
-    deleteItem(item: IItem): Observable<Array<ItemType>> {
+    deleteItem(item: IQuery): Observable<IItem[]> {
         return of(this.ipcRenderer.sendSync('delete-item', item)).pipe(
             catchError((err: any) => Observable.throw(err.json))
         );

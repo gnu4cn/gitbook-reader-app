@@ -5,9 +5,9 @@ import { Book, Category, Writer, Website } from './models';
 import { 
     TableName, 
     IFind,
-    ItemType, 
+    IItem, 
     IWhereItem,
-    IItem,
+    IQuery,
     IFindStatement,
     IFindCondition, 
 } from './vendor';
@@ -42,20 +42,16 @@ export class CRUD {
         }
     }
 
-    deleteItem = async (_item: IItem): Promise<ItemType> => {
-        const table = _item.table;
-        const item = _item.item;
-
-        switch(table){
+    deleteItem = async (query: IQuery): Promise<IItem> => {
+        switch(query.table){
             case 'Book':
                 try {
                     await this.conn
                         .createQueryBuilder()
                         .delete()
                         .from(Book)
-                        .where("id = :id", { id: item.id })
+                        .where("id = :id", { id: query.item.id })
                         .execute();
-                    return item;
                 } catch (err) {throw err};
                 break;
             case 'Writer':
@@ -64,10 +60,8 @@ export class CRUD {
                         .createQueryBuilder()
                         .delete()
                         .from(Writer)
-                        .where("id = :id", { id: item.id })
+                        .where("id = :id", { id: query.item.id })
                         .execute();
-                    return item;
-
                 } catch (err) {throw err};
                 break;
             case 'Website':
@@ -76,10 +70,8 @@ export class CRUD {
                         .createQueryBuilder()
                         .delete()
                         .from(Website)
-                        .where("id = :id", { id: item.id })
+                        .where("id = :id", { id: query.item.id })
                         .execute();
-                    return item;
-
                 } catch (err) {throw err};
                 break;
             case 'Category':
@@ -88,97 +80,81 @@ export class CRUD {
                         .createQueryBuilder()
                         .delete()
                         .from(Category)
-                        .where("id = :id", { id: item.id })
+                        .where("id = :id", { id: query.item.id })
                         .execute();
-                    return item;
-
                 } catch (err) {throw err};
                 break;
-        };
+        }
+
+        return query.item;
     }
 
-    addItem = async (_item: IItem): Promise<ItemType> => {
-        const table = _item.table;
-        const item = _item.item;
-
-        switch(table){
+    addItem = async (query: IQuery): Promise<IItem> => {
+        let item: IItem;
+        switch(query.table){
             case 'Book':
                 try {
                     const bookRepo = this.conn.getRepository(Book);
-                    const _item = await bookRepo.create(item);
-                    await bookRepo.save(_item)
-                    return _item;
+                    item = await bookRepo.create(query.item);
+                    await bookRepo.save(item)
                 } catch (err) {throw err};
                 break;
             case 'Writer':
                 try {
                     const writerRepo = this.conn.getRepository(Writer);
-                    const _item = await writerRepo.create(item);
-                    await writerRepo.save(_item)
-                    return _item;
-                } catch (err) {throw err};
-                break;
-            case 'Website':
-                try {
-                    const websiteRepo = this.conn.getRepository(Website);
-                    const _item = await websiteRepo.create(item);
-                    await websiteRepo.save(_item)
-                    return _item;
-                } catch (err) {throw err};
-                break;
-            case 'Category':
-                try {
-                    const cateRepo = this.conn.getRepository(Category);
-                    const _item = await cateRepo.create(item);
-                    await cateRepo.save(_item)
-                    return _item;
-                } catch (err) {throw err};
-                break;
-        };
-
-    }
-
-    updateItem = async (_item: IItem): Promise<ItemType> => {
-        const table = _item.table;
-        const item = _item.item;
-
-        switch(table){
-            case 'Book':
-                try {
-                    const bookRepo = this.conn.getRepository(Book);
-                    await bookRepo.save(item);
-                    return item;
-                } catch (err) {throw err};
-                break;
-            case 'Writer':
-                try {
-                    const writerRepo = this.conn.getRepository(Writer);
+                    item = await writerRepo.create(query.item);
                     await writerRepo.save(item)
-                    return item;
                 } catch (err) {throw err};
                 break;
             case 'Website':
                 try {
                     const websiteRepo = this.conn.getRepository(Website);
+                    item = await websiteRepo.create(query.item);
                     await websiteRepo.save(item)
-                    return item;
                 } catch (err) {throw err};
                 break;
             case 'Category':
                 try {
                     const cateRepo = this.conn.getRepository(Category);
+                    item = await cateRepo.create(query.item);
                     await cateRepo.save(item)
-                    return item;
                 } catch (err) {throw err};
                 break;
-        };
-
+        }
         return item;
     }
 
-    getItems = async(getParam: IFind) => {
-        const table: TableName = getParam.table as TableName;
+    updateItem = async (query: IQuery): Promise<IItem> => {
+        switch(query.table){
+            case 'Book':
+                try {
+                    const bookRepo = this.conn.getRepository(Book);
+                    await bookRepo.save(query.item);
+                } catch (err) {throw err};
+                break;
+            case 'Writer':
+                try {
+                    const writerRepo = this.conn.getRepository(Writer);
+                    await writerRepo.save(query.item)
+                } catch (err) {throw err};
+                break;
+            case 'Website':
+                try {
+                    const websiteRepo = this.conn.getRepository(Website);
+                    await websiteRepo.save(query.item)
+                } catch (err) {throw err};
+                break;
+            case 'Category':
+                try {
+                    const cateRepo = this.conn.getRepository(Category);
+                    await cateRepo.save(query.item)
+                } catch (err) {throw err};
+                break;
+        }
+        return query.item;
+    }
 
+    getItems = async(getParam: IFind) => {
         let findStatement: IFindStatement;
 
         if(getParam.conditions) {
@@ -198,7 +174,7 @@ export class CRUD {
             });
         }
 
-        switch(table){
+        switch(getParam.table){
             case 'Book':
                 try {
                     const bookRepo = this.conn.getRepository(Book);

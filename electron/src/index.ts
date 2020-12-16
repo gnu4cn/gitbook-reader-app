@@ -1,12 +1,14 @@
 import { app, Menu, BrowserWindow, ipcMain, session } from "electron";
 import { createCapacitorElectronApp } from "@capacitor-community/electron";
 import { fork, ChildProcess } from 'child_process';
+import { remove } from 'fs-extra';
 
 import { join } from 'path';
 
 import { 
-    ItemType, 
+    IItem, 
 } from './vendor';
+import { Book } from './models';
 
 import { CRUD } from './crud';
 import { BookBackend } from './book.backend';
@@ -88,30 +90,39 @@ export default class Main {
             _book.download(cp => Main.processChildren.push(cp));
         });
 
-        ipcMain.on('add-item', async (event, item) =>{
-            let _item: ItemType;
-            await Main.crud.addItem(item).then(_ => _item = _);
-            event.returnValue = _item;
+        ipcMain.on('add-item', async (event, query) =>{
+            let item: IItem;
+            await Main.crud.addItem(query).then(_ => item = _);
+            event.returnValue = item;
         });
 
         // Define any IPC or other custom functionality below here
-        ipcMain.on('delete-item', async (event, item) =>{
-            let _item: ItemType;
-            await Main.crud.addItem(item).then(_ => _item = _);
-            event.returnValue = _item;
+        ipcMain.on('delete-item', async (event, query) =>{
+            let item: IItem;
+            await Main.crud.deleteItem(query).then(_ => item = _);
+
+            if(query.table === 'Book'){
+                const book = query.item as Book;
+                const bookDir = join(booksDir, book.website.uri, book.writer.name, book.name);
+                await remove(bookDir)
+                    .then(() => {})
+                    .catch(e => {})
+            }
+
+            event.returnValue = item;
         });
 
 
-        ipcMain.on('update-item', async (event, _item) =>{
-            let item: ItemType;
-            await Main.crud.updateItem(_item).then(_ => item = _);
+        ipcMain.on('update-item', async (event, query) =>{
+            let item: IItem;
+            await Main.crud.updateItem(query).then(_ => item = _);
             event.returnValue = item;
         });
 
         ipcMain.on('get-items', async (event, getParam) => {
-            let items: Array<ItemType>;
-            await Main.crud.getItems(getParam).then(_ => items = _);
-            event.returnValue = items;
+            let list: Array<IItem>;
+            await Main.crud.getItems(getParam).then(_ => list = _);
+            event.returnValue = list;
         });
 
         //const menuTemplate = createMenuTemplate(app);

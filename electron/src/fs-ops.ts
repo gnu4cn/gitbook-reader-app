@@ -12,7 +12,6 @@ export const getMdList = (bookDir: string): Array<string> => {
     return list.sort(sortFn);
 }
 
-
 export const escapeFileNames = async (dir: string) => {
     const fileList = readdirSync(dir);
 

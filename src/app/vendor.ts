@@ -24,7 +24,7 @@ export interface NewBookDialogResData {
 }
 
 export interface IBookDownloading {
-    _book: Book;
+    book: Book;
     completed: number;
 }
 
@@ -33,11 +33,11 @@ import { Book, Writer, Category, Website } from './models';
 
 export type TableName = "Book" | "Writer" | "Category" | "Website";
 
-export type ItemType = Book|Writer|Category|Website;
+export type IItem = Book|Writer|Category|Website;
 
 export const Tables = ["Book", "Writer", "Category", "Website"];
 
-export interface IItem {
+export interface IQuery {
     table: TableName;
     item: Book|Writer|Category|Website;
 }
@@ -45,7 +45,7 @@ export interface IItem {
 export type FieldName = "books" | "writer" | "writers"| "categories" | "website";
 export interface IFindCondition {
     field: FieldName;
-    itemList: Array<ItemType>;
+    itemList: Array<IItem>;
 }
 
 export interface IFind {

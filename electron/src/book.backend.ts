@@ -4,7 +4,15 @@ import { fork, ChildProcess } from 'child_process';
 
 import { escapeFileNames, getMdList } from './fs-ops';
 import { CRUD } from './crud';
-import { IError, IIpcMessage, IItem, join as _join, IBookDownloading, IBookDownloaded } from './vendor';
+import { 
+    IError, 
+    IIpcMessage, 
+    IItem, 
+    IQuery, 
+    join as _join, 
+    IBookDownloading, 
+    IBookDownloaded 
+} from './vendor';
 import { Book } from './models';
 
 export class BookBackend {
@@ -87,20 +95,21 @@ export class BookBackend {
     }
 
     download = async (cb) => {
+        // 这里书籍下载已经进程化，可多线程下载书籍
         const params = ['-d', this.bookDir, '-s', this.bookUri];
         const child = fork(resolve(__dirname, 'git-ops.js'), params, {stdio: ['ipc']});
         cb(child);
         child.on('message', async (msg: IIpcMessage) => {
             const title = msg.title;
             let message: IBookDownloading;
-            let item: IItem;
+            let query: IQuery;
             switch(title){
                 case 'new-downloading-progress':
                     this.book.downloaded = msg.data as number;
 
                     message = {
                         percent: msg.data as number,
-                        _book: this.book,
+                        book: this.book,
                     }
 
                     this.insideWindow.webContents.send(title, message);
@@ -111,15 +120,15 @@ export class BookBackend {
                     this.book.commit = data.commit;
                     this.book.desc = data.desc;
 
-                     item = {
+                    query = {
                         table: 'Book',
                         item: this.book
                     }
-                    await this.crud.updateItem(item);
+                    await this.crud.updateItem(query);
 
                     message = {
                         percent: msg.data as number,
-                        _book: this.book,
+                        book: this.book,
                     }
                     this.insideWindow.webContents.send('new-downloading-progress', message);
 
@@ -130,15 +139,15 @@ export class BookBackend {
 
                     this.book.errMsg = err.message;
 
-                    item = {
+                    query = {
                         table: 'Book',
                         item: this.book
                     }
-                    await this.crud.updateItem(item);
+                    await this.crud.updateItem(query);
 
                     message = {
                         percent: 0,
-                        _book: this.book,
+                        book: this.book,
                     }
                     this.insideWindow.webContents.send('new-downloading-progress', message);
 

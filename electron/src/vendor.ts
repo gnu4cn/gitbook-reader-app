@@ -14,6 +14,7 @@ export interface IError {
     message: string;
     err: object
 }
+
 export interface IIpcMessage {
     title: string;
     data: number|IBookDownloaded|IError;
@@ -31,49 +32,40 @@ export const sortFn = (a: string, b: string) => {
 
 
 export function join(start: string, end: string): string {
-  if (start.length === 0) {
-    return end;
-  }
-  if (end.length === 0) {
-    return start;
-  }
-  let slashes = 0;
-  if (start.endsWith('/')) {
-    slashes++;
-  }
-  if (end.startsWith('/')) {
-    slashes++;
-  }
-  if (slashes === 2) {
-    return start + end.substring(1);
-  }
-  if (slashes === 1) {
-    return start + end;
-  }
-  return start + '/' + end;
+    if (start.length === 0) {
+        return end;
+    }
+    if (end.length === 0) {
+        return start;
+    }
+    let slashes = 0;
+    if (start.endsWith('/')) {
+        slashes++;
+    }
+    if (end.startsWith('/')) {
+        slashes++;
+    }
+    if (slashes === 2) {
+        return start + end.substring(1);
+    }
+    if (slashes === 1) {
+        return start + end;
+    }
+    return start + '/' + end;
 }
 
 export interface IBookDownloading {
-    _book: Book;
+    book: Book;
     percent: number;
 }
 
 export const asciiSpecialCharRegEx = new RegExp(/\.|\,|\:|\?|\;|\'|\"|\\|\/|\!|\@|\$|\%|\^|\&|\*|\(|\)|\#/, 'g');
 
-
-
 export type TableName = "Book" | "Writer" | "Category" | "Website";
-export const TableNames = ["Book", "Writer", "Category", "Website"];
 
-export type IpcChannel = "get-items" | "add-item" | "delete-item" | "start-loading";
-export const IpcChannels = [ "get-items", "add-item", "delete-item", "start-loading"];
+export type IItem = Book|Writer|Category|Website;
 
-export type ReplyChannel = "reply-get-items" | "reply-add-item" | "reply-delete-item" | "reply-start-loading";
-export const ReplyChannels = [ "reply-get-items", "reply-add-item", "reply-delete-item", "reply-start-loading"];
-
-export type ItemType = Book|Writer|Category|Website;
-
-export interface IItem {
+export interface IQuery {
     table: TableName;
     item: Book|Writer|Category|Website;
 }
@@ -82,7 +74,7 @@ export type FieldName = "books" | "writer" | "writers"| "categories" | "website"
 
 export interface IFindCondition {
     field: FieldName;
-    itemList: Array<ItemType>;
+    itemList: Array<IItem>;
 }
 
 export interface IFind {
@@ -92,7 +84,7 @@ export interface IFind {
 
 export interface IWhereItem {
     field: FieldName;
-    item: ItemType;
+    item: IItem;
 }
 
 export interface IFindStatement {

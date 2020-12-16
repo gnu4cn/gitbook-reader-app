@@ -16,13 +16,14 @@ import { CrudService } from '../../services/crud.service';
 import { NewBookDialog } from './new-book-dialog.component';
 import { DeleteBookDialog } from './delete-book-dialog.component';
 import { 
-    IItem,
+    IQuery,
     REGEXP_SITE, 
     REGEXP_LOC,
     NewBookDialogData,
     NewBookDialogResData,
     DeleteBookDialogData,
-    DeleteBookDialogResData
+    DeleteBookDialogResData,
+    IBookDownloading,
 } from '../../vendor';
 
 @Component({
@@ -48,19 +49,19 @@ export class BookListComponent implements OnInit {
         this.initData();
         this.bookListDisplay = this.bookList.slice();
 
-        this.crud.ipcRenderer.on('new-downloading-progress', (ev, msg) => {
-            const index = this.bookList.findIndex(b => b.id === msg._book.id);
+        this.crud.ipcRenderer.on('new-downloading-progress', (ev, msg: IBookDownloading) => {
+            const index = this.bookList.findIndex(b => b.id === msg.book.id);
             this.bookList.splice(index, 1);
 
-            this.bookList.push(msg._book);
+            this.bookList.push(msg.book);
             this.bookListDisplay = this.bookList.slice();
             this.cdr.detectChanges();
         });
 
-        this.crud.ipcRenderer.on('git-clone-error', (ev, msg) => {
-            const index = this.bookList.findIndex(b => b.id === msg._book.id);
+        this.crud.ipcRenderer.on('git-clone-error', (ev, msg: IBookDownloading) => {
+            const index = this.bookList.findIndex(b => b.id === msg.book.id);
             this.bookList.splice(index, 1);
-            this.bookList.push(msg._book);
+            this.bookList.push(msg.book);
             this.bookListDisplay = this.bookList.slice();
             this.cdr.detectChanges();
         });
@@ -71,10 +72,17 @@ export class BookListComponent implements OnInit {
     }
 
     initData () {
-        this.crud.getItems({table: 'Book'}).subscribe(res => {this.bookList = res.slice() as Book[];});
-        this.crud.getItems({table: 'Writer'}).subscribe(res => {this.writerList = res.slice() as Writer[];});
-        this.crud.getItems({table: 'Category'}).subscribe(res => {this.cateList = res.slice() as Category[];});
-        this.crud.getItems({table: 'Website'}).subscribe(res => {this.websiteList = res.slice() as Website[];});
+        this.crud.getItems({table: 'Book'})
+            .subscribe(res => {this.bookList = res.slice() as Book[];});
+
+        this.crud.getItems({table: 'Writer'})
+            .subscribe(res => {this.writerList = res.slice() as Writer[];});
+
+        this.crud.getItems({table: 'Category'})
+            .subscribe(res => {this.cateList = res.slice() as Category[];});
+
+        this.crud.getItems({table: 'Website'})
+            .subscribe(res => {this.websiteList = res.slice() as Website[];});
     }
 
     startDownload = (book: Book) => {
@@ -117,14 +125,12 @@ export class BookListComponent implements OnInit {
         if(res.recycled){
             res.book.recycled = true;
 
-            const query: IItem = {
+            const query: IQuery = {
                 table: 'Book',
                 item: res.book
             }
             this.crud.updateItem(query).subscribe(b => {
                 this.bookList.push(b as Book);
-                this.bookListDisplay = this.bookList.slice();
-                this.cdr.detectChanges();
             });
         }
         else {
@@ -162,7 +168,7 @@ export class BookListComponent implements OnInit {
             const _website = new Website();
             _website.uri = site;
 
-            const query: IItem = {
+            const query: IQuery = {
                 table: "Website",
                 item: _website
             }
@@ -181,7 +187,7 @@ export class BookListComponent implements OnInit {
             if(!website) {
                 writer.websiteList.push(newBook.website);
 
-                const query: IItem = {
+                const query: IQuery = {
                     table: 'Writer',
                     item: writer,
                 }
@@ -199,7 +205,7 @@ export class BookListComponent implements OnInit {
             _writer.websiteList = [];
             _writer.websiteList.push(newBook.website);
 
-            const query: IItem = {
+            const query: IQuery = {
                 table: "Writer",
                 item: _writer
             }
@@ -219,7 +225,7 @@ export class BookListComponent implements OnInit {
                     const _cate = new Category();
                     _cate.name = c.name;
 
-                    const query: IItem = {
+                    const query: IQuery = {
                         table: "Category",
                         item: _cate
                     }
@@ -233,7 +239,7 @@ export class BookListComponent implements OnInit {
         }
 
         // newBook 准备完毕，存入数据库
-        const query: IItem = {
+        const query: IQuery = {
             table: 'Book',
             item: newBook
         }

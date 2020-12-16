@@ -69,7 +69,10 @@ export const clone = async (bookDir: string, bookUri: string) => {
             .catch(error => { 
                 // 发送消息给父进程
                 if(process.send){
-                    const message: IIpcMessage = {title: 'error-occured', data: {message: error.message, err: error}};
+                    const message: IIpcMessage = {
+                        title: 'error-occured', 
+                        data: {message: error.message, err: error}
+                    };
                     process.send(message);
                 }
             });
