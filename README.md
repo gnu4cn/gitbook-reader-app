@@ -12,6 +12,7 @@
     - 给图片重新加上了`findup`方法，将`images`插件修改为异步方式，实现图片自动查找
     - 发现`router.service.ts`中的判断 `homepage` 方法有问题，加以修改
     - 修正了 `src/app/book/markdown-elements/toc-pagination.component.ts`中的几个问题，分页正常工作
+    - 修改 `src/app/book/services/search.service.ts` 与 `src/app/book/directives/content-search.directive.ts`，为 `search.service.ts`加上`init`方法，并在 `content-search.directive.ts`中调用，以解决首次搜索没有结果的问题
     - 继续实现书籍删除、类别编辑
 
 + 2020-12-12
