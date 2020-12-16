@@ -24,6 +24,7 @@ import {
     DeleteBookDialogData,
     DeleteBookDialogResData,
     IBookDownloading,
+    IQueryResult
 } from '../../vendor';
 
 @Component({
@@ -39,6 +40,7 @@ export class BookListComponent implements OnInit {
     writerList: Array<Writer> = [];
     cateList: Array<Category> = [];
     websiteList: Array<Website> = [];
+    messageList: Array<string|object>;
 
     constructor(private dialog: MatDialog,
         private crud: CrudService,
@@ -73,16 +75,32 @@ export class BookListComponent implements OnInit {
 
     initData () {
         this.crud.getItems({table: 'Book'})
-            .subscribe(res => {this.bookList = res.slice() as Book[];});
+            .subscribe((res: IQueryResult) => {
+                this.messageList.push(res.message);
+                const books = res.data as Book[];
+                this.bookList = books.slice();
+            });
 
         this.crud.getItems({table: 'Writer'})
-            .subscribe(res => {this.writerList = res.slice() as Writer[];});
+            .subscribe((res: IQueryResult) => {
+                this.messageList.push(res.message);
+                const writers = res.data as Writer[];
+                this.writerList = writers.slice();
+            });
 
         this.crud.getItems({table: 'Category'})
-            .subscribe(res => {this.cateList = res.slice() as Category[];});
+            .subscribe((res: IQueryResult) => {
+                this.messageList.push(res.message);
+                const cates = res.data as Category[];
+                this.cateList = cates.slice();
+            });
 
         this.crud.getItems({table: 'Website'})
-            .subscribe(res => {this.websiteList = res.slice() as Website[];});
+            .subscribe((res: IQueryResult) => {
+                this.messageList.push(res.message);
+                const websites = res.data as Website[];
+                this.websiteList = websites.slice();
+            });
     }
 
     startDownload = (book: Book) => {
@@ -113,7 +131,7 @@ export class BookListComponent implements OnInit {
             data: { _book: book}
         });
 
-        dialogRef.afterClosed().subscribe(res => {
+        dialogRef.afterClosed().subscribe((res: DeleteBookDialogResData) => {
             if(res) this.deleteBook(res);
         });
     }                        
@@ -129,8 +147,8 @@ export class BookListComponent implements OnInit {
                 table: 'Book',
                 item: res.book
             }
-            this.crud.updateItem(query).subscribe(b => {
-                this.bookList.push(b as Book);
+            this.crud.updateItem(query).subscribe((queryRes: IQueryResult) => {
+                this.bookList.push(queryRes.data as Book);
             });
         }
         else {
@@ -145,7 +163,7 @@ export class BookListComponent implements OnInit {
             data: { cateList: this.cateList, bookList: this.bookList}
         });
 
-        dialogRef.afterClosed().subscribe(res => {
+        dialogRef.afterClosed().subscribe((res: NewBookDialogResData) => {
             if(res) this.saveBook(res);
         });
     }
@@ -172,8 +190,10 @@ export class BookListComponent implements OnInit {
                 table: "Website",
                 item: _website
             }
-            this.crud.addItem(query).subscribe(w => {
-                const website = w as Website;
+            this.crud.addItem(query).subscribe((res: IQueryResult) => {
+                this.messageList.push(res.message);
+
+                const website = res.data as Website;
                 newBook.website = website ;
                 this.websiteList.push(website);
             });
@@ -191,8 +211,9 @@ export class BookListComponent implements OnInit {
                     table: 'Writer',
                     item: writer,
                 }
-                this.crud.updateItem(query).subscribe(w => {
-                    newBook.writer = w as Writer;
+                this.crud.updateItem(query).subscribe((res: IQueryResult) => {
+                    this.messageList.push(res.message);
+                    newBook.writer = res.data as Writer;
                 });
             }
             else newBook.writer = writer;
@@ -209,8 +230,10 @@ export class BookListComponent implements OnInit {
                 table: "Writer",
                 item: _writer
             }
-            this.crud.addItem(query).subscribe(w => {
-                const writer = w as Writer;
+            this.crud.addItem(query).subscribe((res: IQueryResult) => {
+                this.messageList.push(res.message);
+
+                const writer = res.data as Writer;
                 newBook.writer = writer;
                 this.writerList.push(writer);
             });
@@ -229,8 +252,10 @@ export class BookListComponent implements OnInit {
                         table: "Category",
                         item: _cate
                     }
-                    this.crud.addItem(query).subscribe(c => {
-                        const cate = c as Category;
+                    this.crud.addItem(query).subscribe((res: IQueryResult) => {
+                        this.messageList.push(res.message);
+
+                        const cate = res.data as Category;
                         this.cateList.push(cate);
                         newBook.cateList.push(cate);
                     });
@@ -243,10 +268,11 @@ export class BookListComponent implements OnInit {
             table: 'Book',
             item: newBook
         }
-        this.crud.addItem(query).subscribe(b => {
-            this.bookList.push(b as Book);
+        this.crud.addItem(query).subscribe((res: IQueryResult) => {
+            this.messageList.push(res.message);
+
+            this.bookList.push(res.data as Book);
             this.bookListDisplay = this.bookList.slice();
         });
     }
 }
-

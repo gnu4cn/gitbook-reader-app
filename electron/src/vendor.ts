@@ -5,6 +5,11 @@ interface unknowndata {
     [key: string]: unknown;
 }
 
+export interface IQueryResult {
+    message: string | object;
+    data: IItem | Array<IItem>
+}
+
 export interface IBookDownloaded {
     desc: string;
     commit: string;

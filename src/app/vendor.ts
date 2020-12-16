@@ -4,6 +4,11 @@ interface UnknownData {
     [key: string]: unknown;
 }
 
+export interface IQueryResult {
+    message: string | object;
+    data: IItem | Array<IItem>
+}
+
 export interface DeleteBookDialogData {
     _book: Book;
 }
