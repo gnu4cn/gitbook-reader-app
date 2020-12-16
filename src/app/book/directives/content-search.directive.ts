@@ -27,6 +27,8 @@ export class ContentSearchDirective {
         ];
         const el = elRef.nativeElement;
 
+        this.searchService.init();
+
         const changeEvent = fromEvent(el, 'change');
         const enterEvent = fromEvent(el, 'keydown.enter');
 

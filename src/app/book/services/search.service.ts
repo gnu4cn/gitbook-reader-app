@@ -54,7 +54,6 @@ export class SearchService {
             .use(stringify);
     }
 
-
     get bookPath() {
         return this.settings.bookPath;
     }
@@ -95,14 +94,16 @@ export class SearchService {
         });
     }
 
-    async search(query: string) {
+    init = () => {
         if(!this.searchIndex){
-            this.loadSummary().subscribe(paths => {
-                this.generateSearchIndex(paths).then(() => {
-                    this.search(query);
-                });
-            });
+            this.loadSummary().subscribe(paths => this.generateSearchIndex(paths));
+
+            return null;
         }
+    }
+
+    async search(query: string) {
+        this.init();
 
         if (typeof query !== 'string' || query.trim() === '') {
             return null;

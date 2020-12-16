@@ -9,8 +9,9 @@
 
     - 重写Electron后端，将书籍管理放入 `book.backend.ts`的类中
     - 将Electron的`index.ts`修改为类的形式
-    - 给图片重新加上了`findup`方法，将`images`插件修改为异步方式
+    - 给图片重新加上了`findup`方法，将`images`插件修改为异步方式，实现图片自动查找
     - 发现`router.service.ts`中的判断 `homepage` 方法有问题，加以修改
+    - 修正了 `src/app/book/markdown-elements/toc-pagination.component.ts`中的几个问题，分页正常工作
     - 继续实现书籍删除、类别编辑
 
 + 2020-12-12
