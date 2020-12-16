@@ -111,9 +111,7 @@ export class CRUD {
                 break;
         }
 
-       return {
-            message: message
-        }
+       return {message: message}
     }
 
     addItem = async (query: IQuery): Promise<IQueryResult> => {

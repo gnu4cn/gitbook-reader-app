@@ -1,7 +1,7 @@
 import { app, Menu, BrowserWindow, ipcMain, session } from "electron";
 import { createCapacitorElectronApp } from "@capacitor-community/electron";
 import { fork, ChildProcess } from 'child_process';
-import { remove } from 'fs-extra';
+import { ensureDir, remove } from 'fs-extra';
 
 import { join } from 'path';
 
@@ -106,17 +106,16 @@ export default class Main {
             if(query.table === 'Book'){
                 const book = query.item as Book;
                 const bookDir = join(booksDir, book.website.uri, book.writer.name, book.name);
-                await remove(bookDir)
-                    .then(() => {
-                        res.message.push('，已成功从文件系统移除');
+                await ensureDir(bookDir)
+                    .then(() =>{
+                        remove(bookDir)
+                            .then(() => res.message.push('，已成功从文件系统移除'))
+                            .catch(e => res.message.push(e));
                     })
-                    .catch(e => {
-                        res.message.push(e);
-                    })
-            }
+                    .catch(e => res.message.push(e));
 
-            event.returnValue = res;
-        });
+                event.returnValue = res;
+            }});
 
 
         ipcMain.on('update-item', async (event, query) =>{
