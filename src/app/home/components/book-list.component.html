@@ -12,7 +12,7 @@
         <ion-col *ngFor="let book of sortBy(bookListDisplay, 'name')" sizeXs="12" sizeSm="6" sizeLg="4" sizeXl="4">
             <ion-card>
                 <ion-fab vertical="top" horizontal="end">
-                    <ion-button color="danger" size="small" (click)="deleteBook(book)">
+                    <ion-button color="danger" size="small" (click)="openDeleteBookDialog(book)">
                         <ion-icon name="close-outline" sizme="small"></ion-icon>
                     </ion-button>
                 </ion-fab>

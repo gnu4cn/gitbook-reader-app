@@ -5,7 +5,7 @@ interface UnknownData {
 }
 
 export interface IQueryResult {
-    message: any[];
+    message: Array<string|object>;
     data?: IItem | Array<IItem>
 }
 

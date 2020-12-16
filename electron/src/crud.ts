@@ -44,7 +44,7 @@ export class CRUD {
     }
 
     deleteItem = async (query: IQuery): Promise<IQueryResult> => {
-        let message: any[];
+        let message: Array<string|object> = [];
         switch(query.table){
             case 'Book':
                 try {
@@ -116,7 +116,7 @@ export class CRUD {
 
     addItem = async (query: IQuery): Promise<IQueryResult> => {
         let item: IItem;
-        let message: any[];
+        let message: Array<string|object> = [];
         switch(query.table){
             case 'Book':
                 try {
@@ -174,7 +174,7 @@ export class CRUD {
     }
 
     updateItem = async (query: IQuery): Promise<IQueryResult> => {
-        let message: any[];
+        let message: Array<string|object> = [];
         switch(query.table){
             case 'Book':
                 try {
@@ -231,7 +231,7 @@ export class CRUD {
     getItems = async(getParam: IFind): Promise<IQueryResult> => {
         let findStatement: IFindStatement;
         let itemList: Array<IItem>;
-        let message: any[];
+        let message: Array<string|object> = [];
 
         if(getParam.conditions) {
             const conditions = getParam.conditions as Array<IFindCondition>; 

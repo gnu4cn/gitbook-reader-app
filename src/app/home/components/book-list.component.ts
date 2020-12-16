@@ -40,7 +40,7 @@ export class BookListComponent implements OnInit {
     writerList: Array<Writer> = [];
     cateList: Array<Category> = [];
     websiteList: Array<Website> = [];
-    messageList: Array<string|object>;
+    messageList: Array<string|object> = [];
 
     constructor(private dialog: MatDialog,
         private crud: CrudService,
