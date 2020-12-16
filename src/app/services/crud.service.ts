@@ -16,26 +16,26 @@ export class CrudService {
 
     constructor(private electronService: ElectronService) { }
 
-    getItems(findParam: IFind): Observable<IQueryResult> {
-        return of(this.ipcRenderer.sendSync('get-items', findParam)).pipe(
+    getItems(query: IFind): Observable<IQueryResult> {
+        return of(this.ipcRenderer.sendSync('get-items', query)).pipe(
             catchError((err: any) => Observable.throw(err.json))
         );
     }
 
-    addItem(item: IQuery): Observable<IQueryResult> {
-        return of(this.ipcRenderer.sendSync('add-item', item)).pipe(
+    addItem(query: IQuery): Observable<IQueryResult> {
+        return of(this.ipcRenderer.sendSync('add-item', query)).pipe(
             catchError((err: any) => Observable.throw(err.json))
         );
     }
 
-    updateItem(item: IQuery): Observable<IQueryResult> {
-        return of(this.ipcRenderer.sendSync('update-item', item)).pipe(
+    updateItem(query: IQuery): Observable<IQueryResult> {
+        return of(this.ipcRenderer.sendSync('update-item', query)).pipe(
             catchError((err: any) => Observable.throw(err.json))
         );
     }
 
-    deleteItem(item: IQuery): Observable<IQueryResult> {
-        return of(this.ipcRenderer.sendSync('delete-item', item)).pipe(
+    deleteItem(query: IQuery): Observable<IQueryResult> {
+        return of(this.ipcRenderer.sendSync('delete-item', query)).pipe(
             catchError((err: any) => Observable.throw(err.json))
         );
     }

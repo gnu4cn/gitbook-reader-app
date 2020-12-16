@@ -5,8 +5,8 @@ interface UnknownData {
 }
 
 export interface IQueryResult {
-    message: string | object;
-    data: IItem | Array<IItem>
+    message: any[];
+    data?: IItem | Array<IItem>
 }
 
 export interface DeleteBookDialogData {

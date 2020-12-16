@@ -7,6 +7,8 @@ import { join } from 'path';
 
 import { 
     IItem, 
+    IQuery,
+    IQueryResult
 } from './vendor';
 import { Book } from './models';
 
@@ -85,44 +87,48 @@ export default class Main {
             _book.open(w => Main.winChildren.push(w));
         });
 
-        ipcMain.on('download-book', (event, book) => {
+        ipcMain.on('download-book', (event, book: Book) => {
             const _book = new BookBackend(booksDir, book, mainWindow, loadingWin);
             _book.download(cp => Main.processChildren.push(cp));
         });
 
-        ipcMain.on('add-item', async (event, query) =>{
-            let item: IItem;
-            await Main.crud.addItem(query).then(_ => item = _);
-            event.returnValue = item;
+        ipcMain.on('add-item', async (event, query: IQuery) =>{
+            let res: IQueryResult;
+            await Main.crud.addItem(query).then(_ => res = _);
+            event.returnValue = res;
         });
 
         // Define any IPC or other custom functionality below here
-        ipcMain.on('delete-item', async (event, query) =>{
-            let item: IItem;
-            await Main.crud.deleteItem(query).then(_ => item = _);
+        ipcMain.on('delete-item', async (event, query: IQuery) =>{
+            let res: IQueryResult;
+            await Main.crud.deleteItem(query).then(_ => res = _);
 
             if(query.table === 'Book'){
                 const book = query.item as Book;
                 const bookDir = join(booksDir, book.website.uri, book.writer.name, book.name);
                 await remove(bookDir)
-                    .then(() => {})
-                    .catch(e => {})
+                    .then(() => {
+                        res.message.push('，已成功从文件系统移除');
+                    })
+                    .catch(e => {
+                        res.message.push(e);
+                    })
             }
 
-            event.returnValue = item;
+            event.returnValue = res;
         });
 
 
         ipcMain.on('update-item', async (event, query) =>{
-            let item: IItem;
+            let item: IQueryResult;
             await Main.crud.updateItem(query).then(_ => item = _);
             event.returnValue = item;
         });
 
         ipcMain.on('get-items', async (event, getParam) => {
-            let list: Array<IItem>;
-            await Main.crud.getItems(getParam).then(_ => list = _);
-            event.returnValue = list;
+            let res: IQueryResult;
+            await Main.crud.getItems(getParam).then(_ => res = _);
+            event.returnValue = res;
         });
 
         //const menuTemplate = createMenuTemplate(app);

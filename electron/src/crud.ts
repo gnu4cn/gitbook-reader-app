@@ -44,7 +44,7 @@ export class CRUD {
     }
 
     deleteItem = async (query: IQuery): Promise<IQueryResult> => {
-        let message: string | object;
+        let message: any[];
         switch(query.table){
             case 'Book':
                 try {
@@ -55,9 +55,9 @@ export class CRUD {
                         .from(Book)
                         .where("id = :id", { id: book.id })
                         .execute();
-                    message = `书籍 ${book.name} 成功删除`;
+                    message.push(`书籍 ${book.name} 成功从数据库移除`);
                 } catch (err) {
-                    message = err;
+                    message.push(err);
                     throw err
                 };
                 break;
@@ -71,9 +71,9 @@ export class CRUD {
                         .where("id = :id", { id: writer.id })
                         .execute();
 
-                    message = `作者 ${writer.name} 成功删除`;
+                    message.push(`作者 ${writer.name} 成功从数据库移除`);
                 } catch (err) {
-                    message = err;
+                    message.push(err);
                     throw err
                 };
                 break;
@@ -87,9 +87,9 @@ export class CRUD {
                         .where("id = :id", { id: website.id })
                         .execute();
 
-                    message = `托管平台 ${website.uri} 成功删除`;
+                    message.push(`托管平台 ${website.uri} 成功从数据库移除`);
                 } catch (err) {
-                    message = err;
+                    message.push(err);
                     throw err
                 };
                 break;
@@ -103,23 +103,22 @@ export class CRUD {
                         .where("id = :id", { id: cate.id })
                         .execute();
 
-                    message = `类别 ${cate.name} 成功删除`;
+                    message.push(`类别 ${cate.name} 成功从数据库移除`);
                 } catch (err) {
-                    message = err;
+                    message.push(err);
                     throw err
                 };
                 break;
         }
 
        return {
-            message: message,
-            data: query.item
+            message: message
         }
     }
 
     addItem = async (query: IQuery): Promise<IQueryResult> => {
         let item: IItem;
-        let message: string | object;
+        let message: any[];
         switch(query.table){
             case 'Book':
                 try {
@@ -127,9 +126,9 @@ export class CRUD {
                     item = await bookRepo.create(query.item);
                     await bookRepo.save(item)
 
-                    message = `书籍 ${item.name} 成功添加`;
+                    message.push(`书籍 ${item.name} 成功添加`);
                 } catch (err) {
-                    message = err;
+                    message.push(err);
                     throw err
                 };
                 break;
@@ -139,9 +138,9 @@ export class CRUD {
                     item = await writerRepo.create(query.item);
                     await writerRepo.save(item)
 
-                    message = `作者 ${item.name} 成功添加`
+                    message.push(`作者 ${item.name} 成功添加`);
                 } catch (err) {
-                    message = err;
+                    message.push(err);
                     throw err
                 };
                 break;
@@ -151,9 +150,9 @@ export class CRUD {
                     item = await websiteRepo.create(query.item);
                     await websiteRepo.save(item)
 
-                    message = `托管平台 ${item.uri} 成功添加`
+                    message.push(`托管平台 ${item.uri} 成功添加`);
                 } catch (err) {
-                    message = err;
+                    message.push(err);
                     throw err
                 };
                 break;
@@ -163,9 +162,9 @@ export class CRUD {
                     item = await cateRepo.create(query.item);
                     await cateRepo.save(item)
 
-                    message = `类别 ${item.name} 成功添加`
+                    message.push(`类别 ${item.name} 成功添加`);
                 } catch (err) {
-                    message = err;
+                    message.push(err);
                     throw err
                 };
                 break;
@@ -177,7 +176,7 @@ export class CRUD {
     }
 
     updateItem = async (query: IQuery): Promise<IQueryResult> => {
-        let message: string | object;
+        let message: any[];
         switch(query.table){
             case 'Book':
                 try {
@@ -185,9 +184,9 @@ export class CRUD {
                     const bookRepo = this.conn.getRepository(Book);
                     await bookRepo.save(book);
 
-                    message = `书籍 ${book.name} 已成功更新`
+                    message.push(`书籍 ${book.name} 已成功更新`);
                 } catch (err) {
-                    message = err;
+                    message.push(err);
                     throw err
                 };
                 break;
@@ -197,9 +196,9 @@ export class CRUD {
                     const writerRepo = this.conn.getRepository(Writer);
                     await writerRepo.save(writer);
 
-                    message = `作者 ${writer.name} 已成功更新`;
+                    message.push(`作者 ${writer.name} 已成功更新`);
                 } catch (err) {
-                    message = err;
+                    message.push(err);
                     throw err
                 };
                 break;
@@ -209,9 +208,9 @@ export class CRUD {
                     const websiteRepo = this.conn.getRepository(Website);
                     await websiteRepo.save(website);
 
-                    message = `托管平台 ${website.uri} 已成功更新`;
+                    message.push(`托管平台 ${website.uri} 已成功更新`);
                 } catch (err) {
-                    message = err;
+                    message.push(err);
                     throw err
                 };
                 break;
@@ -221,9 +220,9 @@ export class CRUD {
                     const cateRepo = this.conn.getRepository(Category);
                     await cateRepo.save(cate);
 
-                    message = `类别 ${cate.name} 已成功更新`
+                    message.push(`类别 ${cate.name} 已成功更新`);
                 } catch (err) {
-                    message = err;
+                    message.push(err);
                     throw err
                 };
                 break;
@@ -234,7 +233,7 @@ export class CRUD {
     getItems = async(getParam: IFind): Promise<IQueryResult> => {
         let findStatement: IFindStatement;
         let itemList: Array<IItem>;
-        let message: string | object;
+        let message: any[];
 
         if(getParam.conditions) {
             const conditions = getParam.conditions as Array<IFindCondition>; 
@@ -270,9 +269,9 @@ export class CRUD {
                             .getMany();
                     }
 
-                    message = `获取到 ${itemList.length} 本书籍`;
+                    message.push(`获取到 ${itemList.length} 本书籍`);
                 } catch (err){ 
-                    message = err;
+                    message.push(err);
                     throw err; 
                 }
                 break;
@@ -290,9 +289,9 @@ export class CRUD {
                             .getMany();
                     }
                     
-                    message = `获取到 ${itemList.length} 名作者`
+                    message.push(`获取到 ${itemList.length} 名作者`);
                 } catch (err){ 
-                    message = err;
+                    message.push(err);
                     throw err; 
                 }
                 break;
@@ -302,9 +301,9 @@ export class CRUD {
                     if(findStatement) itemList = await cateRepo.find(findStatement);
                     else itemList = await cateRepo.find();
 
-                    message = `获取到 ${itemList.length} 个类别`
+                    message.push(`获取到 ${itemList.length} 个类别`);
                 } catch (err){ 
-                    message = err;
+                    message.push(err);
                     throw err; 
                 }
                 break;
@@ -314,9 +313,9 @@ export class CRUD {
                     if(findStatement) itemList = await websiteRepo.find(findStatement);
                     else itemList = await websiteRepo.find();
 
-                    message = `获取到 ${itemList.length} 个托管平台`
+                    message.push(`获取到 ${itemList.length} 个托管平台`);
                 } catch (err){ 
-                    message = err;
+                    message.push(err);
                     throw err; 
                 }
                 break;
