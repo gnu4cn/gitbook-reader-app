@@ -49,7 +49,7 @@ export class RouterService {
         let path = this._url.pathname;
         const fragment = this._url.hash ? decodeURI(this._url.hash) : '';
 
-        const re = new RegExp(/\.md/)
+        let re = new RegExp(/\.md/)
         const notHomePage = re.test(path);
 
         let url: string;
@@ -64,7 +64,10 @@ export class RouterService {
             root = path.endsWith('/') ? path : path+'/';
         }
 
-        if(url.endsWith('/')) url = url.slice(0, -1);
+        // 去掉最后的 '/'
+        re = new RegExp(/.*\/$/);
+        if(re.test(url)) url = url.slice(0, -1);
+
         path = url+fragment;
         this.go(path, root);
     }
