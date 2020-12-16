@@ -4,6 +4,31 @@ interface UnknownData {
     [key: string]: unknown;
 }
 
+interface IFilterWriter {
+    writer: Writer
+}
+
+interface IFilterCate {
+    cate: Category
+}
+
+interface IFilterWebsite {
+    website: Website
+}
+
+export type IFilterItem = IFilterCate | IFilterWriter | IFilterWebsite
+
+export interface IFilterAction {
+    action: "add"|"remove";
+    filterItem: IFilterCate | IFilterWriter | IFilterWebsite
+}
+
+export interface IFilter {
+    displayRecyled: boolean;
+    displayNormal: boolean;
+    filterList: Array<IFilterItem>
+}
+
 export interface IQueryResult {
     message: Array<string|object>;
     data?: IItem | Array<IItem>

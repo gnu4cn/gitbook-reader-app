@@ -24,7 +24,10 @@ import {
     IDeleteBookDialogData,
     IDeleteBookDialogResData,
     IBookDownloading,
-    IQueryResult
+    IQueryResult,
+    IFilter,
+    IFilterItem,
+    IFilterAction
 } from '../../vendor';
 
 @Component({
@@ -41,6 +44,14 @@ export class BookListComponent implements OnInit {
     cateList: Array<Category> = [];
     websiteList: Array<Website> = [];
     messageList: Array<string|object> = [];
+    private _filter: IFilter = {
+        displayRecyled: true,
+        displayNormal: true,
+        filterList: []
+    };
+    get filter () {
+        return this._filter;
+    }
 
     constructor(private dialog: MatDialog,
         private crud: CrudService,
@@ -69,8 +80,41 @@ export class BookListComponent implements OnInit {
         });
     }
 
-    sortBy(list: Array<any>, prop: string){
+    sortBy = (list: Array<any>, prop: string) => {
         return list.sort((a, b) => a[prop] > b[prop] ? 1 : a[prop] === b[prop] ? 0 : -1);
+    }
+
+    changeFilter = (filterAction: IFilterAction) => {
+        let index: number;
+        switch (filterAction.action){
+            case 'add':
+                index = this._filter.filterList.findIndex((filterItem: IFilterItem) => {
+                    const key = Object.keys(filterItem)[0];
+                    const _key = Object.keys(filterAction.filterItem)[0];
+                    return key === _key && filterItem[key].id === filterAction[key].id;
+                });
+
+                if(index < 0)this._filter.filterList.push(filterAction.filterItem);
+                break;
+            case 'remove':
+                index = this._filter.filterList.findIndex((filterItem: IFilterItem) => {
+                    const key = Object.keys(filterItem)[0];
+                    const _key = Object.keys(filterAction.filterItem)[0];
+                    return key === _key && filterItem[key].id === filterAction[key].id;
+                });
+
+                if(index >= 0)this._filter.filterList.splice(index, 1);
+                break;
+        }
+    }
+
+    filterFn = (book: Book) => {
+        if(this.filter.displayNormal){
+            if(this.filter.filterList.length > 0) {
+                this.filter.filterList.forEach(filterItem => {
+                });
+            }
+        }
     }
 
     initData () {
