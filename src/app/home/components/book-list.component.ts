@@ -21,8 +21,8 @@ import {
     REGEXP_LOC,
     NewBookDialogData,
     NewBookDialogResData,
-    DeleteBookDialogData,
-    DeleteBookDialogResData,
+    IDeleteBookDialogData,
+    IDeleteBookDialogResData,
     IBookDownloading,
     IQueryResult
 } from '../../vendor';
@@ -126,17 +126,19 @@ export class BookListComponent implements OnInit {
     }
 
     openDeleteBookDialog = (book: Book) => {
+        const dataDialog: IDeleteBookDialogData = {book: book};
+
         const dialogRef = this.dialog.open(DeleteBookDialog, {
             width: '480px',
-            data: { _book: book}
+            data: dataDialog
         });
 
-        dialogRef.afterClosed().subscribe((res: DeleteBookDialogResData) => {
+        dialogRef.afterClosed().subscribe((res: IDeleteBookDialogResData) => {
             if(res) this.deleteBook(res);
         });
     }                        
 
-    deleteBook = (res: DeleteBookDialogResData) => {
+    deleteBook = (res: IDeleteBookDialogResData) => {
         const index = this.bookList.findIndex(b => b.id === res.book.id);
         this.bookList.splice(index, 1);
 

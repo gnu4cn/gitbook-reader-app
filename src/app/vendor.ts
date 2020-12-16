@@ -9,11 +9,11 @@ export interface IQueryResult {
     data?: IItem | Array<IItem>
 }
 
-export interface DeleteBookDialogData {
-    _book: Book;
+export interface IDeleteBookDialogData {
+    book: Book;
 }
 
-export interface DeleteBookDialogResData {
+export interface IDeleteBookDialogResData {
     recycled: boolean;
     book: Book;
 }
