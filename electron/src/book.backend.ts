@@ -53,7 +53,7 @@ export class BookBackend {
 
         bookWindow.loadURL(this.bookUrl);
 
-        webContents.openDevTools();
+        //webContents.openDevTools();
 
         ipcMain.on('book-loading', () =>{
             this.loadingWin.show();
