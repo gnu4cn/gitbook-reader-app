@@ -110,17 +110,6 @@ export class BookListComponent implements OnInit {
         });
     }                        
 
-    openAddBookDialog = () => {
-        const dialogRef = this.dialog.open(NewBookDialog, {
-            width: '480px',
-            data: { cateList: this.cateList, bookList: this.bookList}
-        });
-
-        dialogRef.afterClosed().subscribe(res => {
-            if(res) this.saveBook(res);
-        });
-    }
-
     deleteBook = (res: DeleteBookDialogResData) => {
         const index = this.bookList.findIndex(b => b.id === res.book.id);
         this.bookList.splice(index, 1);
@@ -134,12 +123,25 @@ export class BookListComponent implements OnInit {
             }
             this.crud.updateItem(query).subscribe(b => {
                 this.bookList.push(b as Book);
+                this.bookListDisplay = this.bookList.slice();
+                this.cdr.detectChanges();
             });
         }
         else {
 
         }
         this.bookListDisplay = this.bookList.slice();
+    }
+
+    openAddBookDialog = () => {
+        const dialogRef = this.dialog.open(NewBookDialog, {
+            width: '480px',
+            data: { cateList: this.cateList, bookList: this.bookList}
+        });
+
+        dialogRef.afterClosed().subscribe(res => {
+            if(res) this.saveBook(res);
+        });
     }
 
     saveBook = (res: NewBookDialogResData) => {

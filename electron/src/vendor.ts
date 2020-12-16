@@ -10,9 +10,13 @@ export interface IBookDownloaded {
     commit: string;
 }
 
+export interface IError {
+    message: string;
+    err: object
+}
 export interface IIpcMessage {
     title: string;
-    data: number|IBookDownloaded|Error;
+    data: number|IBookDownloaded|IError;
 }
 
 export const sortFn = (a: string, b: string) => {

@@ -4,7 +4,7 @@ import { fork, ChildProcess } from 'child_process';
 
 import { escapeFileNames, getMdList } from './fs-ops';
 import { CRUD } from './crud';
-import { IIpcMessage, IItem, join as _join, IBookDownloading, IBookDownloaded } from './vendor';
+import { IError, IIpcMessage, IItem, join as _join, IBookDownloading, IBookDownloaded } from './vendor';
 import { Book } from './models';
 
 export class BookBackend {
@@ -126,7 +126,8 @@ export class BookBackend {
                     child.kill('SIGINT');
                     break;
                 case 'error-occured':
-                    const err: Error = msg.data as Error;
+                    const err: IError = msg.data as IError;
+
                     this.book.errMsg = err.message;
 
                     item = {
