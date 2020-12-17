@@ -4,6 +4,18 @@
             <img src="assets/images/book_blank.png" />
         </ion-avatar>
     </ion-fab-button>
+    <ion-fab-button color="light" (click)="displayBooksOnShelf()">
+        <ion-avatar>
+            <ion-badge color="success" style="position: absolute; right: 5px; top: 10px;">{{onShelfList.length}}</ion-badge>
+            <img src="assets/images/bookshelf-512.png" />
+        </ion-avatar>
+    </ion-fab-button>
+    <ion-fab-button color="light" (click)="displayRecycledBooks()">
+        <ion-avatar>
+            <ion-badge color="warning" style="position: absolute; right: 5px; top: 10px;">{{recycledList.length}}</ion-badge>
+            <img src="assets/images/trash_full_513x513.png" />
+        </ion-avatar>
+    </ion-fab-button>
 </ion-fab>
 
 <ion-grid>

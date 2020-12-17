@@ -23,12 +23,6 @@ export interface IFilterAction {
     filterItem: IFilterCate | IFilterWriter | IFilterWebsite
 }
 
-export interface IFilter {
-    displayRecyled: boolean;
-    displayNormal: boolean;
-    filterList: Array<IFilterItem>
-}
-
 export interface IQueryResult {
     message: Array<string|object>;
     data?: IItem | Array<IItem>

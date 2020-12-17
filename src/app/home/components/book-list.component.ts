@@ -25,7 +25,6 @@ import {
     IDeleteBookDialogResData,
     IBookDownloading,
     IQueryResult,
-    IFilter,
     IFilterItem,
     IFilterAction
 } from '../../vendor';
@@ -44,13 +43,14 @@ export class BookListComponent implements OnInit {
     cateList: Array<Category> = [];
     websiteList: Array<Website> = [];
     messageList: Array<string|object> = [];
-    private _filter: IFilter = {
-        displayRecyled: true,
-        displayNormal: true,
-        filterList: []
-    };
-    get filter () {
-        return this._filter;
+    private filter: Array<IFilterItem> = [];
+
+    get recycledList () {
+        return this.bookList.filter(b => b.recycled === true);
+    }
+
+    get onShelfList () {
+        return this.bookList.filter(b => b.recycled === false);
     }
 
     constructor(private dialog: MatDialog,
@@ -60,14 +60,14 @@ export class BookListComponent implements OnInit {
 
     ngOnInit() {
         this.initData();
-        this.bookListDisplay = this.bookList.slice();
+        this.bookListDisplay = this.bookList.filter(b => this.filterFn(b));
 
         this.crud.ipcRenderer.on('new-downloading-progress', (ev, msg: IBookDownloading) => {
             const index = this.bookList.findIndex(b => b.id === msg.book.id);
             this.bookList.splice(index, 1);
 
             this.bookList.push(msg.book);
-            this.bookListDisplay = this.bookList.slice();
+            this.bookListDisplay = this.bookList.filter(b => this.filterFn(b));
             this.cdr.detectChanges();
         });
 
@@ -75,7 +75,7 @@ export class BookListComponent implements OnInit {
             const index = this.bookList.findIndex(b => b.id === msg.book.id);
             this.bookList.splice(index, 1);
             this.bookList.push(msg.book);
-            this.bookListDisplay = this.bookList.slice();
+            this.bookListDisplay = this.bookList.filter(b => this.filterFn(b));
             this.cdr.detectChanges();
         });
     }
@@ -88,33 +88,70 @@ export class BookListComponent implements OnInit {
         let index: number;
         switch (filterAction.action){
             case 'add':
-                index = this._filter.filterList.findIndex((filterItem: IFilterItem) => {
+                index = this.filter.findIndex((filterItem: IFilterItem) => {
                     const key = Object.keys(filterItem)[0];
                     const _key = Object.keys(filterAction.filterItem)[0];
                     return key === _key && filterItem[key].id === filterAction[key].id;
                 });
 
-                if(index < 0)this._filter.filterList.push(filterAction.filterItem);
+                if(index < 0)this.filter.push(filterAction.filterItem);
                 break;
             case 'remove':
-                index = this._filter.filterList.findIndex((filterItem: IFilterItem) => {
+                index = this.filter.findIndex((filterItem: IFilterItem) => {
                     const key = Object.keys(filterItem)[0];
                     const _key = Object.keys(filterAction.filterItem)[0];
                     return key === _key && filterItem[key].id === filterAction[key].id;
                 });
 
-                if(index >= 0)this._filter.filterList.splice(index, 1);
+                if(index >= 0)this.filter.splice(index, 1);
                 break;
         }
     }
 
-    filterFn = (book: Book) => {
-        if(this.filter.displayNormal){
-            if(this.filter.filterList.length > 0) {
-                this.filter.filterList.forEach(filterItem => {
-                });
+    displayRecycledBooks = () => {
+        this.bookListDisplay = this.recycledList.slice();
+    }
+
+    displayBooksOnShelf = () => {
+        this.bookListDisplay = this.onShelfList.slice();
+    }
+
+    // 尚待优化
+    filterFn = (book: Book): boolean => {
+        // 只显示不在回收站的书籍
+        if(book.recycled) return false;
+
+        // 没有过滤条件全部显示
+        if(this.filter.length === 0)return true;
+
+        // 有过滤条件时, 只要有一个条件满足就显示？还是所有条件都满足时才显示？
+        let _writer: boolean = false;
+        let _website: boolean = false;
+        let _cate: boolean = false;
+        this.filter.forEach(filterItem => {
+            const key = Object.keys(filterItem)[0];
+
+            switch(key){
+                case 'writer':
+                    if(book.writer.id === filterItem[key].id) {
+                        _writer = true;
+                    }
+                    break
+                case 'website':
+                    if(book.website.id === filterItem[key].id) {
+                        _website = true;
+                    }
+                    break
+                case 'cate':
+                    const index = book.cateList.findIndex(cate => cate.id === filterItem[key].id);
+                    if(index >= 0) {
+                        _cate = true;
+                    }
+                    break
             }
-        }
+        });
+
+        return _writer || _website || _cate;
     }
 
     initData () {
@@ -154,7 +191,7 @@ export class BookListComponent implements OnInit {
         this.bookList.splice(index, 1);
         book.downloaded = 1;
         this.bookList.push(book);
-        this.bookListDisplay = this.bookList.slice();
+        this.bookListDisplay = this.bookList.filter(b => this.filterFn(b));
     }
 
     openBook(book: Book) {
@@ -207,7 +244,7 @@ export class BookListComponent implements OnInit {
                 this.messageList = [...this.messageList, ...res.message];
             });
         }
-        this.bookListDisplay = this.bookList.slice();
+        this.bookListDisplay = this.bookList.filter(b => this.filterFn(b));
     }
 
     openAddBookDialog = () => {
@@ -325,7 +362,7 @@ export class BookListComponent implements OnInit {
             this.messageList = [...this.messageList, ...res.message];
 
             this.bookList.push(res.data as Book);
-            this.bookListDisplay = this.bookList.slice();
+            this.bookListDisplay = this.bookList.filter(b => this.filterFn(b));
         });
     }
 }
