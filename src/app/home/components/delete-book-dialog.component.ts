@@ -11,9 +11,9 @@ import {
 } from '@angular/material/dialog';
 
 import { 
-    IDeleteBookDialogData,
     IDeleteBookDialogResData,
 } from '../../vendor';
+
 import { Book } from '../../models';
 
 @Component({
@@ -23,27 +23,25 @@ import { Book } from '../../models';
 export class DeleteBookDialog implements OnInit{
     constructor(
         public dialogRef: MatDialogRef<DeleteBookDialog>,
-        @Inject(MAT_DIALOG_DATA) public data: IDeleteBookDialogData 
-    ) {
-        console.log(data)
-    }
+        @Inject(MAT_DIALOG_DATA) public data: Book
+    ) {}
 
     recycled: IDeleteBookDialogResData = {
         recycled: true,
         remove: false,
-        book: this.data.book
+        book: this.data
     }
 
     deleteRecycled: IDeleteBookDialogResData = {
         recycled: false,
         remove: true,
-        book: this.data.book
+        book: this.data
     }
 
     recoverRecycled: IDeleteBookDialogResData = {
         recycled: false,
         remove: false,
-        book: this.data.book
+        book: this.data
     }
     ngOnInit() {}
 

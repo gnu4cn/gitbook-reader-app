@@ -1,7 +1,6 @@
 import { 
     Component, 
     OnInit, 
-    ChangeDetectorRef,
 } from '@angular/core';
 
 import { Router } from '@angular/router';
@@ -22,9 +21,7 @@ import {
     REGEXP_LOC,
     NewBookDialogData,
     NewBookDialogResData,
-    IDeleteBookDialogData,
     IDeleteBookDialogResData,
-    IBookDownloading,
     IQueryResult,
     IFilterItem,
     IFilter,
@@ -60,31 +57,27 @@ export class BookListComponent implements OnInit {
     }
 
     constructor(
-        private dialogDeleteBook: MatDialog,
-        private dialogNewBook: MatDialog,
+        private dialog: MatDialog,
         private crud: CrudService,
-        private cdr: ChangeDetectorRef,
     ) {}
 
     ngOnInit() {
         this.initData();
         this.bookListDisplay = this.bookList.filter(b => this.filterFn(b));
 
-        this.crud.ipcRenderer.on('new-downloading-progress', (ev, msg: IBookDownloading) => {
-            const index = this.bookList.findIndex(b => b.id === msg.book.id);
-            this.bookList.splice(index, 1);
+        this.crud.ipcRenderer.on('book-downloaded', (ev, book: Book) => {
+            const index = this.bookList.findIndex(b => b.id === book.id);
 
-            this.bookList.push(msg.book);
+            this.bookList.splice(index, 1);
+            this.bookList.push(book);
             this.bookListDisplay = this.bookList.filter(b => this.filterFn(b));
-            this.cdr.detectChanges();
         });
 
-        this.crud.ipcRenderer.on('git-clone-error', (ev, msg: IBookDownloading) => {
-            const index = this.bookList.findIndex(b => b.id === msg.book.id);
+        this.crud.ipcRenderer.on('error-occured', (ev, book: Book) => {
+            const index = this.bookList.findIndex(b => b.id === book.id);
             this.bookList.splice(index, 1);
-            this.bookList.push(msg.book);
+            this.bookList.push(book);
             this.bookListDisplay = this.bookList.filter(b => this.filterFn(b));
-            this.cdr.detectChanges();
         });
     }
 
@@ -218,9 +211,9 @@ export class BookListComponent implements OnInit {
     }
 
     openDeleteBookDialog = (book: Book) => {
-        const dataDialog: IDeleteBookDialogData = {book: book};
+        const dataDialog: Book = book;
 
-        const dialogRef = this.dialogDeleteBook.open(DeleteBookDialog, {
+        const dialogRef = this.dialog.open(DeleteBookDialog, {
             width: '480px',
             data: dataDialog
         });
@@ -277,7 +270,7 @@ export class BookListComponent implements OnInit {
     }
 
     openAddBookDialog = () => {
-        const dialogRef = this.dialogNewBook.open(NewBookDialog, {
+        const dialogRef = this.dialog.open(NewBookDialog, {
             width: '480px',
             data: { cateList: this.cateList, bookList: this.bookList}
         });

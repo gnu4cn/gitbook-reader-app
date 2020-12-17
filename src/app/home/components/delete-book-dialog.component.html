@@ -1,15 +1,15 @@
-<h1 mat-dialog-title>删除 - {{ this.data.book.name }}</h1>
+<h1 mat-dialog-title>删除 - {{ this.data.name }}</h1>
 <div mat-dialog-content>
     <p>删除注意事项：</p>
     <ul>
-        <li *ngIf="!this.data.book.recycled">选择放入“回收站”，可在回收站中查看并恢复删除的书籍</li>
+        <li *ngIf="!this.data.recycled">选择放入“回收站”，可在回收站中查看并恢复删除的书籍</li>
         <li>选择彻底删除，<ion-text color="danger">系统将删除下载的该书籍所有文件，并从数据库中移除其记录</ion-text></li>
         <li>关闭此对话框，将不进行任何操作</li>
     </ul>
 </div>
 <div mat-dialog-actions>
     <button mat-button (click)="onNoClick()">放弃</button>
-    <button *ngIf="!this.data.book.recycled" mat-button [mat-dialog-close]="recycled">放入垃圾桶</button>
-    <button *ngIf="this.data.book.recycled" color="success" mat-button [mat-dialog-close]="recoverRecycled">重新放回书架</button>
+    <button *ngIf="!this.data.recycled" mat-button [mat-dialog-close]="recycled">放入垃圾桶</button>
+    <button *ngIf="this.data.recycled" color="success" mat-button [mat-dialog-close]="recoverRecycled">重新放回书架</button>
     <button color="warn" mat-button [mat-dialog-close]="deleteRecycled">彻底删除</button>
 </div>

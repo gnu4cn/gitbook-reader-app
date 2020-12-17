@@ -10,7 +10,6 @@ import {
     IItem, 
     IQuery, 
     join as _join, 
-    IBookDownloading, 
     IBookDownloaded 
 } from './vendor';
 import { Book } from './models';
@@ -101,18 +100,12 @@ export class BookBackend {
         cb(child);
         child.on('message', async (msg: IIpcMessage) => {
             const title = msg.title;
-            let message: IBookDownloading;
             let query: IQuery;
             switch(title){
                 case 'new-downloading-progress':
                     this.book.downloaded = msg.data as number;
 
-                    message = {
-                        percent: msg.data as number,
-                        book: this.book,
-                    }
-
-                    this.insideWindow.webContents.send(title, message);
+                    this.insideWindow.webContents.send(title, this.book);
                     break;
                 case 'book-downloaded':
                     this.book.downloaded = 100;
@@ -126,17 +119,14 @@ export class BookBackend {
                     }
                     await this.crud.updateItem(query);
 
-                    message = {
-                        percent: msg.data as number,
-                        book: this.book,
-                    }
-                    this.insideWindow.webContents.send('new-downloading-progress', message);
+                    this.insideWindow.webContents.send(title, this.book);
 
                     child.kill('SIGINT');
                     break;
                 case 'error-occured':
                     const err: IError = msg.data as IError;
 
+                    this.book.downloaded = 0;
                     this.book.errMsg = err.message;
 
                     query = {
@@ -145,11 +135,7 @@ export class BookBackend {
                     }
                     await this.crud.updateItem(query);
 
-                    message = {
-                        percent: 0,
-                        book: this.book,
-                    }
-                    this.insideWindow.webContents.send('new-downloading-progress', message);
+                    this.insideWindow.webContents.send(title, this.book);
 
                     child.kill('SIGINT');
                     break;

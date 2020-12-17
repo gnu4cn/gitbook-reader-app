@@ -7,8 +7,8 @@
     "ng": "ng",
     "start": "ng serve",
     "deploy:github.io": "ng deploy --base-href=/gitbook-reader/",
-    "build:copy": "ionic build --prod&&npx cap copy",
-    "build": "ng build --prod",
+    "build:copy": "ionic build&&npx cap copy",
+    "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"

@@ -33,10 +33,6 @@ export interface IQueryResult {
     data?: IItem | Array<IItem>
 }
 
-export interface IDeleteBookDialogData {
-    book: Book;
-}
-
 export interface IDeleteBookDialogResData {
     recycled: boolean;
     remove: boolean;
@@ -51,11 +47,6 @@ export interface NewBookDialogData {
 export interface NewBookDialogResData {
     bookUri: string;
     cateList: Array<Category>;
-}
-
-export interface IBookDownloading {
-    book: Book;
-    completed: number;
 }
 
 // typeorm parts

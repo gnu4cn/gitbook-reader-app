@@ -59,11 +59,6 @@ export function join(start: string, end: string): string {
     return start + '/' + end;
 }
 
-export interface IBookDownloading {
-    book: Book;
-    percent: number;
-}
-
 export const asciiSpecialCharRegEx = new RegExp(/\.|\,|\:|\?|\;|\'|\"|\\|\/|\!|\@|\$|\%|\^|\&|\*|\(|\)|\#/, 'g');
 
 export type TableName = "Book" | "Writer" | "Category" | "Website";
