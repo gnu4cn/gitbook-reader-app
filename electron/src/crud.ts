@@ -6,10 +6,7 @@ import {
     TableName, 
     IFind,
     IItem, 
-    IWhereItem,
     IQuery,
-    IFindStatement,
-    IFindCondition, 
     IQueryResult,
 } from './vendor';
 
@@ -26,21 +23,76 @@ export class CRUD {
             database: './db.sqlite',
             entities: [ Category, Website, Writer, Book ],
         });
-        
+
         this.conn.connect();
     }
 
-    updateCCNA60D = async () => {
-        const bookRepo = this.conn.getRepository(Book);
-        const b = await bookRepo
-            .createQueryBuilder('book')
-            .where("book.name = :name", {name: 'ccna60d'})
-            .getOne();
+    getItem = async (query: IFind): Promise<IQueryResult> => {
+        let item: IItem;
+        let repo: any;
+        let message: Array<string|object> = [];
+        switch(query.table){
+            case 'Book':
+                try {
+                    repo = this.conn.getRepository(Book);
+                    item = await repo
+                        .createQueryBuilder('b')
+                        .where(`b.${query.conditions.field} = :value`, query.conditions.condition)
+                        .getOne();
 
-        if(b) {
-            b.downloaded = 100;
-            await bookRepo.save(b);
+                    message.push('成功获取到书籍')
+                } catch (err) {
+                    message.push(err);
+                    throw err
+                }
+
+                break
+            case 'Writer':
+                try {
+                    repo = this.conn.getRepository(Writer);
+                    item = await repo
+                        .createQueryBuilder('w')
+                        .where(`w.${query.conditions.field} = :value`, query.conditions.condition)
+                        .getOne();
+
+                    message.push('成功获取到作者')
+                } catch (err) {
+                    message.push(err);
+                    throw err
+                }
+                break
+            case 'Website':
+                try{
+                    repo = this.conn.getRepository(Website);
+                    item = await repo
+                        .createQueryBuilder('web')
+                        .where(`web.${query.conditions.field} = :value`, query.conditions.condition)
+                        .getOne();
+
+                    message.push('成功获取到托管平台')
+                } catch (err) {
+                    message.push(err);
+                    throw err
+                }
+
+                break
+            case 'Category':
+                try{
+                    repo = this.conn.getRepository(Category);
+                    item = await repo
+                        .createQueryBuilder('c')
+                        .where(`c.${query.conditions.field} = :value`, query.conditions.condition)
+                        .getOne();
+
+                    message.push('成功获取到类别')
+                } catch (err) {
+                    message.push(err);
+                    throw err
+                }
+                break
         }
+
+        return { message: message, data: item }
     }
 
     deleteItem = async (query: IQuery): Promise<IQueryResult> => {
@@ -111,7 +163,7 @@ export class CRUD {
                 break;
         }
 
-       return {message: message}
+        return {message: message}
     }
 
     addItem = async (query: IQuery): Promise<IQueryResult> => {
@@ -229,43 +281,20 @@ export class CRUD {
     }
 
     getItems = async(getParam: IFind): Promise<IQueryResult> => {
-        let findStatement: IFindStatement;
         let itemList: Array<IItem>;
         let message: Array<string|object> = [];
-
-        if(getParam.conditions) {
-            const conditions = getParam.conditions as Array<IFindCondition>; 
-
-            conditions.map(c => {
-                const field = c.field;
-                const list = c.itemList;
-
-                list.map(i => {
-                    const condition: IWhereItem = {
-                        field: field,
-                        item: i
-                    };
-                    findStatement.where.push(condition)
-                })
-            });
-        }
 
         switch(getParam.table){
             case 'Book':
                 try {
                     const bookRepo = this.conn.getRepository(Book);
-                    if(findStatement) {
-                        itemList = await bookRepo.find(findStatement);
-                    }
-                    else {
-                        itemList = await this.conn
-                            .getRepository(Book)
-                            .createQueryBuilder('book')
-                            .leftJoinAndSelect('book.writer', 'writer')
-                            .leftJoinAndSelect('book.website', 'website')
-                            .leftJoinAndSelect('book.cateList', 'cateList')
-                            .getMany();
-                    }
+                    itemList = await this.conn
+                        .getRepository(Book)
+                        .createQueryBuilder('book')
+                        .leftJoinAndSelect('book.writer', 'writer')
+                        .leftJoinAndSelect('book.website', 'website')
+                        .leftJoinAndSelect('book.cateList', 'cateList')
+                        .getMany();
 
                     message.push(`获取到 ${itemList.length} 本书籍`);
                 } catch (err){ 
@@ -276,17 +305,12 @@ export class CRUD {
             case 'Writer':
                 try {
                     const writerRepo = this.conn.getRepository(Writer);
-                    if(findStatement) { 
-                        itemList = await writerRepo.find(findStatement);
-                    }
-                    else {
-                        itemList = await this.conn
-                            .getRepository(Writer)
-                            .createQueryBuilder('writer')
-                            .leftJoinAndSelect('writer.websiteList', 'websiteList')
-                            .getMany();
-                    }
-                    
+                    itemList = await this.conn
+                        .getRepository(Writer)
+                        .createQueryBuilder('writer')
+                        .leftJoinAndSelect('writer.websiteList', 'websiteList')
+                        .getMany();
+
                     message.push(`获取到 ${itemList.length} 名作者`);
                 } catch (err){ 
                     message.push(err);
@@ -296,8 +320,7 @@ export class CRUD {
             case 'Category':
                 try {
                     const cateRepo = this.conn.getRepository(Category);
-                    if(findStatement) itemList = await cateRepo.find(findStatement);
-                    else itemList = await cateRepo.find();
+                    itemList = await cateRepo.find();
 
                     message.push(`获取到 ${itemList.length} 个类别`);
                 } catch (err){ 
@@ -308,8 +331,7 @@ export class CRUD {
             case 'Website':
                 try {
                     const websiteRepo = this.conn.getRepository(Website);
-                    if(findStatement) itemList = await websiteRepo.find(findStatement);
-                    else itemList = await websiteRepo.find();
+                    itemList = await websiteRepo.find();
 
                     message.push(`获取到 ${itemList.length} 个托管平台`);
                 } catch (err){ 

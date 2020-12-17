@@ -75,23 +75,16 @@ export interface IQuery {
     item: Book|Writer|Category|Website;
 }
 
-export type FieldName = "books" | "writer" | "writers"| "categories" | "website";
-
+export interface IQueryCondition {
+    value: string|number;
+}
+export type FieldName = "id" | "name" | "desc"| "downloaded" | "recycled" | "cateList" | "writer" | "website";
 export interface IFindCondition {
     field: FieldName;
-    itemList: Array<IItem>;
+    condition: IQueryCondition;
 }
 
 export interface IFind {
     table: TableName
-    conditions?: Array<IFindCondition>;
-}
-
-export interface IWhereItem {
-    field: FieldName;
-    item: IItem;
-}
-
-export interface IFindStatement {
-    where: Array<IWhereItem> 
+    conditions?: IFindCondition;
 }

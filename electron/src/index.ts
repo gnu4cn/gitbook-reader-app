@@ -8,6 +8,7 @@ import { join } from 'path';
 import { 
     IItem, 
     IQuery,
+    IFind,
     IQueryResult
 } from './vendor';
 import { Book } from './models';
@@ -95,6 +96,12 @@ export default class Main {
         ipcMain.on('add-item', async (event, query: IQuery) =>{
             let res: IQueryResult;
             await Main.crud.addItem(query).then(_ => res = _);
+            event.returnValue = res;
+        });
+
+        ipcMain.on('get-item', async (event, query: IFind) =>{
+            let res: IQueryResult;
+            await Main.crud.getItem(query).then(_ => res = _);
             event.returnValue = res;
         });
 

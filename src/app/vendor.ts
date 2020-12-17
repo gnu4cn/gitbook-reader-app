@@ -18,6 +18,11 @@ interface IFilterWebsite {
 
 export type IFilterItem = IFilterCate | IFilterWriter | IFilterWebsite
 
+export interface IFilter {
+    displayRecycled: boolean;
+    filterList: Array<IFilterItem>
+}
+
 export interface IFilterAction {
     action: "add"|"remove";
     filterItem: IFilterCate | IFilterWriter | IFilterWebsite
@@ -34,6 +39,7 @@ export interface IDeleteBookDialogData {
 
 export interface IDeleteBookDialogResData {
     recycled: boolean;
+    remove: boolean;
     book: Book;
 }
 
@@ -66,17 +72,19 @@ export interface IQuery {
     item: Book|Writer|Category|Website;
 }
 
-export type FieldName = "books" | "writer" | "writers"| "categories" | "website";
+export interface IQueryCondition {
+    value: string|number;
+}
+export type FieldName = "id" | "name" | "desc"| "downloaded" | "recycled" | "cateList" | "writer" | "website";
 export interface IFindCondition {
     field: FieldName;
-    itemList: Array<IItem>;
+    condition: IQueryCondition;
 }
 
 export interface IFind {
     table: TableName
-    conditions?: Array<IFindCondition>;
+    conditions?: IFindCondition;
 }
-
 
 export const REGEXP_ZH = new RegExp(/[\u3400-\u4DB5\u4E00-\u9FEA\uFA0E\uFA0F\uFA11\uFA13\uFA14\uFA1F\uFA21\uFA23\uFA24\uFA27-\uFA29\u{20000}-\u{2A6D6}\u{2A700}-\u{2B734}\u{2B740}-\u{2B81D}\u{2B820}-\u{2CEA1}\u{2CEB0}-\u{2EBE0}]/u);
 

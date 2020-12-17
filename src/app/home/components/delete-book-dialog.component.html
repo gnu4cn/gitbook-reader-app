@@ -8,7 +8,8 @@
     </ul>
 </div>
 <div mat-dialog-actions>
-    <button mat-button (click)="onNoClick()">放弃删除</button>
-    <button *ngIf="!this.data.book.recycled" mat-button [mat-dialog-close]="recycled">移入回收站</button>
-    <button mat-button [mat-dialog-close]="notRecycled">彻底删除</button>
+    <button mat-button (click)="onNoClick()">放弃</button>
+    <button *ngIf="!this.data.book.recycled" mat-button [mat-dialog-close]="recycled">放入垃圾桶</button>
+    <button *ngIf="this.data.book.recycled" color="success" mat-button [mat-dialog-close]="recoverRecycled">重新放回书架</button>
+    <button color="warn" mat-button [mat-dialog-close]="deleteRecycled">彻底删除</button>
 </div>

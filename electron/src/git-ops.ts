@@ -7,7 +7,7 @@ import { IIpcMessage, IBookDownloaded } from './vendor';
 
 export const clone = async (bookDir: string, bookUri: string) => {
     let bookCommit = '';
-    let progress: number = 0;
+    let progress = 1;
     const opts = {
         fetchOpts: {
             callbacks: {

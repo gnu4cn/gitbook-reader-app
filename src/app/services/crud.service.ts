@@ -22,6 +22,12 @@ export class CrudService {
         );
     }
 
+    getItem(query: IFind): Observable<IQueryResult> {
+        return of(this.ipcRenderer.sendSync('get-item', query)).pipe(
+            catchError((err: any) => Observable.throw(err.json))
+        );
+    }
+
     addItem(query: IQuery): Observable<IQueryResult> {
         return of(this.ipcRenderer.sendSync('add-item', query)).pipe(
             catchError((err: any) => Observable.throw(err.json))

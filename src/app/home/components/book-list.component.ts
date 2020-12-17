@@ -15,6 +15,7 @@ import { CrudService } from '../../services/crud.service';
 
 import { NewBookDialog } from './new-book-dialog.component';
 import { DeleteBookDialog } from './delete-book-dialog.component';
+
 import { 
     IQuery,
     REGEXP_SITE, 
@@ -26,7 +27,9 @@ import {
     IBookDownloading,
     IQueryResult,
     IFilterItem,
-    IFilterAction
+    IFilter,
+    IFilterAction,
+    IFind
 } from '../../vendor';
 
 @Component({
@@ -43,7 +46,10 @@ export class BookListComponent implements OnInit {
     cateList: Array<Category> = [];
     websiteList: Array<Website> = [];
     messageList: Array<string|object> = [];
-    private filter: Array<IFilterItem> = [];
+    private filter: IFilter = {
+        displayRecycled: false,
+        filterList: []
+    };
 
     get recycledList () {
         return this.bookList.filter(b => b.recycled === true);
@@ -53,7 +59,9 @@ export class BookListComponent implements OnInit {
         return this.bookList.filter(b => b.recycled === false);
     }
 
-    constructor(private dialog: MatDialog,
+    constructor(
+        private dialogDeleteBook: MatDialog,
+        private dialogNewBook: MatDialog,
         private crud: CrudService,
         private cdr: ChangeDetectorRef,
     ) {}
@@ -88,47 +96,50 @@ export class BookListComponent implements OnInit {
         let index: number;
         switch (filterAction.action){
             case 'add':
-                index = this.filter.findIndex((filterItem: IFilterItem) => {
+                index = this.filter.filterList.findIndex((filterItem: IFilterItem) => {
                     const key = Object.keys(filterItem)[0];
                     const _key = Object.keys(filterAction.filterItem)[0];
                     return key === _key && filterItem[key].id === filterAction[key].id;
                 });
 
-                if(index < 0)this.filter.push(filterAction.filterItem);
+                if(index < 0)this.filter.filterList.push(filterAction.filterItem);
                 break;
             case 'remove':
-                index = this.filter.findIndex((filterItem: IFilterItem) => {
+                index = this.filter.filterList.findIndex((filterItem: IFilterItem) => {
                     const key = Object.keys(filterItem)[0];
                     const _key = Object.keys(filterAction.filterItem)[0];
                     return key === _key && filterItem[key].id === filterAction[key].id;
                 });
 
-                if(index >= 0)this.filter.splice(index, 1);
+                if(index >= 0)this.filter.filterList.splice(index, 1);
                 break;
         }
     }
 
     displayRecycledBooks = () => {
+        this.filter.displayRecycled = true;
         this.bookListDisplay = this.recycledList.slice();
     }
 
     displayBooksOnShelf = () => {
+        this.filter.displayRecycled = false;
         this.bookListDisplay = this.onShelfList.slice();
     }
 
     // 尚待优化
     filterFn = (book: Book): boolean => {
+        if(this.filter.displayRecycled) return book.recycled;
         // 只显示不在回收站的书籍
         if(book.recycled) return false;
 
         // 没有过滤条件全部显示
-        if(this.filter.length === 0)return true;
+        if(this.filter.filterList.length === 0)return true;
 
         // 有过滤条件时, 只要有一个条件满足就显示？还是所有条件都满足时才显示？
         let _writer: boolean = false;
         let _website: boolean = false;
         let _cate: boolean = false;
-        this.filter.forEach(filterItem => {
+        this.filter.filterList.forEach(filterItem => {
             const key = Object.keys(filterItem)[0];
 
             switch(key){
@@ -209,7 +220,7 @@ export class BookListComponent implements OnInit {
     openDeleteBookDialog = (book: Book) => {
         const dataDialog: IDeleteBookDialogData = {book: book};
 
-        const dialogRef = this.dialog.open(DeleteBookDialog, {
+        const dialogRef = this.dialogDeleteBook.open(DeleteBookDialog, {
             width: '480px',
             data: dataDialog
         });
@@ -234,8 +245,12 @@ export class BookListComponent implements OnInit {
             this.crud.updateItem(query).subscribe((queryRes: IQueryResult) => {
                 this.bookList.push(queryRes.data as Book);
             });
+
+            this.bookListDisplay = this.bookList.filter(b => this.filterFn(b));
+            return 0;
         }
-        else {
+
+        if (!res.recycled && res.remove){
             query = {
                 table: 'Book',
                 item: res.book
@@ -243,12 +258,26 @@ export class BookListComponent implements OnInit {
             this.crud.deleteItem(query).subscribe((res: IQueryResult) => {
                 this.messageList = [...this.messageList, ...res.message];
             });
+
+            this.bookListDisplay = this.bookList.filter(b => this.filterFn(b));
+            return 0;
         }
+
+        res.book.recycled = false;
+        query = {
+            table: 'Book',
+            item: res.book
+        }
+        this.crud.updateItem(query).subscribe((queryRes: IQueryResult) => {
+            this.bookList.push(queryRes.data as Book);
+        });
+
         this.bookListDisplay = this.bookList.filter(b => this.filterFn(b));
+        return 0;
     }
 
     openAddBookDialog = () => {
-        const dialogRef = this.dialog.open(NewBookDialog, {
+        const dialogRef = this.dialogNewBook.open(NewBookDialog, {
             width: '480px',
             data: { cateList: this.cateList, bookList: this.bookList}
         });
