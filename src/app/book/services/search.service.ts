@@ -12,7 +12,7 @@ import stringify from 'remark-stringify';
 import slug from 'remark-slug';
 import { links, images } from '../shared/links';
 import frontmatter from 'remark-frontmatter';
-import { getTitle } from '@swimlane/docspa-remark-preset';
+import { getTitle } from '../gbr-preset/index';
 
 import { FetchService } from './fetch.service';
 import { SettingsService } from './settings.service';

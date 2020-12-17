@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 
 import { HooksService } from '../services/hooks.service';
 import { MarkdownService } from '../markdown/markdown.service';
-import { customBlocks } from '@swimlane/docspa-remark-preset';
+import { customBlocks } from '../gbr-preset/index';
 
 @NgModule({
 })

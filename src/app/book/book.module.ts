@@ -30,7 +30,7 @@ import { createCustomElement } from '@angular/elements';
 
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 
-import { preset } from '@swimlane/docspa-remark-preset';
+import { preset } from './gbr-preset/index';
 // import { DocspaStackblitzModule } from '@swimlane/docspa-stackblitz';
 // import * as squeezeParagraphs from 'remark-squeeze-paragraphs';
 
