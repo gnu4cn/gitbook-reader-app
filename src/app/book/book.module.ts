@@ -28,8 +28,6 @@ import { ElementInputDirective } from './directives/element-input.directive';
 
 import { createCustomElement } from '@angular/elements';
 
-import { NgxChartsModule } from '@swimlane/ngx-charts';
-
 import { preset } from './gbr-preset/index';
 // import { DocspaStackblitzModule } from '@swimlane/docspa-stackblitz';
 // import * as squeezeParagraphs from 'remark-squeeze-paragraphs';

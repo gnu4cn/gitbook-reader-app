@@ -36,7 +36,6 @@
     "@ngx-loading-bar/core": "^5.1.1",
     "@ngx-loading-bar/http-client": "^5.1.1",
     "@rigor789/remark-autolink-headings": "^5.1.0",
-    "@swimlane/ngx-charts": "^16.0.0",
     "@ungap/global-this": "^0.4.3",
     "@webcomponents/custom-elements": "^1.4.3",
     "deepmerge": "^4.2.2",
