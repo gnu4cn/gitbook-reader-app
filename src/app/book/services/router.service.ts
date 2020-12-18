@@ -46,7 +46,10 @@ export class RouterService {
     }
 
     activateRoute(snapshot: ActivatedRouteSnapshot) {
-        let path = this._url.pathname;
+        let path: string = '';
+        try {
+            path = decodeURIComponent(this._url.pathname);
+        }catch(e){console.log(e)};
         const fragment = this._url.hash ? decodeURI(this._url.hash) : '';
 
         let re = new RegExp(/\.md/)
