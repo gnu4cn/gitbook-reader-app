@@ -68,8 +68,8 @@ export class Book extends Meta{
     @Column({default: ''})
     errMsg: string; 
 
-    @Column({default: 0})
-    downloaded: number;
+    @Column({default: false})
+    downloaded: boolean;
 
     @Column({default: 0})
     openCount: number;

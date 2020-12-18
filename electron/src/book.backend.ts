@@ -10,7 +10,8 @@ import {
     IItem, 
     IQuery, 
     join as _join, 
-    IBookDownloaded 
+    IBookDownloaded, 
+    IProgressMessage
 } from './vendor';
 import { Book } from './models';
 
@@ -98,17 +99,20 @@ export class BookBackend {
         const params = ['-d', this.bookDir, '-s', this.bookUri];
         const child = fork(resolve(__dirname, 'git-ops.js'), params, {stdio: ['ipc']});
         cb(child);
+
         child.on('message', async (msg: IIpcMessage) => {
             const title = msg.title;
             let query: IQuery;
             switch(title){
                 case 'new-downloading-progress':
-                    this.book.downloaded = msg.data as number;
-
-                    this.insideWindow.webContents.send(title, this.book);
+                    const progressMessage: IProgressMessage = {
+                        book: this.book,
+                        progress: msg.data as number
+                    }
+                    this.insideWindow.webContents.send(title, progressMessage);
                     break;
                 case 'book-downloaded':
-                    this.book.downloaded = 100;
+                    this.book.downloaded = true;
                     const data: IBookDownloaded = msg.data as IBookDownloaded;
                     this.book.commit = data.commit;
                     this.book.desc = data.desc;
@@ -126,7 +130,8 @@ export class BookBackend {
                 case 'error-occured':
                     const err: IError = msg.data as IError;
 
-                    this.book.downloaded = 0;
+                    this.book.downloaded = false;
+                    this.book.downloadable = false;
                     this.book.errMsg = err.message;
 
                     query = {

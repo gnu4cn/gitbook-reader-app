@@ -4,6 +4,11 @@ interface UnknownData {
     [key: string]: unknown;
 }
 
+export interface IProgressMessage {
+    book: Book;
+    progress: number
+}
+
 interface IFilterWriter {
     writer: Writer
 }

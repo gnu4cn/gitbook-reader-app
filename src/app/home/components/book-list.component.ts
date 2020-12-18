@@ -193,7 +193,7 @@ export class BookListComponent implements OnInit {
 
         const index = this.bookList.findIndex(b => b.id === book.id);
         this.bookList.splice(index, 1);
-        book.downloaded = 1;
+        book.downloaded = true;
         this.bookList.push(book);
         this.bookListDisplay = this.bookList.filter(b => this.filterFn(b));
     }

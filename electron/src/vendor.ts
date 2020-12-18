@@ -10,6 +10,11 @@ export interface IQueryResult {
     data?: IItem | Array<IItem>
 }
 
+export interface IProgressMessage {
+    book: Book;
+    progress: number
+}
+
 export interface IBookDownloaded {
     desc: string;
     commit: string;
