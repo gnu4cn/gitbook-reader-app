@@ -1,3 +1,36 @@
+<ion-grid>
+    <ion-row>
+        <!-- Books added already -->
+        <ion-col *ngFor="let book of sortBy(bookListDisplay, 'name')" sizeXs="12" sizeSm="6" sizeLg="4" sizeXl="4">
+            <mat-card class="book-card">
+
+                <div style="background-image: url('assets/images/hard-cover-lay-flat.jpg'); background-size: auto 50px;">
+                    <mat-card-title style="position: absolute; left: 10px; top: 10px;">{{book.name}}</mat-card-title>
+                </div>
+
+                <mat-card-header>
+                    <div mat-card-avatar 
+                         style="background-image: url('assets/images/avatar.png'); background-size: cover;">
+                    </div>
+                    <mat-card-title>{{book.writer.name}}</mat-card-title>
+                    <mat-card-subtitle>{{book.website.uri}}</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>{{book.desc}}</mat-card-content>
+                <mat-card-actions fxLayoutAlign="end end">
+                    <button mat-button *ngIf="book.downloaded" (click)="openBook(book)">打开阅读</button>
+                    <button mat-button *ngIf="!book.downloaded && book.downloadable" (click)="startDownload(book)">下载</button>
+                    <button mat-button *ngIf="!book.recycled && book.downloaded">
+                        <ion-icon name="close-outline" sizme="small" (click)="openDeleteBookDialog(book)"></ion-icon>删除
+                    </button>
+                    <button mat-button *ngIf="book.recycled">
+                        <ion-icon name="cog-outline" sizme="small" (click)="openDeleteBookDialog(book)"></ion-icon>恢复/删除
+                    </button>
+                </mat-card-actions>
+            </mat-card>
+        </ion-col>
+    </ion-row>
+</ion-grid>
+
 <ion-fab vertical="bottom" horizontal="start">
     <ion-fab-button color="light" (click)="openAddBookDialog()">
         <ion-avatar>
@@ -22,32 +55,4 @@
     </ion-fab-button>
 </ion-fab>
 
-<ion-grid>
-    <ion-row>
-        <!-- Books added already -->
-        <ion-col *ngFor="let book of sortBy(bookListDisplay, 'name')" sizeXs="12" sizeSm="6" sizeLg="4" sizeXl="4">
-            <mat-card class="book-card">
-                <mat-card-title style="position: absolute; left: 50%; top: 50%;">{{book.name}}</mat-card-title>
-                <img mat-card-image src="assets/images/hard-cover-lay-flat.jpg" alt="book card image">
-                <mat-card-header>
-                    <div mat-card-avatar 
-                         style="background-image: url('assets/images/avatar.png'); background-size: cover;">
-                    </div>
-                    <mat-card-title>{{book.writer.name}}</mat-card-title>
-                    <mat-card-subtitle>{{book.website.uri}}</mat-card-subtitle>
-                </mat-card-header>
-                <mat-card-content>{{book.desc}}</mat-card-content>
-                <mat-card-actions>
-                    <button mat-button *ngIf="book.downloaded" (click)="openBook(book)">打开阅读</button>
-                    <button mat-button *ngIf="!book.downloaded && book.downloadable" (click)="startDownload(book)">下载</button>
-                    <button mat-button *ngIf="!book.recycled && book.downloaded">
-                        <ion-icon name="close-outline" sizme="small" (click)="openDeleteBookDialog(book)"></ion-icon>删除
-                    </button>
-                    <button mat-button *ngIf="book.recycled">
-                        <ion-icon name="cog-outline" sizme="small" (click)="openDeleteBookDialog(book)"></ion-icon>恢复/删除
-                    </button>
-                </mat-card-actions>
-            </mat-card>
-        </ion-col>
-    </ion-row>
-</ion-grid>
+
