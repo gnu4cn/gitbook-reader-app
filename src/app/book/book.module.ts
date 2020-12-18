@@ -40,6 +40,7 @@ import { ContentSearchDirective } from './directives/content-search.directive';
 
 import { environment } from '../../environments/environment';
 import { config } from '../gbr.config';
+
 @NgModule({
     imports: [
         CommonModule,

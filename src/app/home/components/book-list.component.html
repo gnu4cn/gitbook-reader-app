@@ -15,7 +15,10 @@
                     <mat-card-title>{{book.writer.name}}</mat-card-title>
                     <mat-card-subtitle>{{book.website.uri}}</mat-card-subtitle>
                 </mat-card-header>
-                <mat-card-content>{{book.desc}}</mat-card-content>
+                <mat-card-content>
+                    <docspa-md-include [path]="{{book.website.uri}}/{{book.writer.name}}/{{book.name}}/README.md" 
+                    [lines]=10></docspa-md-include>
+                </mat-card-content>
                 <mat-card-actions fxLayoutAlign="end end">
                     <button mat-button *ngIf="book.downloaded" (click)="openBook(book)">打开阅读</button>
                     <button mat-button *ngIf="!book.downloaded && book.downloadable" (click)="startDownload(book)">下载</button>

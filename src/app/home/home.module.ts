@@ -6,6 +6,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { MaterialModule } from '../material.module';
 
+import { BookPageModule } from '../book/book.module';
 import { BookListComponent } from './components/book-list.component';
 import { NewBookDialog } from './components/new-book-dialog.component';
 import { DeleteBookDialog } from './components/delete-book-dialog.component';
@@ -18,6 +19,7 @@ import { HomePage } from './home.page';
         CommonModule,
         FormsModule,
         IonicModule,
+        BookPageModule,
         MaterialModule,
         HomePageRoutingModule
     ],

@@ -18,13 +18,13 @@ class Meta {
 
     @UpdateDateColumn()
     dateUpdated: Date;
+
+    @Column({default: ''})
+    name: string;
 }
 
 @Entity()
 export class Category extends Meta{
-    @Column()
-    name: string;
-
     @ManyToMany(type => Book, book => book.cateList)
     bookList: Book[];
 }
@@ -43,9 +43,6 @@ export class Website extends Meta{
 
 @Entity()
 export class Writer extends Meta{
-    @Column()
-    name: string;
-
     @ManyToMany(type => Website, website => website.writerList)
     @JoinTable()
     websiteList: Array<Website>;
@@ -58,9 +55,6 @@ export class Writer extends Meta{
 export class Book extends Meta{
     @Column({default: ''})
     title: string;
-
-    @Column()
-    name: string;
 
     @Column({default: ''})
     commit: string;

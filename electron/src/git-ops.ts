@@ -37,26 +37,27 @@ export const clone = async (bookDir: string, bookUri: string) => {
         await ensureDirSync(bookDir);
 
         Git.Clone.clone(bookUri, bookDir, opts)
-            .then(repo => {
-                return repo.getMasterCommit();
-            })
-            .then(commit => {
-                bookCommit = commit.sha();
-                return commit.getEntry("README.md");
-            })
-            .then(entry => {
-                return entry.getBlob();
-            })
-            .then(async (blob) => {
-                //const firstTenLines = blob.toString().split('\n').slice(0, 10).join('\n');
-                const bookDesc = blob.toString().split('\n').slice(0, 10).join('\n');
-
+            .then(async(repo) => {
+//
+// 保留这些行的目的是记住怎么获取 repo 中的文件
+//
+//                return repo.getMasterCommit();
+//            })
+//            .then(commit => {
+//                bookCommit = commit.sha();
+//                return commit.getEntry("README.md");
+//            })
+//            .then(entry => {
+//                return entry.getBlob();
+//            })
+//            .then(async (blob) => {
+//                //const firstTenLines = blob.toString().split('\n').slice(0, 10).join('\n');
+//                const bookDesc = blob.toString().split('\n').slice(0, 10).join('\n');
                 // 处理文件、目录中的特殊字符
                 await escapeFileNames(bookDir);
 
                 // 发送消息给父进程
                 const msg: IBookDownloaded = {
-                    desc: bookDesc,
                     commit: bookCommit
                 }
                 if(process.send){

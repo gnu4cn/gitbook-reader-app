@@ -115,7 +115,6 @@ export class BookBackend {
                     this.book.downloaded = true;
                     const data: IBookDownloaded = msg.data as IBookDownloaded;
                     this.book.commit = data.commit;
-                    this.book.desc = data.desc;
 
                     query = {
                         table: 'Book',

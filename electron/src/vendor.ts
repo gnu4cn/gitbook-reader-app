@@ -16,7 +16,6 @@ export interface IProgressMessage {
 }
 
 export interface IBookDownloaded {
-    desc: string;
     commit: string;
 }
 

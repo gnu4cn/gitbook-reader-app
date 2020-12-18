@@ -29,6 +29,9 @@ export class EmbedMarkdownComponent implements OnInit, OnChanges {
     path = '';
 
     @Input()
+    lines: number;
+
+    @Input()
     isPageContent = false;
 
     @Input()
@@ -93,7 +96,12 @@ export class EmbedMarkdownComponent implements OnInit, OnChanges {
             _vfile.contents = `~~~${codeblock}\n${_vfile.contents}\n~~~`;
         }
 
+
         await this.markdownService.process(_vfile);
+        const contents: string = _vfile.contents as string;
+
+        const _html = this.lines ? contents.split('\n').slice(0, this.lines).join('\n') : contents;
+
         this.html = bypassSecurity ? this.sanitizer.bypassSecurityTrustHtml(_vfile.contents as string) : _vfile.contents;
 
         setTimeout(() => {
