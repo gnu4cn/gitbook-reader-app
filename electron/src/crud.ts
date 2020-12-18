@@ -200,7 +200,9 @@ export class CRUD {
                     item = await websiteRepo.create(query.item);
                     await websiteRepo.save(item)
 
-                    message.push(`托管平台 ${item.uri} 成功添加`);
+                    const _item: Website = item as Website;
+
+                    message.push(`托管平台 ${_item.uri} 成功添加`);
                 } catch (err) {
                     message.push(err);
                     throw err

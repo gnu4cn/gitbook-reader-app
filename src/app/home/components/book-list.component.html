@@ -4,9 +4,7 @@
         <ion-col *ngFor="let book of sortBy(bookListDisplay, 'name')" sizeXs="12" sizeSm="6" sizeLg="4" sizeXl="4">
             <mat-card class="book-card">
 
-                <div style="background-image: url('assets/images/hard-cover-lay-flat.jpg'); background-size: auto 50px;">
-                    <mat-card-title style="position: absolute; left: 10px; top: 10px;">{{book.name}}</mat-card-title>
-                </div>
+                <mat-card-title>{{book.name}}</mat-card-title>
 
                 <mat-card-header>
                     <div mat-card-avatar 
@@ -15,9 +13,8 @@
                     <mat-card-title>{{book.writer.name}}</mat-card-title>
                     <mat-card-subtitle>{{book.website.uri}}</mat-card-subtitle>
                 </mat-card-header>
-                <mat-card-content>
-                    <docspa-md-include [path]="{{book.website.uri}}/{{book.writer.name}}/{{book.name}}/README.md" 
-                    [lines]=10></docspa-md-include>
+                <mat-card-content *ngIf="book.downloaded">
+                    <docspa-md-include [path]="book.desc" [lines]=10></docspa-md-include>
                 </mat-card-content>
                 <mat-card-actions fxLayoutAlign="end end">
                     <button mat-button *ngIf="book.downloaded" (click)="openBook(book)">打开阅读</button>
@@ -37,7 +34,8 @@
 <ion-fab vertical="bottom" horizontal="start">
     <ion-fab-button color="light" (click)="openAddBookDialog()">
         <ion-avatar>
-            <img src="assets/images/book_blank.png" />
+            <ion-icon name="add-outline" style="position: absolute; right: 5px; bottom: 10px;"></ion-icon>
+            <img src="assets/images/closed-book-clipart-12-512x512.png" />
         </ion-avatar>
     </ion-fab-button>
     <ion-fab-button color="light" (click)="displayBooksOnShelf()">

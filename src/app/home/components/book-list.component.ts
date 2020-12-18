@@ -1,6 +1,7 @@
 import { 
     Component, 
     OnInit, 
+    ChangeDetectorRef
 } from '@angular/core';
 
 import { Router } from '@angular/router';
@@ -25,6 +26,7 @@ import {
     IQueryResult,
     IFilterItem,
     IFilter,
+    IProgressMessage,
     IFilterAction,
     IFind
 } from '../../vendor';
@@ -58,6 +60,7 @@ export class BookListComponent implements OnInit {
 
     constructor(
         private dialog: MatDialog,
+        private cdr: ChangeDetectorRef,
         private crud: CrudService,
     ) {}
 
@@ -65,12 +68,13 @@ export class BookListComponent implements OnInit {
         this.initData();
         this.bookListDisplay = this.bookList.filter(b => this.filterFn(b));
 
-        this.crud.ipcRenderer.on('book-downloaded', (ev, book: Book) => {
-            const index = this.bookList.findIndex(b => b.id === book.id);
+        this.crud.ipcRenderer.on('book-downloaded', (ev, msg: IProgressMessage) => {
+            const index = this.bookList.findIndex(b => b.id === msg.book.id);
 
             this.bookList.splice(index, 1);
-            this.bookList.push(book);
+            this.bookList.push(msg.book);
             this.bookListDisplay = this.bookList.filter(b => this.filterFn(b));
+            this.cdr.detectChanges();
         });
 
         this.crud.ipcRenderer.on('error-occured', (ev, book: Book) => {
@@ -78,6 +82,7 @@ export class BookListComponent implements OnInit {
             this.bookList.splice(index, 1);
             this.bookList.push(book);
             this.bookListDisplay = this.bookList.filter(b => this.filterFn(b));
+            this.cdr.detectChanges();
         });
     }
 

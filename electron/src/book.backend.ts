@@ -68,8 +68,7 @@ export class BookBackend {
         });
 
         ipcMain.on('summary-request', async (event, bookPath) => {
-            const bookDir = join(this.booksDir, bookPath);
-            event.returnValue = getMdList(bookDir); 
+            event.returnValue = getMdList(this.bookDir); 
         })
 
         webContents.on('did-finish-load', () => {
@@ -103,15 +102,17 @@ export class BookBackend {
         child.on('message', async (msg: IIpcMessage) => {
             const title = msg.title;
             let query: IQuery;
+            let progressMessage: IProgressMessage;
             switch(title){
                 case 'new-downloading-progress':
-                    const progressMessage: IProgressMessage = {
+                    progressMessage = {
                         book: this.book,
                         progress: msg.data as number
                     }
                     this.insideWindow.webContents.send(title, progressMessage);
                     break;
                 case 'book-downloaded':
+                    this.book.desc = join(this.bookPath, 'README.md');
                     this.book.downloaded = true;
                     const data: IBookDownloaded = msg.data as IBookDownloaded;
                     this.book.commit = data.commit;
@@ -122,7 +123,12 @@ export class BookBackend {
                     }
                     await this.crud.updateItem(query);
 
-                    this.insideWindow.webContents.send(title, this.book);
+                    progressMessage = {
+                        book: this.book,
+                        progress: 100
+                    }
+
+                    this.insideWindow.webContents.send(title, progressMessage);
 
                     child.kill('SIGINT');
                     break;

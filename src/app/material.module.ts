@@ -13,6 +13,7 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { FormsModule, ReactiveFormsModule }   from '@angular/forms';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 @NgModule({
     declarations: [],
@@ -21,6 +22,7 @@ import { FormsModule, ReactiveFormsModule }   from '@angular/forms';
         MatFormFieldModule,
         MatProgressBarModule,
         MatInputModule,
+        MatSnackBarModule,
         MatDialogModule,
         MatCardModule,
         MatToolbarModule,
@@ -40,6 +42,7 @@ import { FormsModule, ReactiveFormsModule }   from '@angular/forms';
         MatDialogModule,
         MatCardModule,
         MatAutocompleteModule,
+        MatSnackBarModule,
         FormsModule,
         MatIconModule,
         MatProgressBarModule,
