@@ -76,7 +76,7 @@ export class TOCPaginationComponent implements OnInit, OnChanges {
 
     private pathChanges = (path: string) => {
         if(!path) path = 'README.md';
-        path = decodeURI(path);
+        path = decodeURIComponent(path);
 
         if(this.files === undefined){
             this.searchService.loadSummary().subscribe(paths => {
