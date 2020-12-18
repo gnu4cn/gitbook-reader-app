@@ -6,6 +6,7 @@ import markdown from 'remark-parse';
 import stringify from 'remark-stringify';
 import slug from 'remark-slug';
 import frontmatter from 'remark-frontmatter';
+import RegexEscape from 'regex-escape';
 
 import { RouterService } from '../services/router.service';
 import { MarkdownService } from '../markdown/markdown.service';
@@ -94,7 +95,7 @@ export class TOCPaginationComponent implements OnInit, OnChanges {
         // The original regexp is wrong
         // const re = new RegExp(`^\.?/?${path}$`);
 
-        const re = new RegExp(`^.*${path}.*$`);
+        const re = new RegExp(`^.*${RegexEscape(path)}.*$`);
         const index = this.files.findIndex(file => {
             return re.test(file.path);
         });

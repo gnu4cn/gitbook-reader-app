@@ -4,7 +4,7 @@
         "baseUrl": "./",
         "outDir": "./dist/out-tsc",
         "esModuleInterop": true,
-        "sourceMap": true,
+        "sourceMap": false,
         "declaration": false,
         "downlevelIteration": true,
         "emitDecoratorMetadata": true,
