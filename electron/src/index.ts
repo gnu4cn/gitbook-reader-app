@@ -20,12 +20,17 @@ import { loadingWindow } from './window.children';
 //import { createMenuTemplate } from './menu_template';
 
 // The MainWindow object can be accessed via myCapacitorApp.getMainWindow()
+interface IBookItem {
+    id: number;
+    book: BookBackend
+}
 export default class Main {
     static application: Electron.App;
 
     static myCapacitorApp = createCapacitorElectronApp();
     static winChildren: Array<Electron.BrowserWindow> = [];
     static processChildren: Array<ChildProcess> = [];
+    static bookList: Array<IBookItem> = [];
     static crud = new CRUD();
 
     // This method will be called when Electron has finished
@@ -84,8 +89,19 @@ export default class Main {
         });
 
         ipcMain.on('open-book', (event, book) => {
-            const _book = new BookBackend(booksDir, book, mainWindow, loadingWin);
-            _book.open(w => Main.winChildren.push(w));
+            const bookItem = {
+                id: book.id,
+                book: new BookBackend(booksDir, book, mainWindow, loadingWin)
+            }
+
+            Main.bookList.push(bookItem);
+            bookItem.book.open(w => {
+                Main.winChildren.push(w);
+                w.on('closed', () => {
+                    const index = Main.bookList.findIndex(bookItem => bookItem.id === book.id);
+                    delete Main.bookList[index];
+                });
+            });
         });
 
         ipcMain.on('download-book', (event, book: Book) => {

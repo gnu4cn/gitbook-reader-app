@@ -95,7 +95,7 @@ export const asciiSpecialCharRegEx = new RegExp(/\.|\,|\:|\?|\;|\'|\"|\\|\/|\!|\
 
 export interface IMessage {
     event: string;
-    data?: object | string;
+    data?: object | string | IQueryResult;
 }
 
 export interface Location {

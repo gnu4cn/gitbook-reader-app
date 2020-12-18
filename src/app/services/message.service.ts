@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 
-import { SafeHtml } from '@angular/platform-browser';
-
 import { IMessage } from '../vendor';
 
 @Injectable({
