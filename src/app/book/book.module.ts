@@ -33,8 +33,6 @@ import { preset } from './gbr-preset/index';
 // import * as squeezeParagraphs from 'remark-squeeze-paragraphs';
 
 import { EditOnGithubComponent } from './plugins/edit-on-github';
-import { TabsPluginModule } from './plugins/tabs.module';
-import { GridPluginModule } from './plugins/grid.module';
 import { SafeHtmlPipe } from './pipes/safe-html.pipe';
 
 import { GBR_CONFIG_TOKEN, GBR_ENVIRONMENT } from './gbr.tokens';
@@ -52,8 +50,6 @@ import { config } from '../gbr.config';
         MarkdownModule,
         MarkdownElementsModule,
         DocsifyPluginsModule,
-        TabsPluginModule,
-        GridPluginModule,
     ],
     declarations: [
         EditOnGithubComponent,
@@ -83,8 +79,6 @@ import { config } from '../gbr.config';
         MarkdownModule,
         MarkdownElementsModule,
         DocsifyPluginsModule,
-        TabsPluginModule,
-        GridPluginModule,
         EditOnGithubComponent,
         ListCollapseDirective,
         SectionScrollSpyDirective,

@@ -1,7 +1,7 @@
 import { Injectable, InjectionToken, Inject, Optional } from '@angular/core';
 
 import unified from 'unified';
-import markdown from 'remark-parse';
+import remark from 'remark';
 const gfm = require('remark-gfm');
 import remark2rehype from 'remark-rehype';
 import rehypeStringify from 'rehype-stringify';
@@ -29,8 +29,7 @@ export class MarkdownService {
         if (this._processor) {
             return this._processor;
         }
-        return this._processor = unified()
-            .use(markdown)
+        return this._processor = remark()
             .use(gfm)
             .use(this.config)
             .use(links, { locationService: this.locationService })

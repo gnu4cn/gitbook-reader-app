@@ -4,19 +4,12 @@ import math from 'remark-math';
 import katex from 'remark-html-katex';
 import gemojiToEmoji from 'remark-gemoji-to-emoji';
 import parseFrontmatter from 'remark-parse-yaml';
-import shortcodes from 'remark-shortcodes';
 import slug from 'remark-slug';
-import remarkAttr from 'remark-attr';
 import reporter from 'vfile-reporter';
 import sectionize from 'remark-sectionize';
 
-import customBlocks from './plugins/remark-custom-blocks-plugin';
-
 import { readMatter, getTitle } from './plugins/frontmatter';
 import { infoString, infoStringToAttr } from './plugins/misc';
-import { customBlocksOptions } from './plugins/remark-custom-blocks';
-import { customBlockquotes, customBlockquotesOptions } from './plugins/remark-custom-blockquotes';
-import { shortCodeProps } from './plugins/short-codes';
 import { prism } from './plugins/prism';
 import { mermaid } from './plugins/mermaid';
 
@@ -25,7 +18,7 @@ import { Root } from 'mdast';
 import { VFile } from 'vfile';
 import { Transformer } from 'unified';
 
-export { customBlocks, customBlockquotes, prism, mermaid, reporter, getTitle };
+export { prism, mermaid, reporter, getTitle };
 
 export function moveIds(): Transformer {
   return (tree: Root, file: VFile) => {
@@ -47,7 +40,6 @@ export const plugins = [
   readMatter,
   getTitle,
   infoString,
-  [ remarkAttr, { scope: 'permissive' } ],
   slug,
   [ headings, { behaviour: 'append' } ],
   sectionize,
@@ -56,10 +48,6 @@ export const plugins = [
   katex,
   gemojiToEmoji,
   infoStringToAttr,
-  [ customBlocks, customBlocksOptions ],
-  [ customBlockquotes, customBlockquotesOptions ],
-  shortcodes,
-  shortCodeProps,
   mermaid,
   prism
 ];

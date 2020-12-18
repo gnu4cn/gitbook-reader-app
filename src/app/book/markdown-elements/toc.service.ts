@@ -8,8 +8,7 @@ import visit from 'unist-util-visit';
 import toc from 'mdast-util-toc';
 import { resolve } from 'url';
 
-import unified from 'unified';
-import markdown from 'remark-parse';
+import remark from 'remark';
 import slug from 'remark-slug';
 import rehypeStringify from 'rehype-stringify';
 import remark2rehype from 'remark-rehype';
@@ -51,8 +50,7 @@ export class TocService {
         if (this._processor) {
             return this._processor;
         }
-        return this._processor = unified()
-            .use(markdown)
+        return this._processor = remark()
             .use(frontmatter)
             .use(slug)
             .use(this.removeNodesPlugin, this.minDepth)

@@ -57,10 +57,10 @@ export class BookBackend {
         });
 
         const webContents = bookWindow.webContents;
+        webContents.openDevTools();
 
         bookWindow.loadURL(this.bookUrl);
 
-        webContents.openDevTools();
 
         ipcMain.on('book-loading', () =>{
             this.loadingWin.show();

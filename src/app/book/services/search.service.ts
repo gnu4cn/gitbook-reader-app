@@ -6,8 +6,7 @@ import {
     catchError,
 } from "rxjs/operators";
 
-import unified from 'unified';
-import markdown from 'remark-parse';
+import remark from 'remark';
 import stringify from 'remark-stringify';
 import slug from 'remark-slug';
 import { links, images } from '../shared/links';
@@ -41,8 +40,7 @@ export class SearchService {
 
     // search segment
     private get processor() {
-        return unified() // md -> toc -> md + links
-            .use(markdown)
+        return remark() // md -> toc -> md + links
             .use(frontmatter)
             .use(slug)
             .use(getTitle as any)

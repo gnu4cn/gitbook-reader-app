@@ -4,8 +4,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { of } from 'rxjs';
 import { mergeMap, map } from 'rxjs/operators';
 
-import unified from 'unified';
-import markdown from 'remark-parse';
+import remark from 'remark';
 import visit from 'unist-util-visit';
 import slug from 'remark-slug';
 import * as MDAST from 'mdast';
@@ -24,7 +23,6 @@ import { TocService } from '../markdown-elements/toc.service';
 import { join, isAbsolutePath } from '../shared/utils';
 
 import type { VFile, Heading } from '../book.vendor';
-
 
 @Injectable({
     providedIn: 'root'
@@ -68,8 +66,7 @@ export class PrintService {
             };
         };
 
-        this.processLinks = unified()
-            .use(markdown)
+        this.processLinks = remark()
             .use(frontmatter)
             .use(slug)
             .use(this.tocService.linkPlugin)
@@ -77,8 +74,7 @@ export class PrintService {
             .use(raw)
             .use(rehypeStringify);
 
-        this.processor = unified()
-            .use(markdown)
+        this.processor = remark()
             .use(this.markdownService.remarkPlugins)
             .use(fixLinks)
             .use(fixIds)
@@ -120,7 +116,7 @@ export class PrintService {
         const toc = await this.processor.process(toc_vfile);
         const f = await this.fetchVfile(contentPage);
 
-        const content =`<h1 float="left">目 录</h1><br>${toc.contents}<hr><article class="print-page">${f.contents}</article>`; 
+        const content =`<h2 float="left">目 录</h2><br>${toc.contents}<hr><article class="print-page">${f.contents}</article>`; 
         return safe ? this.sanitizer.bypassSecurityTrustHtml(content) : content;
     }
 
