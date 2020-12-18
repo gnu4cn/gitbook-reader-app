@@ -1,0 +1,20 @@
+.downloading-progress-bar {
+  &.mat-progress-bar {
+    height: 10px;
+  }
+
+  .mat-progress-bar-fill::after {
+    background-color: #37474f;
+  }
+
+  .mat-progress-bar-buffer {
+    background-color: #90a4ae;
+  }
+
+  /* remove animation and the dots*/ 
+  .mat-progress-bar-background {
+    animation: none;
+    background-color: #eceff1;
+    fill: #eceff1;
+  }
+}

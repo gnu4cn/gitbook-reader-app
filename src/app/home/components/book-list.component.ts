@@ -74,6 +74,10 @@ export class BookListComponent implements OnInit {
             this.bookList.splice(index, 1);
             this.bookList.push(msg.book);
             this.bookListDisplay = this.bookList.filter(b => this.filterFn(b));
+            document
+                .getElementById(`delete-book-${msg.book.id}`)
+                .setAttribute('disabled', 'true');
+
             this.cdr.detectChanges();
         });
 
@@ -195,12 +199,9 @@ export class BookListComponent implements OnInit {
 
     startDownload = (book: Book) => {
         this.crud.ipcRenderer.send('download-book', book);
-
-        const index = this.bookList.findIndex(b => b.id === book.id);
-        this.bookList.splice(index, 1);
-        book.downloaded = true;
-        this.bookList.push(book);
-        this.bookListDisplay = this.bookList.filter(b => this.filterFn(b));
+        document
+            .getElementById(`download-book-${book.id}`)
+            .setAttribute('disabled', 'true');
     }
 
     openBook(book: Book) {
@@ -293,7 +294,8 @@ export class BookListComponent implements OnInit {
 
         const site = newBookUri.match(REGEXP_SITE)[0];
         const [ writerName, name ] = newBookUri.replace(REGEXP_SITE, '').match(REGEXP_LOC)[0].split('/');
-        newBook.name = name;
+        const re = new RegExp(/\.git$/)
+        newBook.name = re.test(name) ? name.replace(re, '') : name;
 
         const website = this.websiteList.find(w => w.uri === site);
         if (website){

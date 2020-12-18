@@ -1,3 +1,2 @@
-<p>
-  snackbar works!
-</p>
+<mat-label class="progress-bar-label">{{data.book.name}} - {{data.progress}}%<mat-label>
+<mat-progress-bar class="downloading-progress-bar" mode="determinate" [value]="data.progress"></mat-progress-bar>

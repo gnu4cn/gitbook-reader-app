@@ -3,9 +3,7 @@
         <!-- Books added already -->
         <ion-col *ngFor="let book of sortBy(bookListDisplay, 'name')" sizeXs="12" sizeSm="6" sizeLg="4" sizeXl="4">
             <mat-card class="book-card">
-
-                <mat-card-title>{{book.name}}</mat-card-title>
-
+                <mat-card-title *ngIf="!book.downloaded">{{book.name}}</mat-card-title>
                 <mat-card-header>
                     <div mat-card-avatar 
                          style="background-image: url('assets/images/avatar.png'); background-size: cover;">
@@ -14,16 +12,20 @@
                     <mat-card-subtitle>{{book.website.uri}}</mat-card-subtitle>
                 </mat-card-header>
                 <mat-card-content *ngIf="book.downloaded">
-                    <docspa-md-include [path]="book.desc" [lines]=10></docspa-md-include>
+                    <docspa-md-include [isPageContent]="true" [path]="book.desc" [lines]=3></docspa-md-include>
                 </mat-card-content>
+                <mat-card-content *ngIf="book.errMsg">
+                    <ion-text color="danger">{{book.errMsg}} - 无法下载，建议删除</ion-text>
+                </mat-card-content>
+
                 <mat-card-actions fxLayoutAlign="end end">
-                    <button mat-button *ngIf="book.downloaded" (click)="openBook(book)">打开阅读</button>
-                    <button mat-button *ngIf="!book.downloaded && book.downloadable" (click)="startDownload(book)">下载</button>
-                    <button mat-button *ngIf="!book.recycled && book.downloaded">
-                        <ion-icon name="close-outline" sizme="small" (click)="openDeleteBookDialog(book)"></ion-icon>删除
+                    <button mat-button [disabled]="!book.downloaded" (click)="openBook(book)">打开阅读</button>
+                    <button id="{{ 'download-book-' + book.id }}" mat-button [disabled]="book.downloaded" (click)="startDownload(book)">下载</button>
+                    <button id="{{ 'delete-book-' + book.id }}" mat-button (click)="openDeleteBookDialog(book)" [disabled]="book.recycled">
+                        <ion-icon name="close-outline" sizme="small"></ion-icon>删除
                     </button>
-                    <button mat-button *ngIf="book.recycled">
-                        <ion-icon name="cog-outline" sizme="small" (click)="openDeleteBookDialog(book)"></ion-icon>恢复/删除
+                    <button mat-button *ngIf="book.recycled" (click)="openDeleteBookDialog(book)">
+                        <ion-icon name="cog-outline" sizme="small"></ion-icon>恢复/彻底删除
                     </button>
                 </mat-card-actions>
             </mat-card>

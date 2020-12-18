@@ -1,33 +1,44 @@
 import { Component, 
+    ChangeDetectorRef,
     OnInit } from '@angular/core';
-import {MatSnackBar} from '@angular/material/snack-bar';
+import {
+    MatSnackBar,
+    MatSnackBarHorizontalPosition,
+    MatSnackBarVerticalPosition,
+} from '@angular/material/snack-bar';
 
 import { CrudService } from '../services/crud.service';
 import { IProgressMessage } from '../vendor';
 import { SnackbarComponent } from './components/snackbar.component';
-
+interface ISnackBarItem {
+    id: number;
+    snackbar: any
+}
 @Component({
     selector: 'app-home',
     templateUrl: './home.page.html',
     styleUrls: ['./home.page.scss'],
 })
 export class HomePage implements OnInit {
-    downloadingQueue: Array<IProgressMessage> = [];
-    snackBarList: any[] = [];
+    snackBarList: Array<ISnackBarItem> = [];
+
+    horizontalPosition: MatSnackBarHorizontalPosition = 'end';
+    verticalPosition: MatSnackBarVerticalPosition = 'bottom';
     constructor(
         private crud: CrudService,
+        private cdr: ChangeDetectorRef,
         private snackbar: MatSnackBar
     ) {}
 
     ngOnInit() {
         this.crud.ipcRenderer.on('new-downloading-progress', (ev, msg: IProgressMessage) => {
-            const index = this.downloadingQueue.findIndex(b => b.book.id === msg.book.id);
-
-            if(index >=0) this.downloadingQueue.splice(index, 1);
+            const index = this.snackBarList.findIndex(snackbarItem => snackbarItem.id === msg.book.id);
             if(index < 0){
                 const _snackbar = this.snackbar.openFromComponent(SnackbarComponent, {
                     duration: 0,
-                    data: msg
+                    data: msg,
+                    horizontalPosition: this.horizontalPosition,
+                    verticalPosition: this.verticalPosition,
                 });
 
                 const snackBarItem = {
@@ -36,14 +47,16 @@ export class HomePage implements OnInit {
                 }
 
                 this.snackBarList.push(snackBarItem);
+                this.cdr.detectChanges();
             }
-            this.downloadingQueue.push(msg);
         });
 
         this.crud.ipcRenderer.on('book-downloaded', (ev, msg: IProgressMessage) => {
-            const index = this.downloadingQueue.findIndex(b => b.book.id === msg.book.id);
+            const index = this.snackBarList.findIndex(snackbarItem => snackbarItem.id === msg.book.id);
 
-            if(index >=0) this.downloadingQueue.splice(index, 1);
+            this.snackBarList[index].snackbar.dismiss();
+            this.snackBarList.splice(index, 1);
+            this.cdr.detectChanges();
         });
     }
 }

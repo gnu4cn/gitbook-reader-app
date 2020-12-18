@@ -32,7 +32,7 @@ export class LocationService {
     }
 
     get bookLoc() {
-        return join(this.settings.rootLoc, this.bookPath);
+        return join(this.rootLoc, this.bookPath);
     }
 
     get ext() {

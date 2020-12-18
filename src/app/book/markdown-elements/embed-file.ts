@@ -102,7 +102,7 @@ export class EmbedMarkdownComponent implements OnInit, OnChanges {
 
         const _html = this.lines ? contents.split('\n').slice(0, this.lines).join('\n') : contents;
 
-        this.html = bypassSecurity ? this.sanitizer.bypassSecurityTrustHtml(_vfile.contents as string) : _vfile.contents;
+        this.html = bypassSecurity ? this.sanitizer.bypassSecurityTrustHtml(_html) : _html;
 
         setTimeout(() => {
             this.doScroll();

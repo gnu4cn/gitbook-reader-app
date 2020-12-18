@@ -74,9 +74,6 @@ export class Book extends Meta{
     @Column({default: false})
     indexed: boolean;
 
-    @Column({default: true})
-    downloadable: boolean;
-
     @ManyToMany(type => Category, category => category.bookList)
     @JoinTable()
     cateList: Category[];

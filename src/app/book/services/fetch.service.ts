@@ -4,7 +4,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, share, catchError } from 'rxjs/operators';
 import normalize from 'normalize-path';
-import { resolve, join as _join } from 'path';
+import { join as _join } from 'path';
+import { resolve } from 'url';
 
 import { join } from '../shared/utils';
 import { SettingsService } from './settings.service';

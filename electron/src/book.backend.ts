@@ -135,8 +135,6 @@ export class BookBackend {
                 case 'error-occured':
                     const err: IError = msg.data as IError;
 
-                    this.book.downloaded = false;
-                    this.book.downloadable = false;
                     this.book.errMsg = err.message;
 
                     query = {

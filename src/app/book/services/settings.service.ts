@@ -16,7 +16,7 @@ export class SettingsService {
     sideLoad: {[key: string]: string } = {};
 
     coverpage = '';
-    private _bookPath = 'assets';
+    private _bookPath = '';
     // nameLink = '';
     ext = '.md';
     notFoundPage = '_404.md';
