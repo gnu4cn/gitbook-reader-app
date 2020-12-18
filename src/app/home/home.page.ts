@@ -151,7 +151,7 @@ export class HomePage implements OnInit {
                     break
             }
 
-            this.cdr.detectChanges();
+            this.bookListDisplay = this.bookList.filter(b => this.filterFn(b));
         });
     }
 
@@ -177,6 +177,7 @@ export class HomePage implements OnInit {
                 if(index >= 0)this.filter.filterList.splice(index, 1);
                 break;
         }
+
     }
 
     displayRecycledBooks = () => {

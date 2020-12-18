@@ -1,6 +1,41 @@
 <ion-header>
-    <ion-toolbar>
+    <ion-toolbar slots="end">
         <ion-title>Gitbook阅读器</ion-title>
+
+        <ion-fab vertical="bottom" horizontal="end" edge>
+            <ion-grid>
+                <ion-row>
+                    <ion-col>
+                <ion-fab-button color="light" (click)="openAddBookDialog()">
+                    <ion-avatar>
+                        <ion-icon name="add-outline" style="position: absolute; right: 5px; bottom: 10px;"></ion-icon>
+                        <img src="assets/images/closed-book-clipart-12-512x512.png" />
+                    </ion-avatar>
+                </ion-fab-button>
+                    </ion-col>
+                    <ion-col>
+                <ion-fab-button color="light" (click)="displayBooksOnShelf()">
+                    <ion-avatar>
+                        <ion-badge color="success" style="position: absolute; left: 5px; bottom: 10px;">
+                            {{onShelfList.length}}
+                        </ion-badge>
+                        <img src="assets/images/bookshelf-512.png" />
+                    </ion-avatar>
+                </ion-fab-button>
+                    </ion-col>
+                    <ion-col>
+                <ion-fab-button color="light" (click)="displayRecycledBooks()">
+                    <ion-avatar>
+                        <ion-badge color="warning" style="position: absolute; left: 5px; bottom: 10px;">
+                            {{recycledList.length}}
+                        </ion-badge>
+                        <img src="assets/images/trash_full_512x512.png" />
+                    </ion-avatar>
+                </ion-fab-button>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+        </ion-fab>
     </ion-toolbar>
 </ion-header>
 <ion-content padding>
@@ -8,29 +43,4 @@
         <app-book-list [bookListDisplay]="bookListDisplay"></app-book-list>
     </section>
 </ion-content>
-<ion-footer>
-    <ion-fab vertical="top" horizontal="start" slot="fixed">
-        <ion-fab-button color="light" (click)="openAddBookDialog()">
-            <ion-avatar>
-                <ion-icon name="add-outline" style="position: absolute; right: 5px; bottom: 10px;"></ion-icon>
-                <img src="assets/images/closed-book-clipart-12-512x512.png" />
-            </ion-avatar>
-        </ion-fab-button>
-        <ion-fab-button color="light" (click)="displayBooksOnShelf()">
-            <ion-avatar>
-                <ion-badge color="success" style="position: absolute; left: 5px; bottom: 10px;">
-                    {{onShelfList.length}}
-                </ion-badge>
-                <img src="assets/images/bookshelf-512.png" />
-            </ion-avatar>
-        </ion-fab-button>
-        <ion-fab-button color="light" (click)="displayRecycledBooks()">
-            <ion-avatar>
-                <ion-badge color="warning" style="position: absolute; left: 5px; bottom: 10px;">
-                    {{recycledList.length}}
-                </ion-badge>
-                <img src="assets/images/trash_full_512x512.png" />
-            </ion-avatar>
-        </ion-fab-button>
-    </ion-fab>
-</ion-footer>
+
