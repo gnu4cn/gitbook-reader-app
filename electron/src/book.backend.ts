@@ -68,7 +68,8 @@ export class BookBackend {
         });
 
         ipcMain.on('summary-request', async (event, bookPath) => {
-            event.returnValue = getMdList(this.bookDir); 
+            const bookDir = join(this.booksDir, bookPath);
+            event.returnValue = getMdList(bookDir); 
         })
 
         webContents.on('did-finish-load', () => {
