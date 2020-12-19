@@ -111,7 +111,6 @@ export class LocationService {
         }
 
         const notFound = '/assets/images/image-not-found.jpg';
-
         let res: string;
 
         await this.fetchService.findup(this.bookLoc, base, src).then(p => {
