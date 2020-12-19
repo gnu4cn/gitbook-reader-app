@@ -124,33 +124,29 @@ export class HomePage implements OnInit {
         });
 
         this.crud.ipcRenderer.on('book-downloaded', (ev, msg: IProgressMessage) => {
-            const index = this.snackBarList.findIndex(snackbarItem => snackbarItem.id === msg.book.id);
+            let index: number;
+            index = this.snackBarList.findIndex(snackbarItem => snackbarItem.id === msg.book.id);
 
             this.snackBarList[index].snackbar.dismiss();
             this.snackBarList.splice(index, 1);
+
+            index = this.bookList.findIndex(b => b.id === msg.book.id);
+            this.bookList.splice(index, 1);
+            this.bookList.push(msg.book);
+            this.bookListDisplay = this.bookList.filter(b => this.filterFn(b));
             this.cdr.detectChanges();
         });
 
         this.msgService.getMessage().subscribe((msg: IMessage) => {
             const data = msg.data as IQueryResult;
             const book = data.data as Book;
+
             const index = this.bookList.findIndex(b => b.id === book.id);
             this.bookList.splice(index, 1);
 
-            switch(msg.event){
-                case 'book-recycled':
-                    this.bookList.push(book);
-                    this.messageList = [...this.messageList, ...data.message];
-                    break
-                case 'book-recovered':
-                    this.bookList.push(book);
-                    this.messageList = [...this.messageList, ...data.message];
-                    break
-                case 'book-deleted':
-                    this.messageList = [...this.messageList, ...data.message];
-                    break
-            }
+            if(msg.event === 'book-recycled' || msg.event === 'book-recovered') this.bookList.push(book);
 
+            this.messageList = [...this.messageList, ...data.message];
             this.bookListDisplay = this.bookList.filter(b => this.filterFn(b));
         });
     }
@@ -378,5 +374,4 @@ export class HomePage implements OnInit {
             this.bookListDisplay = this.bookList.filter(b => this.filterFn(b));
         });
     }
-
 }

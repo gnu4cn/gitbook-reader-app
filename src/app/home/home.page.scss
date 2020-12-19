@@ -1,14 +1,7 @@
-:root {
-    /* Set the background of the entire app */
-    --ion-background-color: #ff3700;
-
-    /* Set the font family of the entire app */
-    --ion-font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Roboto", sans-serif;
-}
-
 ion-header {
     ion-toolbar{
         --background: url("/assets/images/blue-background-header-1.png") no-repeat;
+        --background-size: 100px;
     }
 }
 

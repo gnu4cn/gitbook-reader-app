@@ -98,11 +98,8 @@ export class EmbedMarkdownComponent implements OnInit, OnChanges {
 
 
         await this.markdownService.process(_vfile);
-        const contents: string = _vfile.contents as string;
 
-        const _html = this.lines ? contents.split('\n').slice(0, this.lines).join('\n') : contents;
-
-        this.html = bypassSecurity ? this.sanitizer.bypassSecurityTrustHtml(_html) : _html;
+        this.html = bypassSecurity ? this.sanitizer.bypassSecurityTrustHtml(_vfile.contents as string) : _vfile.content;
 
         setTimeout(() => {
             this.doScroll();
@@ -122,7 +119,11 @@ export class EmbedMarkdownComponent implements OnInit, OnChanges {
             _vfile.data.gbr.notFound = true;
         } else {
             _vfile = this.locationService.pageToFile(this.path) as VFile;
-            const { contents, notFound } = await this.fetchService.get(_vfile.data.gbr.url).toPromise();
+
+            // 这里加入 lines 操作 contents
+            let { contents, notFound } = await this.fetchService.get(_vfile.data.gbr.url).toPromise();
+            contents = this.lines ? contents.split('\n').slice(0, this.lines).join('\n') : contents;
+
             _vfile.data.gbr.notFound = notFound;
             _vfile.data.gbr.isPageContent = this.isPageContent;
             _vfile.contents = (!notFound || this.isPageContent) ? contents : `!> *File not found*\n!> ${this.path}`;

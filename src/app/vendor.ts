@@ -117,7 +117,10 @@ export const IsQualifiedAndNotExistedGitRepoValidatorFn = (bookList: Array<Book>
         if(isQuailified){
             index = bookList.findIndex(book => {
                 const site = uri.match(REGEXP_SITE)[0];
-                const loc = uri.replace(REGEXP_SITE, '').match(REGEXP_LOC)[0];
+                let loc: string = uri.replace(REGEXP_SITE, '').match(REGEXP_LOC)[0];
+
+                const re = new RegExp(/\.git$/);
+                loc = re.test(loc) ? loc.replace(re, '') : loc;
 
                 const _site = book.website.uri;
                 const _loc = `${book.writer.name}/${book.name}`

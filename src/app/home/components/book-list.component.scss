@@ -3,5 +3,10 @@
     font-size: 12px;
 }
 
-.book-card {
+ion-toolbar, ion-header {
+ --min-height: 80px;
+}
+
+mat-card:hover {
+    background-color: #626262;
 }

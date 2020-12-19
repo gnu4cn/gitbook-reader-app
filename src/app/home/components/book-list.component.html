@@ -1,7 +1,7 @@
-<ion-grid *ngIf="bookListDisplay">
+<ion-grid>
     <ion-row>
         <!-- Books added already -->
-        <ion-col *ngFor="let book of sortBy(bookListDisplay, 'name')" sizeXs="12" sizeSm="6" sizeLg="4" sizeXl="4">
+        <ion-col *ngFor="let book of sortBy(bookListDisplay, 'name')" sizeXs="12" sizeSm="6" sizeLg="4" sizeXl="3">
             <mat-card class="book-card">
                 <mat-card-title *ngIf="!book.downloaded">{{book.name}}</mat-card-title>
 
@@ -15,10 +15,16 @@
                 </mat-card-header>
 
                 <!-- 操作 -->
-                <mat-card-actions fxLayoutAlign="end end">
-                    <button mat-button [disabled]="!book.downloaded" (click)="openBook(book)">打开阅读</button>
-                    <button id="{{ 'download-book-' + book.id }}" mat-button [disabled]="book.downloaded" (click)="startDownload(book)">下载</button>
-                    <button id="{{ 'delete-book-' + book.id }}" mat-button (click)="openDeleteBookDialog(book)" [disabled]="book.recycled">
+                <mat-card-actions fxLayout="row" fxLayoutGap="5px">
+                    <button mat-button *ngIf="book.downloaded" (click)="openBook(book)">
+                        <ion-icon name="book-outline"></ion-icon>打开阅读
+                    </button>
+                    <button id="{{ 'download-book-' + book.id }}" mat-button 
+                            *ngIf="!book.downloaded" (click)="startDownload(book)">
+                        <ion-icon name="cloud-download-outline"></ion-icon>下载
+                    </button>
+                    <button id="{{ 'delete-book-' + book.id }}" mat-button (click)="openDeleteBookDialog(book)" 
+                        [disabled]="book.recycled">
                         <ion-icon name="close-outline" sizme="small"></ion-icon>删除
                     </button>
                     <button mat-button *ngIf="book.recycled" (click)="openDeleteBookDialog(book)">
@@ -28,7 +34,7 @@
 
                 <!--简介-->
                 <mat-card-content *ngIf="book.downloaded">
-                    <docspa-md-include [isPageContent]="true" [path]="book.desc" [lines]=3></docspa-md-include>
+                    <docspa-md-include [isPageContent]="true" [path]="book.desc" [lines]=8></docspa-md-include>
                 </mat-card-content>
 
                 <mat-card-content *ngIf="book.errMsg">

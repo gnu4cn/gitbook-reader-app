@@ -20,17 +20,12 @@ import { loadingWindow } from './window.children';
 //import { createMenuTemplate } from './menu_template';
 
 // The MainWindow object can be accessed via myCapacitorApp.getMainWindow()
-interface IBookItem {
-    id: number;
-    book: BookBackend
-}
 export default class Main {
     static application: Electron.App;
 
     static myCapacitorApp = createCapacitorElectronApp();
     static winChildren: Array<Electron.BrowserWindow> = [];
     static processChildren: Array<ChildProcess> = [];
-    static bookList: Array<IBookItem> = [];
     static crud = new CRUD();
 
     // This method will be called when Electron has finished
@@ -39,6 +34,7 @@ export default class Main {
     private static onReady = () => {
         const filter = {
             urls: [
+                'https://badges.frapsoft.com/*',
                 'http://localhost:10080/*', 
                 'https://raw.githubusercontent.com/*'
             ]
@@ -94,14 +90,7 @@ export default class Main {
                 book: new BookBackend(booksDir, book, mainWindow, loadingWin)
             }
 
-            Main.bookList.push(bookItem);
-            bookItem.book.open(w => {
-                Main.winChildren.push(w);
-                w.on('closed', () => {
-                    const index = Main.bookList.findIndex(bookItem => bookItem.id === book.id);
-                    delete Main.bookList[index];
-                });
-            });
+            bookItem.book.open(w => Main.winChildren.push(w));
         });
 
         ipcMain.on('download-book', (event, book: Book) => {

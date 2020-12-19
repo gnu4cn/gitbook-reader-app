@@ -72,9 +72,10 @@ export class BookListComponent implements OnInit {
         });
     }                        
 
-    deleteBook = (res: IDeleteBookDialogResData) => {
+    deleteBook = async (res: IDeleteBookDialogResData) => {
         let query: IQuery;
         let msg: IMessage;
+
         if(res.recycled){
             res.book.recycled = true;
 
@@ -82,7 +83,8 @@ export class BookListComponent implements OnInit {
                 table: 'Book',
                 item: res.book
             }
-            this.crud.updateItem(query).subscribe((queryRes: IQueryResult) => {
+
+            await this.crud.updateItem(query).subscribe((queryRes: IQueryResult) => {
                 msg = {
                     event: 'book-recycled',
                     data: {
@@ -92,6 +94,7 @@ export class BookListComponent implements OnInit {
                 }
                 this.msgService.sendMessage(msg);
             });
+
             return 0;
         }
 
@@ -100,7 +103,8 @@ export class BookListComponent implements OnInit {
                 table: 'Book',
                 item: res.book
             }
-            this.crud.deleteItem(query).subscribe((queryRes: IQueryResult) => {
+
+            await this.crud.deleteItem(query).subscribe((queryRes: IQueryResult) => {
                 msg = {
                     event: 'book-deleted',
                     data: {
@@ -120,6 +124,7 @@ export class BookListComponent implements OnInit {
             table: 'Book',
             item: res.book
         }
+
         this.crud.updateItem(query).subscribe((queryRes: IQueryResult) => {
             msg = {
                 event: 'book-recovered',
@@ -128,8 +133,7 @@ export class BookListComponent implements OnInit {
                     data: queryRes.data
                 }
             }
+            this.msgService.sendMessage(msg);
         });
-
-        return 0;
     }
 }

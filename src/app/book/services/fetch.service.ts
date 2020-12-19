@@ -5,7 +5,6 @@ import { Observable, of } from 'rxjs';
 import { map, share, catchError } from 'rxjs/operators';
 import normalize from 'normalize-path';
 import { join as _join } from 'path';
-import { resolve } from 'url';
 
 import { join } from '../shared/utils';
 import { SettingsService } from './settings.service';
@@ -63,7 +62,9 @@ export class FetchService {
     async findup(root: string, from: string, to: string): Promise<string> {
         if(!from.startsWith('/')) from = '/'+from;
 
-        const url = to ? join(root, resolve(from, to)) : null;
+        const re = new RegExp(/\.md$/)
+        from = re.test(from) ? _join(from, '..') : from;
+        const url = to ? join(root, join(from, to)) : null;
         const item = await this.get(url).toPromise();
 
         if (!item) {
@@ -75,7 +76,7 @@ export class FetchService {
 
             from = normalize(_join(from, '..'));
             return from === '/' 
-                ? await this.find(root, resolve(from, to)) 
+                ? await this.find(root, join(from, to)) 
                 : this.findup(root, from, to);
         }
 
