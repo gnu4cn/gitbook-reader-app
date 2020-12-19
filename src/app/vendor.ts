@@ -4,6 +4,11 @@ interface UnknownData {
     [key: string]: unknown;
 }
 
+export interface IEditBookDialogData {
+    cateList: Array<Category>;
+    book: Book
+}
+
 export interface IProgressMessage {
     book: Book;
     progress: number
@@ -35,7 +40,8 @@ export interface IFilterAction {
 
 export interface IQueryResult {
     message: Array<string|object>;
-    data?: IItem | Array<IItem>
+    data?: IItem | Array<IItem>;
+    _data?: IItem | Array<IItem>
 }
 
 export interface IDeleteBookDialogResData {

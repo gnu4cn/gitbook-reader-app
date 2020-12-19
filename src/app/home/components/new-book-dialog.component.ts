@@ -6,7 +6,7 @@ import {
     ViewChild 
 } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { COMMA, ENTER, SPACE } from '@angular/cdk/keycodes';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -36,8 +36,8 @@ export class NewBookDialog implements OnInit{
     @ViewChild('cateInput') cateInput: ElementRef<HTMLInputElement>;
     @ViewChild('auto') MatAutocomplete: MatAutocomplete;
 
-    uriInputControl: FormControl = new FormControl('');
-    cateListInputControl: FormControl = new FormControl('');
+    uriInputControl: FormControl = new FormControl();
+    cateListInputControl: FormControl = new FormControl();
 
     newBook: NewBookDialogResData = {
         bookUri: '',
@@ -47,7 +47,8 @@ export class NewBookDialog implements OnInit{
     visible = true;
     selectable = true;
     removable = true;
-    separatorKeysCodes: number[] = [ ENTER, COMMA, SPACE ];
+    separatorKeysCodes: number[] = [ ENTER, COMMA ];
+
 
     filteredCateList: Observable<Array<Category>>;
     _tempCateList = this.data.cateList.slice();

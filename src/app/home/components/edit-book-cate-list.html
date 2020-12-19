@@ -1,0 +1,36 @@
+<h1 mat-dialog-title>修改类别</h1>
+<div mat-dialog-content>
+    <form>
+        <!-- bookCateListInput -->
+        <mat-form-field fxFill style="font-size: 16px">
+            <mat-label>书籍分类(<b>不能为空</b>)</mat-label>
+            <mat-chip-list #chipList aria-label="Book cate selection">
+                <mat-chip
+                    *ngFor="let cate of data.book.cateList"
+                    [selectable]="selectable"
+                    [removable]="removable"
+                    (removed)="remove(cate)">
+                    {{cate.name}}
+                    <ion-icon matChipRemove *ngIf="removable" name="close-circle"></ion-icon>
+                </mat-chip>
+                <input
+                        placeholder="加入类别(以逗号，回车结束)"
+                    #cateInput
+                    [formControl]="cateListInputControl"
+                    [matAutocomplete]="auto"
+                    [matChipInputFor]="chipList"
+                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                    (matChipInputTokenEnd)="add($event)" />
+            </mat-chip-list>
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+                <mat-option *ngFor="let cate of filteredCateList | async" [value]="cate.name">
+                    {{cate.name}}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+    </form>
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()">放弃修改</button>
+    <button mat-button [disabled]="data.book.cateList.length === 0" [mat-dialog-close]="data.book">修改</button>
+</div>

@@ -106,9 +106,7 @@ export class LocationService {
      * Return a resolved url relative to the base path
      */
     prepareSrcAsync = async (src: string, base: string = '') => {
-        if (isAbsolutePath(src)) { 
-            return src; 
-        }
+        if (isAbsolutePath(src)) return src; 
 
         const notFound = '/assets/images/image-not-found.jpg';
         let res: string;

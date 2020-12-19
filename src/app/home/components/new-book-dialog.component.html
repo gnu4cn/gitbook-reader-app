@@ -16,23 +16,21 @@
 
         <!-- bookCateListInput -->
         <mat-form-field fxFill style="font-size: 16px">
+            <mat-label>书籍分类(<b>不能为空</b>)</mat-label>
             <mat-chip-list #chipList aria-label="Book cate selection">
-                <mat-chip
-                    *ngFor="let cate of newBook.cateList"
-                    [selectable]="selectable"
-                    [removable]="removable"
-                    (removed)="remove(cate)" required>
+                <mat-chip [selectable]="selectable" [removable]="removable" *ngFor="let cate of newBook.cateList"
+                        (removed)="remove(cate)">
                     {{cate.name}}
                     <ion-icon matChipRemove *ngIf="removable" name="close-circle"></ion-icon>
                 </mat-chip>
-                <input
-                    placeholder="加入类别（输入结束按回车）"
-                    #cateInput
-                    [formControl]="cateListInputControl"
-                    [matAutocomplete]="auto"
-                    [matChipInputFor]="chipList"
-                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                    (matChipInputTokenEnd)="add($event)" />
+                <input 
+                        placeholder="加入类别(以逗号，回车结束)"
+                       #cateInput
+                       [formControl]="cateListInputControl"
+                       [matAutocomplete]="auto"
+                       [matChipInputFor]="chipList"
+                       [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                       (matChipInputTokenEnd)="add($event)" />
             </mat-chip-list>
             <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
                 <mat-option *ngFor="let cate of filteredCateList | async" [value]="cate.name">
@@ -44,5 +42,5 @@
 </div>
 <div mat-dialog-actions>
     <button mat-button (click)="onNoClick()">暂不添加</button>
-    <button mat-button [disabled]="!uriInputControl.valid" [mat-dialog-close]="newBook">添加</button>
+    <button mat-button [disabled]="!uriInputControl.valid || newBook.cateList.length === 0" [mat-dialog-close]="newBook">添加</button>
 </div>

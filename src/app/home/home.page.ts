@@ -119,8 +119,8 @@ export class HomePage implements OnInit {
                 }
 
                 this.snackBarList.push(snackBarItem);
-                this.cdr.detectChanges();
             }
+            this.cdr.detectChanges();
         });
 
         this.crud.ipcRenderer.on('book-downloaded', (ev, msg: IProgressMessage) => {
@@ -140,11 +140,13 @@ export class HomePage implements OnInit {
         this.msgService.getMessage().subscribe((msg: IMessage) => {
             const data = msg.data as IQueryResult;
             const book = data.data as Book;
+            const cateList = data._data ? data._data as Array<Category> : [];
 
             const index = this.bookList.findIndex(b => b.id === book.id);
             this.bookList.splice(index, 1);
 
-            if(msg.event === 'book-recycled' || msg.event === 'book-recovered') this.bookList.push(book);
+            if(msg.event === 'book-recycled' || msg.event === 'book-recovered' || msg.event === 'book-updated') this.bookList.push(book);
+            if(cateList.length > 0) this.cateList = cateList.slice();
 
             this.messageList = [...this.messageList, ...data.message];
             this.bookListDisplay = this.bookList.filter(b => this.filterFn(b));

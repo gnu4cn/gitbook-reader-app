@@ -11,6 +11,7 @@ import { BookListComponent } from './components/book-list.component';
 import { NewBookDialog } from './components/new-book-dialog.component';
 import { DeleteBookDialog } from './components/delete-book-dialog.component';
 import { SnackbarComponent } from './components/snackbar.component';
+import { EditBookCateListDialog } from './components/edit-book-cate-list.component';
 
 import { HomePageRoutingModule } from './home-routing.module';
 import { HomePage } from './home.page';
@@ -28,6 +29,7 @@ import { HomePage } from './home.page';
         BookListComponent,
         NewBookDialog,
         DeleteBookDialog,
+        EditBookCateListDialog,
         SnackbarComponent
     ]
 })
