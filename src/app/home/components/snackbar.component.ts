@@ -21,7 +21,7 @@ export class SnackbarComponent implements OnInit {
         this.crud.ipcRenderer.on('new-downloading-progress', (ev, msg: IProgressMessage) => {
             if(msg.book.id === this.data.book.id){
                 this.data.progress = msg.progress;
-                //this.cdr.detectChanges();
+                this.cdr.detectChanges();
             }
         });
     }

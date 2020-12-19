@@ -57,6 +57,10 @@ export class BookListComponent implements OnInit {
         document
             .getElementById(`download-book-${book.id}`)
             .setAttribute('disabled', 'true');
+        document
+            .getElementById(`delete-book-${book.id}`)
+            .setAttribute('disabled', 'true');
+
     }
 
     openBook(book: Book) {

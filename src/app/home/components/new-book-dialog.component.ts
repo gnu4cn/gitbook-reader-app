@@ -51,7 +51,8 @@ export class NewBookDialog implements OnInit{
 
 
     filteredCateList: Observable<Array<Category>>;
-    _tempCateList = this.data.cateList.slice();
+    tempCateList: Array<Category>;
+    cateList: Array<Category>;
 
     constructor(
         public dialogRef: MatDialogRef<NewBookDialog>,
@@ -59,13 +60,15 @@ export class NewBookDialog implements OnInit{
     ) {
         this.filteredCateList = this.cateListInputControl.valueChanges.pipe(
             startWith(null),
-            map((cateInput: string | null) => cateInput ? this._filter(cateInput) : this._tempCateList.slice())
+            map((cateInput: string | null) => cateInput ? this._filter(cateInput) : this.tempCateList.slice())
         );
 
         this.uriInputControl.valueChanges.subscribe(val => this.newBook.bookUri = val);
     }
 
     ngOnInit() {
+        this.tempCateList = this.data.cateList.slice();
+        this.cateList = this.data.cateList.slice();
         this.uriInputControl.setValidators(IsQualifiedAndNotExistedGitRepoValidatorFn(this.data.bookList));
     }
 
@@ -73,11 +76,11 @@ export class NewBookDialog implements OnInit{
         const zh = REGEXP_ZH.test(val);
 
         if(zh){
-            return this._tempCateList.filter(cate => cate.name.indexOf(val) === 0 );
+            return this.tempCateList.filter(cate => cate.name.indexOf(val) === 0 );
         }
         else{
             const filterVal = val.toLowerCase();
-            return this._tempCateList.filter(cate => cate.name.toLowerCase().indexOf(filterVal) === 0);
+            return this.tempCateList.filter(cate => cate.name.toLowerCase().indexOf(filterVal) === 0);
         }
     }
 
@@ -99,7 +102,7 @@ export class NewBookDialog implements OnInit{
 
         if(_value) {
             // 加入到 newBook 的 cateList
-            const _cate = this.data.cateList.find(cate => cate.name === _value);
+            const _cate = this.cateList.find(cate => cate.name === _value);
 
             if(_cate){
                 this.newBook.cateList.push(_cate);
@@ -111,8 +114,8 @@ export class NewBookDialog implements OnInit{
             }
 
             // 从备选清单中移除
-            const _cateIndex = this._tempCateList.findIndex(cate => cate.name === _value);
-            if(_cateIndex>=0) this._tempCateList.splice(_cateIndex, 1);
+            const _cateIndex = this.tempCateList.findIndex(cate => cate.name === _value);
+            if(_cateIndex>=0) this.tempCateList.splice(_cateIndex, 1);
         }
     }
 
@@ -122,8 +125,8 @@ export class NewBookDialog implements OnInit{
         this.newBook.cateList.splice(index, 1);
 
         // 重新加入到备选清单
-        const _cate = this.data.cateList.find(c => c.name === cate.name);
-        if(_cate) this._tempCateList.push(_cate);
+        const _cate = this.cateList.find(c => c.name === cate.name);
+        if(_cate) this.tempCateList.push(_cate);
     }
 
     selected(event: MatAutocompleteSelectedEvent): void{

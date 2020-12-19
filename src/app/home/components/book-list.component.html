@@ -18,9 +18,9 @@
                     <ion-chip color="tertiary" *ngFor="let cate of book.cateList" (click)="listBooksUnderCate(cate)">
                         <ion-label>{{cate.name}}</ion-label>
                     </ion-chip>
-                    <ion-button (click)="openEditBookCateListDialog(book)" size="small">
-                        <ion-icon name="cog-outline"></ion-icon>
-                    </ion-button>
+                    <button (click)="openEditBookCateListDialog(book)" size="small" mat-button>
+                        <ion-icon name="cog-outline"></ion-icon>修改
+                    </button>
                 </mat-card-content>
 
                 <!-- 操作 -->

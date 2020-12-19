@@ -49,7 +49,6 @@ export class HomePage implements OnInit {
     // full bookList
     bookList: Array<Book> = [];
     // bookList to display
-    bookListDisplay: Array<Book> = [];
     writerList: Array<Writer> = [];
     cateList: Array<Category> = [];
     websiteList: Array<Website> = [];
@@ -78,19 +77,18 @@ export class HomePage implements OnInit {
         private dialog: MatDialog,
     ) {}
 
+    get bookListDisplay () {
+            return this.bookList.filter(b => this.filterFn(b));
+    }
+
     ngOnInit() {
         this.initData();
-        this.bookListDisplay = this.bookList.filter(b => this.filterFn(b));
 
         this.crud.ipcRenderer.on('book-downloaded', (ev, msg: IProgressMessage) => {
             const index = this.bookList.findIndex(b => b.id === msg.book.id);
 
             this.bookList.splice(index, 1);
             this.bookList.push(msg.book);
-            this.bookListDisplay = this.bookList.filter(b => this.filterFn(b));
-            document
-                .getElementById(`delete-book-${msg.book.id}`)
-                .setAttribute('disabled', 'true');
 
             this.cdr.detectChanges();
         });
@@ -99,7 +97,6 @@ export class HomePage implements OnInit {
             const index = this.bookList.findIndex(b => b.id === book.id);
             this.bookList.splice(index, 1);
             this.bookList.push(book);
-            this.bookListDisplay = this.bookList.filter(b => this.filterFn(b));
             this.cdr.detectChanges();
         });
 
@@ -133,7 +130,6 @@ export class HomePage implements OnInit {
             index = this.bookList.findIndex(b => b.id === msg.book.id);
             this.bookList.splice(index, 1);
             this.bookList.push(msg.book);
-            this.bookListDisplay = this.bookList.filter(b => this.filterFn(b));
             this.cdr.detectChanges();
         });
 
@@ -149,7 +145,6 @@ export class HomePage implements OnInit {
             if(cateList.length > 0) this.cateList = cateList.slice();
 
             this.messageList = [...this.messageList, ...data.message];
-            this.bookListDisplay = this.bookList.filter(b => this.filterFn(b));
         });
     }
 
@@ -180,12 +175,10 @@ export class HomePage implements OnInit {
 
     displayRecycledBooks = () => {
         this.filter.displayRecycled = true;
-        this.bookListDisplay = this.recycledList.slice();
     }
 
     displayBooksOnShelf = () => {
         this.filter.displayRecycled = false;
-        this.bookListDisplay = this.onShelfList.slice();
     }
 
     // 尚待优化
@@ -373,7 +366,6 @@ export class HomePage implements OnInit {
             this.messageList = [...this.messageList, ...res.message];
 
             this.bookList.push(res.data as Book);
-            this.bookListDisplay = this.bookList.filter(b => this.filterFn(b));
         });
     }
 }

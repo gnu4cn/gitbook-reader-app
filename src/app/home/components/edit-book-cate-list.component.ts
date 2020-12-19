@@ -27,7 +27,7 @@ import { REGEXP_ZH, IEditBookDialogData } from '../../vendor';
 
 @Component({
     selector: 'edit-book-cate-list-dialog',
-    templateUrl: 'edit-book-cate-list.html',
+    templateUrl: 'edit-book-cate-list.component.html',
 })
 export class EditBookCateListDialog implements OnInit{
     @ViewChild('cateInput') cateInput: ElementRef<HTMLInputElement>;
@@ -42,6 +42,7 @@ export class EditBookCateListDialog implements OnInit{
 
     filteredCateList: Observable<Category[]>;
     tempCateList: Array<Category>;
+    cateList: Array<Category>;
 
     constructor(
         public dialogRef: MatDialogRef<EditBookCateListDialog>,
@@ -56,6 +57,7 @@ export class EditBookCateListDialog implements OnInit{
     ngOnInit() {
         // 生成备选清单，要把 this.data.book 的 cateList 移除
         this.tempCateList = this.data.cateList.slice();
+        this.cateList = this.data.cateList.slice();
 
         this.data.book.cateList.map(c => {
             const index = this.tempCateList.findIndex(_c => _c.id === c.id);
@@ -93,7 +95,7 @@ export class EditBookCateListDialog implements OnInit{
 
         if(_value) {
             // 加入到 newBook 的 cateList
-            const _cate = this.data.cateList.find(cate => cate.name === _value);
+            const _cate = this.cateList.find(cate => cate.name === _value);
 
             if(_cate){
                 this.data.book.cateList.push(_cate);
@@ -116,7 +118,7 @@ export class EditBookCateListDialog implements OnInit{
         this.data.book.cateList.splice(index, 1);
 
         // 如果在既有类别清单中，则重新加入到备选清单
-        const _cate = this.data.cateList.find(c => c.name === cate.name);
+        const _cate = this.cateList.find(c => c.name === cate.name);
         if(_cate) this.tempCateList.push(_cate);
     }
 
