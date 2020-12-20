@@ -15,7 +15,7 @@
         - 之前遇到的`nodegit`原生模块编译问题，找不到`openssh`的诸多头文件，就可以通过修改`binding.gyp`配置文件加以解决
         - `nodegit`模块本身就带有获取`openssh`库和头文件的实用工具（`node_modules/nodegit/utils/acquireOPENSSL.js`, 运行命令` node ./node_modules/nodegit/utils/acquireOpenSSL.js`既可获取到OpenSSL, 在`vendor`目录下），无需额外安装或编译`openssh`!!!
         - 现在遇到了在编译完成生成动态链接库时，`libssh2`报错的问题，预计可再次修改`binding.gyp`加以解决
-        - `libssh2.lib(channel.obj) : error LNK2019: unresolved external symbol RAND_bytes`, `libssh2.lib(channel.obj) : error LNK2001: 无法解析的外部符号 RAND_bytes`, 上述修改`binding.gyp` 仍无法解决，现参考 [Libssh2 LINKER errors](https://github.com/libssh2/libssh2/issues/191)，加以解决
+        - `libssh2.lib(channel.obj) : error LNK2019: unresolved external symbol RAND_bytes`, `libssh2.lib(channel.obj) : error LNK2001: 无法解析的外部符号 RAND_bytes`, 上述修改`binding.gyp` 等` fatal error LNK1120: 140 个无法解析的外部命令`......仍无法解决，现参考 [Libssh2 LINKER errors](https://github.com/libssh2/libssh2/issues/191)，加以解决
 
 
 + 2020-12-17
