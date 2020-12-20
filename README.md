@@ -13,7 +13,7 @@
         - `node-gyp`, gyp, generate your projects, 藉由Python对原生Node模块进行跨平台编译，在不同平台调用不同的构建工具（Linux GCC、Windows MSVS Build, macOS Xcode）
         - 往编译器传递参数，是通过模块根目录下的`binding.gyp`构建配置文件完成的，可编辑此文件，修改编译参数
         - 之前遇到的`nodegit`原生模块编译问题，找不到`openssh`的诸多头文件，就可以通过修改`binding.gyp`配置文件加以解决
-        - `nodegit`模块本身就带有获取`openssh`库和头文件的实用工具，无需额外安装或编译`openssh`!!!
+        - `nodegit`模块本身就带有获取`openssh`库和头文件的实用工具（`node_modules/nodegit/utils/acquireOPENSSL.js`, 运行命令` node ./node_modules/nodegit/utils/acquireOpenSSL.js`既可获取到OpenSSL, 在`vendor`目录下），无需额外安装或编译`openssh`!!!
         - 现在遇到了在编译完成生成动态链接库时，`libssh2`报错的问题，预计可再次修改`binding.gyp`加以解决
 
 
@@ -72,7 +72,7 @@
 
 + 2020-12-07
     
-    - 前段界面已经优化的很不错了，阅读页面稳定，Home 页面简化成熟
+    - 前端界面已经优化的很不错了，阅读页面稳定，Home 页面简化成熟
     - 加入了NodeGit和Sqlite3两个原生模块，其中NodeGit用于克隆Markdown书籍，Sqlite3用于维护本地书籍数据
     - 两个原生模块都需要为当前Electron版本进行重新构建，为此要使用命令`npm i electron-rebuild --save-dev`安装`electron-rebuild`
     - 重新构建就是为当前特定版本的Electron重新编译模块的二进制版本，而不是使用该模块的预先构建版本
