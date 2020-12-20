@@ -5,6 +5,18 @@
 
 ## 开发日志
 
++ 2020-12-20
+
+    - 已经完善了书籍类别修改
+    + 再次尝试Windows下的编译，得到以下认知：
+
+        - `node-gyp`, gyp, generate your projects, 藉由Python对原生Node模块进行跨平台编译，在不同平台调用不同的构建工具（Linux GCC、Windows MSVS Build, macOS Xcode）
+        - 往编译器传递参数，是通过模块根目录下的`binding.gyp`构建配置文件完成的，可编辑此文件，修改编译参数
+        - 之前遇到的`nodegit`原生模块编译问题，找不到`openssh`的诸多头文件，就可以通过修改`binding.gyp`配置文件加以解决
+        - `nodegit`模块本身就带有获取`openssh`库和头文件的实用工具，无需额外安装或编译`openssh`!!!
+        - 现在遇到了在编译完成生成动态链接库时，`libssh2`报错的问题，预计可再次修改`binding.gyp`加以解决
+
+
 + 2020-12-17
 
     - 在实现书籍删除时，遇到新下载书籍无法删除的问题，`mat-dialog`模板数据未能绑定
