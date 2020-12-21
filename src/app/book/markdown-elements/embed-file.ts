@@ -35,6 +35,9 @@ export class EmbedMarkdownComponent implements OnInit, OnChanges {
     isPageContent = false;
 
     @Input()
+    isPreview = false;
+
+    @Input()
     set safe(val: boolean) {
         this._safe = true;
     }
@@ -97,7 +100,8 @@ export class EmbedMarkdownComponent implements OnInit, OnChanges {
         }
 
 
-        await this.markdownService.process(_vfile);
+        if(this.isPreview) await this.markdownService.processPreview(_vfile);
+        else await this.markdownService.process(_vfile);
 
         this.html = bypassSecurity ? this.sanitizer.bypassSecurityTrustHtml(_vfile.contents as string) : _vfile.content;
 

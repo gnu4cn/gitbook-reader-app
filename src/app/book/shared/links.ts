@@ -58,6 +58,18 @@ export const links = (settings: { locationService: LocationService }): Transform
     };
 };
 
+export const removeLinks = (settings: { locationService: LocationService }): Transformer => {
+    return (tree: Node, vfile: VFile) => {
+        return visit(tree, ['link', 'definition'], (node: Link, index: number, parent: any) => {
+            if (!isAbsolutePath(node.url)) {
+                parent.children.splice(index, 1);
+            }
+            return true;
+        });
+    };
+};
+
+
 export const images = function (this: UNIFIED.Processor, {locationService}: {locationService: LocationService}) {
     const processor = this;
     return async (tree: MDAST.Root, vfile: VFile) => {
