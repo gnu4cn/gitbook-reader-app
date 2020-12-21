@@ -16,7 +16,7 @@ export const clone = async (bookDir: string, bookUri: string) => {
                     const received = progress.receivedObjects();
                     const indexed = progress.indexedObjects();
                     const percent = Math.round(received/total*100);
-                    if ( progress !== percent && percent%5 === 0){
+                    if ( progress !== percent){
                         if(process.send){
                             const message: IIpcMessage = {title: 'new-downloading-progress', data: percent}; 
                             process.send(message);

@@ -9,6 +9,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import {MatDividerModule} from '@angular/material/divider';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
@@ -26,6 +27,7 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
         MatDialogModule,
         MatCardModule,
         MatToolbarModule,
+        MatDividerModule,
         FormsModule,
         MatIconModule,
         ReactiveFormsModule,
@@ -46,6 +48,7 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
         FormsModule,
         MatIconModule,
         MatProgressBarModule,
+        MatDividerModule,
         MatToolbarModule,
         FlexLayoutModule,
         MatFormFieldModule,
