@@ -62,7 +62,10 @@ export const removeLinks = (settings: { locationService: LocationService }): Tra
     return (tree: Node, vfile: VFile) => {
         return visit(tree, ['link', 'definition'], (node: Link, index: number, parent: any) => {
             if (!isAbsolutePath(node.url)) {
+                let text: Node;
+                if(node.children) text = node.children[0];
                 parent.children.splice(index, 1);
+                if(text) parent.children.push(text);
             }
             return true;
         });
