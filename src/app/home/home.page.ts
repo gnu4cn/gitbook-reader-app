@@ -78,7 +78,7 @@ export class HomePage implements OnInit {
     ) {}
 
     get bookListDisplay () {
-            return this.bookList.filter(b => this.filterFn(b));
+        return this.bookList.filter(b => this.filterFn(b));
     }
 
     ngOnInit() {
@@ -124,8 +124,10 @@ export class HomePage implements OnInit {
             let index: number;
             index = this.snackBarList.findIndex(snackbarItem => snackbarItem.id === msg.book.id);
 
-            this.snackBarList[index].snackbar.dismiss();
-            this.snackBarList.splice(index, 1);
+            if(index >= 0){
+                this.snackBarList[index].snackbar.dismiss();
+                this.snackBarList.splice(index, 1);
+            }
 
             index = this.bookList.findIndex(b => b.id === msg.book.id);
             this.bookList.splice(index, 1);
