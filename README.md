@@ -5,6 +5,11 @@
 
 ## 开发日志
 
++ 2020-12-21
+
+    - 调整UI，加入打开 README.md
+    - 修改 `src/app/book/markdown/markdown.service.ts`，`src/app/book/markdown-elements/embed-file.ts`与`src/app/book/shared/links.ts`，将`home.page`中打开的README.md中的内部链接去除
+
 + 2020-12-20
 
     - 已经完善了书籍类别修改
