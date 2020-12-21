@@ -3,53 +3,51 @@
         <!-- Books added already -->
         <ion-col *ngFor="let book of sortBy(bookListDisplay, 'name')" sizeXs="12" sizeSm="6" sizeLg="4" sizeXl="3">
             <mat-card class="book-card">
-                <mat-card-title *ngIf="!book.downloaded">{{book.name}}</mat-card-title>
+                <mat-card-title>{{book.name | uppercase}}</mat-card-title>
 
                 <!-- 作者和来源 -->
                 <mat-card-header>
                     <div mat-card-avatar 
-                      style="background-image: url('assets/images/avatar.png'); background-size: cover;">
+                         style="background-image: url('assets/images/avatar.png'); background-size: cover;">
                     </div>
                     <mat-card-title>{{book.writer.name}}</mat-card-title>
                     <mat-card-subtitle>{{book.website.uri}}</mat-card-subtitle>
                 </mat-card-header>
 
-                <mat-card-content fxLayout="row" fxLayoutGap="5px">
+                <mat-card-content fxLayout="row" fxLayoutGap="5px" class="cate-list">
                     <ion-chip color="tertiary" *ngFor="let cate of book.cateList" (click)="listBooksUnderCate(cate)">
                         <ion-label>{{cate.name}}</ion-label>
                     </ion-chip>
-                    <button (click)="openEditBookCateListDialog(book)" size="small" mat-button>
+                    <button (click)="openEditBookCateListDialog(book)" mat-button>
                         <ion-icon name="cog-outline"></ion-icon>修改
                     </button>
                 </mat-card-content>
 
                 <!-- 操作 -->
                 <mat-card-actions fxLayout="row" fxLayoutGap="5px">
+                    <button mat-button *ngIf="book.downloaded" (click)="openReadmeDialog(book.desc)">
+                        <ion-icon name="compass-outline"></ion-icon>README.md
+                    </button>
                     <button mat-button *ngIf="book.downloaded" (click)="openBook(book)">
-                        <ion-icon name="book-outline"></ion-icon>打开阅读
+                        <ion-icon name="book-outline"></ion-icon>阅读
                     </button>
                     <button id="{{ 'download-book-' + book.id }}" mat-button 
                             *ngIf="!book.downloaded" (click)="startDownload(book)">
                         <ion-icon name="cloud-download-outline"></ion-icon>下载
                     </button>
                     <button id="{{ 'delete-book-' + book.id }}" mat-button (click)="openDeleteBookDialog(book)" 
+                            *ngIf="!book.downloaded || !book.recycled"
                             [disabled]="book.recycled">
                         <ion-icon name="close-outline" sizme="small"></ion-icon>删除
                     </button>
                     <button mat-button *ngIf="book.recycled" (click)="openDeleteBookDialog(book)">
-                        <ion-icon name="cog-outline" sizme="small"></ion-icon>恢复/彻底删除
+                        <ion-icon name="cog-outline" sizme="small"></ion-icon>操作
                     </button>
                 </mat-card-actions>
-
-                <!--简介-->
-                <mat-card-content *ngIf="book.downloaded">
-                    <docspa-md-include [isPageContent]="true" [path]="book.desc" [lines]=8></docspa-md-include>
-                </mat-card-content>
 
                 <mat-card-content *ngIf="book.errMsg">
                     <ion-text color="danger">{{book.errMsg}} - 无法下载，建议删除</ion-text>
                 </mat-card-content>
-
             </mat-card>
         </ion-col>
     </ion-row>

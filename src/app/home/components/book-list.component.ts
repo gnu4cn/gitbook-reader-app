@@ -15,6 +15,7 @@ import { MessageService } from '../../services/message.service';
 
 import { DeleteBookDialog } from './delete-book-dialog.component';
 import { EditBookCateListDialog } from './edit-book-cate-list.component';
+import { ReadmeDialog } from './readme-dialog.component';
 
 import { 
     IQuery,
@@ -61,6 +62,14 @@ export class BookListComponent implements OnInit {
             .getElementById(`delete-book-${book.id}`)
             .setAttribute('disabled', 'true');
 
+    }
+
+    openReadmeDialog = (readme: string) => {
+
+        this.dialog.open(ReadmeDialog, {
+            width: '640px',
+            data: readme
+        });
     }
 
     openBook(book: Book) {

@@ -8,5 +8,9 @@ ion-toolbar, ion-header {
 }
 
 mat-card:hover {
-    background-color: #626262;
+    background-color: #4f4f4f;
+}
+
+mat-card-actions {
+    border-bottom: 1px;
 }
