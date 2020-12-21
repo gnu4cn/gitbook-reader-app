@@ -1,5 +1,4 @@
 import { Component, 
-    ChangeDetectorRef,
     OnInit } from '@angular/core';
 import {
     MatSnackBar,
@@ -45,18 +44,24 @@ interface ISnackBarItem {
     styleUrls: ['./home.page.scss'],
 })
 export class HomePage implements OnInit {
-    snackBarList: Array<ISnackBarItem> = [];
-    // full bookList
+    horizontalPosition: MatSnackBarHorizontalPosition = 'end';
+    verticalPosition: MatSnackBarVerticalPosition = 'bottom';
+
     bookList: Array<Book> = [];
-    // bookList to display
     writerList: Array<Writer> = [];
     cateList: Array<Category> = [];
     websiteList: Array<Website> = [];
     messageList: Array<string|object> = [];
+    snackBarList: Array<ISnackBarItem> = [];
+
     private filter: IFilter = {
         displayRecycled: false,
         filterList: []
     };
+
+    get bookListDisplay () {
+        return this.bookList.filter(b => this.filterFn(b));
+    }
 
     get recycledList () {
         return this.bookList.filter(b => b.recycled === true);
@@ -66,20 +71,12 @@ export class HomePage implements OnInit {
         return this.bookList.filter(b => b.recycled === false);
     }
 
-    horizontalPosition: MatSnackBarHorizontalPosition = 'end';
-    verticalPosition: MatSnackBarVerticalPosition = 'bottom';
-
     constructor(
         private crud: CrudService,
-        private cdr: ChangeDetectorRef,
         private snackbar: MatSnackBar,
         private msgService: MessageService,
         private dialog: MatDialog,
     ) {}
-
-    get bookListDisplay () {
-        return this.bookList.filter(b => this.filterFn(b));
-    }
 
     ngOnInit() {
         this.initData();
@@ -88,7 +85,6 @@ export class HomePage implements OnInit {
             const index = this.bookList.findIndex(b => b.id === book.id);
             this.bookList.splice(index, 1);
             this.bookList.push(book);
-            this.cdr.detectChanges();
         });
 
         this.crud.ipcRenderer.on('new-downloading-progress', (ev, msg: IProgressMessage) => {
@@ -108,7 +104,6 @@ export class HomePage implements OnInit {
 
                 this.snackBarList.push(snackBarItem);
             }
-            this.cdr.detectChanges();
         });
 
         this.crud.ipcRenderer.on('book-downloaded', (ev, msg: IProgressMessage) => {
@@ -123,7 +118,6 @@ export class HomePage implements OnInit {
             index = this.bookList.findIndex(b => b.id === msg.book.id);
             this.bookList.splice(index, 1);
             this.bookList.push(msg.book);
-            this.cdr.detectChanges();
         });
 
         this.msgService.getMessage().subscribe((msg: IMessage) => {
