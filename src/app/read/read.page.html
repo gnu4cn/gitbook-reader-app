@@ -63,8 +63,9 @@
         <docspa-md-include class="sidebar-nav" [path]="sidebarPage" [safe]="true"></docspa-md-include>
     </aside>
 
-    <a id="content-top"></a>
     <ion-content>
+        <!-- 在 `read.page.ts` 中，指明了在没有 fragment 时，要 scrollTo content-top, 在 `markdown.service.ts` 中没有插入 `content-top` 的锚点 -->
+        <a id="content-top"></a>
         <section id="content" class="content">
             <article *ngIf="contentPage"
                               class="markdown-section"

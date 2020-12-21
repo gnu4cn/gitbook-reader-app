@@ -7,9 +7,9 @@ import { VFile } from 'vfile';
 import { Node } from 'unist';
 import { Image } from 'mdast';
 import MDAST from 'mdast';
+import { join as _join } from 'path';
 
-import { isAbsolutePath } from './utils';
-import { join } from './utils';
+import { isAbsolutePath, join } from './utils';
 
 import type { Link } from '../book.vendor';
 
@@ -39,7 +39,9 @@ export const links = (settings: { locationService: LocationService }): Transform
                     return true;
                 }
 
-                node.url = join(vfile.history[0], node.url);
+                const re = new RegExp(/\.md/);
+                
+                node.url = join(re.test(node.url) ? _join(vfile.history[0], '..') : vfile.history[0], node.url);
 
                 // tslint:disable-next-line: prefer-const
                 let [routerLink = '', fragment] = node.url.split('#');
