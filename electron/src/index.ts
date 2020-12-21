@@ -34,25 +34,23 @@ export default class Main {
     private static onReady = () => {
         const filter = {
             urls: [
-                'https://badges.frapsoft.com/*',
                 'http://localhost:10080/*', 
-                'https://raw.githubusercontent.com/*'
             ]
         };
 
-        session.defaultSession.webRequest.onBeforeSendHeaders(
-            filter,
-            (details, callback) => {
-                console.log(details);
-                details.requestHeaders['Origin'] = 'http://localhost:10080';
-                callback({ requestHeaders: details.requestHeaders });
-            }
-        );
+//        session.defaultSession.webRequest.onBeforeSendHeaders(
+//            filter,
+//            (details, callback) => {
+//                //console.log(details);
+//                details.requestHeaders['Origin'] = 'http://localhost:10080';
+//                callback({ requestHeaders: details.requestHeaders });
+//            }
+//        );
 
         session.defaultSession.webRequest.onHeadersReceived(
             filter,
             (details, callback) => {
-                console.log(details);
+                //console.log(details);
                 details.responseHeaders['Access-Control-Allow-Origin'] = [
                     'capacitor-electron://-'
                 ];

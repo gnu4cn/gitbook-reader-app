@@ -1,7 +1,10 @@
 import { Component, OnInit, Inject,
     ChangeDetectorRef
 } from '@angular/core';
-import {MAT_SNACK_BAR_DATA} from '@angular/material/snack-bar';
+import {
+    MAT_SNACK_BAR_DATA, 
+    MatSnackBar
+} from '@angular/material/snack-bar';
 
 import { IProgressMessage } from '../../vendor';
 import { CrudService } from '../../services/crud.service';
@@ -21,6 +24,13 @@ export class SnackbarComponent implements OnInit {
         this.crud.ipcRenderer.on('new-downloading-progress', (ev, msg: IProgressMessage) => {
             if(msg.book.id === this.data.book.id){
                 this.data.progress = msg.progress;
+                this.cdr.detectChanges();
+            }
+        });
+
+        this.crud.ipcRenderer.on('book-downloaded', (ev, msg: IProgressMessage) => {
+            if(msg.book.id === this.data.book.id){
+                this.data.progress = 100;
                 this.cdr.detectChanges();
             }
         });

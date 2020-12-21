@@ -1,7 +1,9 @@
 import { Component, 
+    ChangeDetectorRef,
     OnInit } from '@angular/core';
 import {
     MatSnackBar,
+    MatSnackBarRef,
     MatSnackBarHorizontalPosition,
     MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
@@ -35,7 +37,7 @@ import {
 
 interface ISnackBarItem {
     id: number;
-    snackbar: any
+    snackbar: MatSnackBarRef<SnackbarComponent>
 }
 
 @Component({
@@ -74,6 +76,7 @@ export class HomePage implements OnInit {
     constructor(
         private crud: CrudService,
         private snackbar: MatSnackBar,
+        private cdr: ChangeDetectorRef,
         private msgService: MessageService,
         private dialog: MatDialog,
     ) {}
@@ -97,7 +100,7 @@ export class HomePage implements OnInit {
                     verticalPosition: this.verticalPosition,
                 });
 
-                const snackBarItem = {
+                const snackBarItem: ISnackBarItem = {
                     id: msg.book.id,
                     snackbar: _snackbar
                 }
@@ -118,6 +121,8 @@ export class HomePage implements OnInit {
             index = this.bookList.findIndex(b => b.id === msg.book.id);
             this.bookList.splice(index, 1);
             this.bookList.push(msg.book);
+            
+            this.cdr.detectChanges();
         });
 
         this.msgService.getMessage().subscribe((msg: IMessage) => {

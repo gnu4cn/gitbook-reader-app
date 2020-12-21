@@ -1,2 +1,7 @@
-<mat-label class="progress-bar-label">{{data.book.name}} - {{data.progress}}%<mat-label>
-<mat-progress-bar class="downloading-progress-bar" mode="determinate" [value]="data.progress"></mat-progress-bar>
+<mat-label class="progress-bar-label">{{data.book.name}}<mat-label>
+        <div fxLayout="row">
+            <mat-progress-bar fxFill class="downloading-progress-bar" mode="determinate" [value]="data.progress"></mat-progress-bar>
+            <mat-divider [vertical]="true"></mat-divider>
+            <mat-chip *ngIf="this.data.progress < 100">{{data.progress}}%</mat-chip>
+            <mat-chip *ngIf="this.data.progress === 100"><ion-icon name="checkmark-circle-outline"></ion-icon></mat-chip>
+        </div>
