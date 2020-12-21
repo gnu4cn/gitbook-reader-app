@@ -84,15 +84,6 @@ export class HomePage implements OnInit {
     ngOnInit() {
         this.initData();
 
-        this.crud.ipcRenderer.on('book-downloaded', (ev, msg: IProgressMessage) => {
-            const index = this.bookList.findIndex(b => b.id === msg.book.id);
-
-            this.bookList.splice(index, 1);
-            this.bookList.push(msg.book);
-
-            this.cdr.detectChanges();
-        });
-
         this.crud.ipcRenderer.on('error-occured', (ev, book: Book) => {
             const index = this.bookList.findIndex(b => b.id === book.id);
             this.bookList.splice(index, 1);
