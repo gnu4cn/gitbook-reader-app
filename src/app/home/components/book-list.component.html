@@ -3,12 +3,15 @@
         <!-- Books added already -->
         <ion-col *ngFor="let book of sortBy(bookListDisplay, 'name')" sizeXs="12" sizeSm="6" sizeLg="4" sizeXl="3">
             <mat-card class="book-card">
+                <ion-badge color="warning" style="position: absolute; right: 5px; top: 10px;">
+                    {{book.openCount}}次阅读
+                </ion-badge>
                 <mat-card-title>{{book.name | uppercase}}</mat-card-title>
 
                 <!-- 作者和来源 -->
                 <mat-card-header>
                     <div mat-card-avatar 
-                         style="background-image: url('assets/images/avatar.png'); background-size: cover;">
+                                           style="background-image: url('assets/images/avatar.png'); background-size: cover;">
                     </div>
                     <mat-card-title>{{book.writer.name}}</mat-card-title>
                     <mat-card-subtitle>{{book.website.uri}}</mat-card-subtitle>

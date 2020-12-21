@@ -73,7 +73,21 @@ export class BookListComponent implements OnInit {
     }
 
     openBook(book: Book) {
-        this.crud.ipcRenderer.send('open-book', book)
+        this.crud.ipcRenderer.send('open-book', book);
+        book.openCount += 1;
+        const query: IQuery = {
+            table: 'Book',
+            item: book
+        }
+
+        this.crud.updateItem(query).subscribe((queryRes: IQueryResult) => {
+            const msg: IMessage = {
+                event: 'book-updated',
+                data: queryRes
+            };
+
+            this.msgService.sendMessage(msg);
+        });
     }
 
     listBooksUnderCate = (cate: Category) => {
