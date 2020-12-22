@@ -1,12 +1,13 @@
 import { Component, OnInit, Inject,
     ChangeDetectorRef
 } from '@angular/core';
+
 import {
     MAT_SNACK_BAR_DATA, 
     MatSnackBar
 } from '@angular/material/snack-bar';
 
-import { IProgressMessage } from '../../vendor';
+import { IProgressMessage, sortBy } from '../../vendor';
 import { CrudService } from '../../services/crud.service';
 @Component({
     selector: 'app-snackbar',
@@ -14,25 +15,37 @@ import { CrudService } from '../../services/crud.service';
     styleUrls: ['./snackbar.component.scss'],
 })
 export class SnackbarComponent implements OnInit {
+    private downloadingList: Array<IProgressMessage> = [];
+
+    get downloadingQueue () {
+        return sortBy(this.downloadingList, 'progress');
+    }
+
     constructor(
         private crud: CrudService,
         private cdr: ChangeDetectorRef,
         @Inject(MAT_SNACK_BAR_DATA) public data: IProgressMessage
-    ) { }
+    ) {
+        this.downloadingList.push(data);
+    }
 
     ngOnInit() {
         this.crud.ipcRenderer.on('new-downloading-progress', (ev, msg: IProgressMessage) => {
-            if(msg.book.id === this.data.book.id){
-                this.data.progress = msg.progress;
-                this.cdr.detectChanges();
-            }
+            const index: number = this.downloadingList.findIndex(item => item.book.id === msg.book.id);
+
+            if(index >= 0) this.downloadingList.splice(index, 1);
+            this.downloadingList.push(msg);
+
+            this.cdr.detectChanges();
         });
 
         this.crud.ipcRenderer.on('book-downloaded', (ev, msg: IProgressMessage) => {
-            if(msg.book.id === this.data.book.id){
-                this.data.progress = 100;
-                this.cdr.detectChanges();
-            }
+            const index: number = this.downloadingList.findIndex(item => item.book.id === msg.book.id);
+
+            this.downloadingList.splice(index, 1);
+            this.downloadingList.push(msg);
+
+            this.cdr.detectChanges();
         });
     }
 }

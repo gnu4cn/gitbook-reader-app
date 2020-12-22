@@ -18,6 +18,7 @@ import { EditBookCateListDialog } from './edit-book-cate-list.component';
 import { ReadmeDialog } from './readme-dialog.component';
 
 import { 
+    sortBy,
     IQuery,
     IEditBookDialogData,
     IDeleteBookDialogResData,
@@ -48,9 +49,9 @@ export class BookListComponent implements OnInit {
 
     selectable: boolean = true;
     removable: boolean = true;
-
-    sortBy = (list: Array<any>, prop: string) => {
-        return list.sort((a, b) => a[prop] > b[prop] ? 1 : a[prop] === b[prop] ? 0 : -1);
+    
+    get bookList () {
+        return sortBy(this.bookListDisplay, 'openCount');
     }
 
     startDownload = (book: Book) => {
@@ -75,6 +76,7 @@ export class BookListComponent implements OnInit {
     openBook(book: Book) {
         this.crud.ipcRenderer.send('open-book', book);
         book.openCount += 1;
+        book.recycled = false;
         const query: IQuery = {
             table: 'Book',
             item: book
@@ -175,6 +177,7 @@ export class BookListComponent implements OnInit {
 
         if(res.recycled){
             res.book.recycled = true;
+            res.book.openCount = 0;
 
             query = {
                 table: 'Book',

@@ -1,37 +1,53 @@
 <ion-header>
     <ion-toolbar slots="end">
         <ion-title>Gitbook阅读器</ion-title>
-
         <ion-fab vertical="center" horizontal="end" edge>
             <ion-grid>
                 <ion-row>
+                    <!-- 添加一本书 -->
                     <ion-col>
-                <ion-fab-button color="light" (click)="openAddBookDialog()">
-                    <ion-avatar>
-                        <ion-icon name="add-outline" style="position: absolute; right: 5px; bottom: 10px;"></ion-icon>
-                        <img src="assets/images/closed-book-clipart-12-512x512.png" />
-                    </ion-avatar>
-                </ion-fab-button>
+                        <ion-fab-button color="light" (click)="openAddBookDialog()" matTooltip="从已知Git repo添加一本书" >
+                            <ion-avatar>
+                                <ion-icon name="add-outline" style="position: absolute; right: 5px; bottom: 10px;"></ion-icon>
+                                <img src="assets/images/closed-book-clipart-12-512x512.png" />
+                            </ion-avatar>
+                        </ion-fab-button>
                     </ion-col>
+
+                    <!-- 正在看的书, 打开次数大于 0 的书 -->
                     <ion-col>
-                <ion-fab-button color="light" (click)="displayBooksOnShelf()">
-                    <ion-avatar>
-                        <ion-badge color="success" style="position: absolute; left: 5px; bottom: 10px;">
-                            {{onShelfList.length}}
-                        </ion-badge>
-                        <img src="assets/images/bookshelf-512.png" />
-                    </ion-avatar>
-                </ion-fab-button>
+                        <ion-fab-button color="light" (click)="displayCurrentlyReadingBookList()" matTooltip="正在看的书">
+                            <ion-avatar>
+                                <ion-badge color="success" style="position: absolute; left: 5px; bottom: 10px;">
+                                    {{bookListCurrentlyReading.length}}
+                                </ion-badge>
+                                <img src="assets/images/currently-reading-books.png" />
+                            </ion-avatar>
+                        </ion-fab-button>
+                    </ion-col>                   
+
+                    <!-- 书架上的书, 打开 0 次的书 -->
+                    <ion-col>
+                        <ion-fab-button color="light" (click)="displayBookListOnShelf()" matTooltip="书架上的书">
+                            <ion-avatar>
+                                <ion-badge color="success" style="position: absolute; left: 5px; bottom: 10px;">
+                                    {{bookListOnShelf.length}}
+                                </ion-badge>
+                                <img src="assets/images/bookshelf-512.png" />
+                            </ion-avatar>
+                        </ion-fab-button>
                     </ion-col>
+                    
+                    <!-- 准备删除的书 -->
                     <ion-col>
-                <ion-fab-button color="light" (click)="displayRecycledBooks()">
-                    <ion-avatar>
-                        <ion-badge color="warning" style="position: absolute; left: 5px; bottom: 10px;">
-                            {{recycledList.length}}
-                        </ion-badge>
-                        <img src="assets/images/trash_full_512x512.png" />
-                    </ion-avatar>
-                </ion-fab-button>
+                        <ion-fab-button color="light" (click)="displayRecycledBookList()" matTooltip="暂存在回收站的书">
+                            <ion-avatar>
+                                <ion-badge color="warning" style="position: absolute; left: 5px; bottom: 10px;">
+                                    {{bookListRecycled.length}}
+                                </ion-badge>
+                                <img src="assets/images/trash_full_512x512.png" />
+                            </ion-avatar>
+                        </ion-fab-button>
                     </ion-col>
                 </ion-row>
             </ion-grid>

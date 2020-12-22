@@ -5,6 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import {MatIconModule} from '@angular/material/icon';
 import {MatCardModule} from '@angular/material/card';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import {MatToolbarModule} from '@angular/material/toolbar';
@@ -23,6 +24,7 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
         MatFormFieldModule,
         MatProgressBarModule,
         MatInputModule,
+        MatTooltipModule,
         MatSnackBarModule,
         MatDialogModule,
         MatCardModule,
@@ -49,6 +51,7 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
         MatIconModule,
         MatProgressBarModule,
         MatDividerModule,
+        MatTooltipModule,
         MatToolbarModule,
         FlexLayoutModule,
         MatFormFieldModule,

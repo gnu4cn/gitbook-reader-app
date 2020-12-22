@@ -1,5 +1,9 @@
 import { ValidatorFn, AbstractControl } from '@angular/forms';
 
+export const sortBy = (list: Array<any>, prop: string) => {
+        return list.sort((a, b) => a[prop] > b[prop] ? -1 : a[prop] === b[prop] ? 0 : 1);
+    }
+
 interface UnknownData {
     [key: string]: unknown;
 }
@@ -30,6 +34,7 @@ export type IFilterItem = IFilterCate | IFilterWriter | IFilterWebsite
 
 export interface IFilter {
     displayRecycled: boolean;
+    isOpened: boolean;
     filterList: Array<IFilterItem>
 }
 

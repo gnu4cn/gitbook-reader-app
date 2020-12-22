@@ -1,7 +1,10 @@
-<mat-label size="small" >
-    {{data.book.name | uppercase}} - 
-    <ion-text *ngIf="data.progress < 100">{{data.progress}}%</ion-text>
-    <ion-icon *ngIf="data.progress === 100" name="checkmark-circle-outline"></ion-icon>
-</mat-label>
-<mat-progress-bar class="downloading-progress-bar" mode="determinate" [value]="data.progress"></mat-progress-bar>
-
+<ion-row *ngFor="let item of downloadingQueue" fxFill>
+    <ion-col fxFill>
+    <mat-label size="small" >
+        {{item.book.name | uppercase}}
+        <ion-text *ngIf="item.progress < 100"> - {{item.progress}}%</ion-text>
+        <ion-icon *ngIf="item.progress === 100" name="checkmark-circle-outline"></ion-icon>
+    </mat-label>
+    <mat-progress-bar class="downloading-progress-bar" mode="determinate" [value]="item.progress"></mat-progress-bar>
+    </ion-col>
+</ion-row>
