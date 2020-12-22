@@ -96,6 +96,20 @@ export class HomePage implements OnInit {
         private dialog: MatDialog,
     ) {}
 
+    private changeFabButton = (button: string) => {
+        const buttonList = ['currently-reading', 'on-shelf', 'recycled'];
+        document.getElementById(`avatar-${button}`)
+            .style.backgroundColor = '#3880ff';
+
+        console.log(button, document.getElementById(`avatar-${button}`));
+
+        const index = buttonList.findIndex(b => b === button);
+        buttonList.splice(index, 1).map(b => {
+            document.getElementById(`avatar-${b}`).style.backgroundColor = "#fff";
+            console.log(document.getElementById(`avatar-${b}`));
+        });
+    } 
+
     ngOnInit() {
         this.initData();
 
@@ -152,20 +166,29 @@ export class HomePage implements OnInit {
             if(msg.event === 'book-recycled' || msg.event === 'book-recovered' || msg.event === 'book-updated') this.bookList.push(book);
             if(cateList.length > 0) this.cateList = cateList.slice();
 
+            if(msg.event === 'book-recycled') this.displayRecycledBookList();
+            if(msg.event === 'book-recovered') this.displayBookListOnShelf();
+
             this.messageList = [...this.messageList, ...data.message];
         });
     }
 
     displayCurrentlyReadingBookList = () => {
         this._bookListDisplay = this.bookListCurrentlyReading.slice();
+        this.changeFabButton('currently-reading');
+        this.cdr.detectChanges();
     }
 
     displayBookListOnShelf = () => {
         this._bookListDisplay = this.bookListOnShelf.slice();
+        this.changeFabButton('on-shelf');
+        this.cdr.detectChanges();
     }
 
     displayRecycledBookList = () => {
         this._bookListDisplay = this.bookListRecycled.slice();
+        this.changeFabButton('recycled');
+        this.cdr.detectChanges();
     }
 
     changeFilter = (filterAction: IFilterAction) => {
@@ -387,6 +410,8 @@ export class HomePage implements OnInit {
             this.messageList = [...this.messageList, ...res.message];
 
             this.bookList.push(res.data as Book);
+
+            this.displayBookListOnShelf();
         });
     }
 }

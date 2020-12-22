@@ -8,3 +8,11 @@ ion-header {
 ion-content {
     --background: lightblue;
 }
+
+ion-toolbar {
+    --min-height: 80px;
+}
+
+ion-badge {
+    z-index: 10;
+}

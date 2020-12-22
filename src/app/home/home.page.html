@@ -16,11 +16,12 @@
 
                     <!-- 正在看的书, 打开次数大于 0 的书 -->
                     <ion-col>
-                        <ion-fab-button color="light" (click)="displayCurrentlyReadingBookList()" matTooltip="正在看的书">
-                            <ion-avatar>
-                                <ion-badge color="success" style="position: absolute; left: 5px; bottom: 10px;">
-                                    {{bookListCurrentlyReading.length}}
-                                </ion-badge>
+                        <ion-badge color="success" style="position: absolute; right: 0px; top: 0px; overflow: visible!important;">
+                            {{bookListCurrentlyReading.length}}
+                        </ion-badge>
+                        <ion-fab-button 
+                            color="light" (click)="displayCurrentlyReadingBookList()" matTooltip="正在看的书">
+                            <ion-avatar id="avatar-currently-reading">
                                 <img src="assets/images/currently-reading-books.png" />
                             </ion-avatar>
                         </ion-fab-button>
@@ -28,23 +29,24 @@
 
                     <!-- 书架上的书, 打开 0 次的书 -->
                     <ion-col>
+                        <ion-badge color="success" style="position: absolute; right: 0px; top: 0px; overflow: visible!important;">
+                            {{bookListOnShelf.length}}
+                        </ion-badge>
                         <ion-fab-button color="light" (click)="displayBookListOnShelf()" matTooltip="书架上的书">
-                            <ion-avatar>
-                                <ion-badge color="success" style="position: absolute; left: 5px; bottom: 10px;">
-                                    {{bookListOnShelf.length}}
-                                </ion-badge>
+                            <ion-avatar id="avatar-on-shelf">
                                 <img src="assets/images/bookshelf-512.png" />
                             </ion-avatar>
                         </ion-fab-button>
                     </ion-col>
-                    
+
                     <!-- 准备删除的书 -->
                     <ion-col>
+                        <ion-badge color="warning" style="position: absolute; right: 0px; top: 0px; overflow: visible!important;">
+                            {{bookListRecycled.length}}
+                        </ion-badge>
+
                         <ion-fab-button color="light" (click)="displayRecycledBookList()" matTooltip="暂存在回收站的书">
-                            <ion-avatar>
-                                <ion-badge color="warning" style="position: absolute; left: 5px; bottom: 10px;">
-                                    {{bookListRecycled.length}}
-                                </ion-badge>
+                            <ion-avatar id="avatar-recycled">
                                 <img src="assets/images/trash_full_512x512.png" />
                             </ion-avatar>
                         </ion-fab-button>
