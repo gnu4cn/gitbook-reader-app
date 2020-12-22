@@ -12,13 +12,11 @@ import {
     MatDialog, 
 } from '@angular/material/dialog';
 
-import { CrudService } from '../services/crud.service';
 import { SnackbarComponent } from './components/snackbar.component';
-
 import { Book, Category, Writer, Website } from '../models';
-
 import { MessageService } from '../services/message.service';
 import { NewBookDialog } from './components/new-book-dialog.component';
+import { CrudService } from '../services/crud.service';
 
 import { 
     IQuery,
@@ -35,6 +33,7 @@ import {
     IMessage
 } from '../vendor';
 
+type TAvatarIds = "currently-reading" | "on-shelf" | "recycled";
 @Component({
     selector: 'app-home',
     templateUrl: './home.page.html',
@@ -45,30 +44,12 @@ export class HomePage implements OnInit {
     verticalPosition: MatSnackBarVerticalPosition = 'bottom';
 
     bookList: Array<Book> = [];
-    private _bookListDisplay: Array<Book> = [];
 
     writerList: Array<Writer> = [];
     cateList: Array<Category> = [];
     websiteList: Array<Website> = [];
     messageList: Array<string|object> = [];
     downloadingList: Array<number> = [];
-
-    get bookListCurrentlyReading () {
-        this.filter.displayRecycled = false;
-        this.filter.isOpened = true;
-        return this.bookList.filter(b => this.filterFn(b)).slice();
-    }
-
-    get bookListOnShelf () {
-        this.filter.displayRecycled = false;
-        this.filter.isOpened = false;
-        return this.bookList.filter(b => this.filterFn(b)).slice();
-    }
-
-    get bookListRecycled () {
-        this.filter.displayRecycled = true;
-        return this.bookList.filter(b => this.filterFn(b)).slice();
-    }
 
     private _filter: IFilter = {
         displayRecycled: false,
@@ -81,11 +62,7 @@ export class HomePage implements OnInit {
     }
 
     get bookListDisplay () {
-        return this._bookListDisplay;
-    }
-
-    get bookListDisplayLength () {
-        return this._bookListDisplay.length;
+        return this.bookList.filter(b => this.filterFn(b));
     }
 
     constructor(
@@ -96,7 +73,7 @@ export class HomePage implements OnInit {
         private dialog: MatDialog,
     ) {}
 
-    private changeFabButton = (button: string) => {
+    private changeFabButton = (button: TAvatarIds) => {
         const buttonList = ['currently-reading', 'on-shelf', 'recycled'];
         document.getElementById(`avatar-${button}`)
             .style.backgroundColor = '#3880ff';
@@ -136,6 +113,7 @@ export class HomePage implements OnInit {
             if(index < 0){
                 this.downloadingList.push(msg.book.id);
             }
+            this.cdr.detectChanges();
         });
 
         this.crud.ipcRenderer.on('book-downloaded', (ev, msg: IProgressMessage) => {
@@ -151,7 +129,7 @@ export class HomePage implements OnInit {
             if(this.downloadingList.length === 0){
                 this.snackbar.dismiss();
             }
-
+            this.displayBookListOnShelf();
             this.cdr.detectChanges();
         });
 
@@ -166,29 +144,48 @@ export class HomePage implements OnInit {
             if(msg.event === 'book-recycled' || msg.event === 'book-recovered' || msg.event === 'book-updated') this.bookList.push(book);
             if(cateList.length > 0) this.cateList = cateList.slice();
 
-            if(msg.event === 'book-recycled') this.displayRecycledBookList();
-            if(msg.event === 'book-recovered') this.displayBookListOnShelf();
-
             this.messageList = [...this.messageList, ...data.message];
+            this.cdr.detectChanges();
         });
     }
 
+    get bookListCurrentlyReading () {
+        this.filter.displayRecycled = false;
+        this.filter.isOpened = true;
+        return this.bookList.filter(b => this.filterFn(b)).slice();
+    }
+
+    get bookListOnShelf () {
+        this.filter.displayRecycled = false;
+        this.filter.isOpened = false;
+
+        return this.bookList.filter(b => this.filterFn(b)).slice();
+    }
+
+    get bookListRecycled () {
+        this.filter.displayRecycled = true;
+
+        return this.bookList.filter(b => this.filterFn(b)).slice();
+    }
+
     displayCurrentlyReadingBookList = () => {
-        this._bookListDisplay = this.bookListCurrentlyReading.slice();
+        this.filter.displayRecycled = false;
+        this.filter.isOpened = false;
+
         this.changeFabButton('currently-reading');
-        this.cdr.detectChanges();
     }
 
     displayBookListOnShelf = () => {
-        this._bookListDisplay = this.bookListOnShelf.slice();
+        this.filter.displayRecycled = false;
+        this.filter.isOpened = false;
+
         this.changeFabButton('on-shelf');
-        this.cdr.detectChanges();
     }
 
     displayRecycledBookList = () => {
-        this._bookListDisplay = this.bookListRecycled.slice();
+        this.filter.displayRecycled = true;
+
         this.changeFabButton('recycled');
-        this.cdr.detectChanges();
     }
 
     changeFilter = (filterAction: IFilterAction) => {
@@ -228,37 +225,34 @@ export class HomePage implements OnInit {
             return !book.recycled && book.openCount === 0;
         }
 
-        // 有过滤条件时, 只要有一个条件满足就显示？还是所有条件都满足时才显示？
-        if(this.filter.filterList.length > 0){
-            let _writer: boolean = false;
-            let _website: boolean = false;
-            let _cate: boolean = false;
-            let _openCount: boolean = false;
-            this.filter.filterList.forEach(filterItem => {
-                const key = Object.keys(filterItem)[0];
+        let _writer: boolean = false;
+        let _website: boolean = false;
+        let _cate: boolean = false;
+        let _openCount: boolean = false;
+        this.filter.filterList.forEach(filterItem => {
+            const key = Object.keys(filterItem)[0];
 
-                switch(key){
-                    case 'writer':
-                        if(book.writer.id === filterItem[key].id) {
-                            _writer = true;
-                        }
-                        break
-                    case 'website':
-                        if(book.website.id === filterItem[key].id) {
-                            _website = true;
-                        }
-                        break
-                    case 'cate':
-                        const index = book.cateList.findIndex(cate => cate.id === filterItem[key].id);
-                        if(index >= 0) {
-                            _cate = true;
-                        }
-                        break
-                }
-            });
+            switch(key){
+                case 'writer':
+                    if(book.writer.id === filterItem[key].id) {
+                        _writer = true;
+                    }
+                    break
+                case 'website':
+                    if(book.website.id === filterItem[key].id) {
+                        _website = true;
+                    }
+                    break
+                case 'cate':
+                    const index = book.cateList.findIndex(cate => cate.id === filterItem[key].id);
+                    if(index >= 0) {
+                        _cate = true;
+                    }
+                    break
+            }
+        });
 
-            return _writer || _website || _cate;
-        }
+        return _writer || _website || _cate;
     }
 
     initData () {
@@ -302,116 +296,6 @@ export class HomePage implements OnInit {
                 this.saveBook(res);
                 this.displayBookListOnShelf();
             }
-        });
-    }
-
-    saveBook = (res: NewBookDialogResData) => {
-        const newBook = new Book();
-        newBook.cateList = [];
-
-        const newBookUri = res.bookUri;
-
-        const site = newBookUri.match(REGEXP_SITE)[0];
-        const [ writerName, name ] = newBookUri.replace(REGEXP_SITE, '').match(REGEXP_LOC)[0].split('/');
-        const re = new RegExp(/\.git$/)
-        newBook.name = re.test(name) ? name.replace(re, '') : name;
-
-        const website = this.websiteList.find(w => w.uri === site);
-        if (website){
-            newBook.website = website;
-        }
-        else {
-            const _website = new Website();
-            _website.uri = site;
-
-            const query: IQuery = {
-                table: "Website",
-                item: _website
-            }
-            this.crud.addItem(query).subscribe((res: IQueryResult) => {
-                this.messageList = [...this.messageList, ...res.message];
-
-                const website = res.data as Website;
-                newBook.website = website ;
-                this.websiteList.push(website);
-            });
-        }
-
-        const writer: Writer = this.writerList.find(w => w.name === writerName);
-        if (writer){
-            // 查看 website 是否在 writer 的
-            if(writer.websiteList === undefined) writer.websiteList = [];
-            const website = writer.websiteList.find(w => w.uri === newBook.website.uri);
-            if(!website) {
-                writer.websiteList.push(newBook.website);
-
-                const query: IQuery = {
-                    table: 'Writer',
-                    item: writer,
-                }
-                this.crud.updateItem(query).subscribe((res: IQueryResult) => {
-                    this.messageList = [...this.messageList, ...res.message];
-                    newBook.writer = res.data as Writer;
-                });
-            }
-            else newBook.writer = writer;
-        }
-        else {
-            const _writer = new Writer();
-            _writer.name = writerName;
-
-            // 将 newBook.website 写入 _writer.websiteList
-            _writer.websiteList = [];
-            _writer.websiteList.push(newBook.website);
-
-            const query: IQuery = {
-                table: "Writer",
-                item: _writer
-            }
-            this.crud.addItem(query).subscribe((res: IQueryResult) => {
-                this.messageList = [...this.messageList, ...res.message];
-
-                const writer = res.data as Writer;
-                newBook.writer = writer;
-                this.writerList.push(writer);
-            });
-        }
-
-        // 处理 cateList
-        if(res.cateList.length>0){
-            res.cateList.map(c => {
-                const cate = this.cateList.find(cate => cate.name === c.name);
-                if (cate) newBook.cateList.push(cate);
-                else {
-                    const _cate = new Category();
-                    _cate.name = c.name;
-
-                    const query: IQuery = {
-                        table: "Category",
-                        item: _cate
-                    }
-                    this.crud.addItem(query).subscribe((res: IQueryResult) => {
-                        this.messageList = [...this.messageList, ...res.message];
-
-                        const cate = res.data as Category;
-                        this.cateList.push(cate);
-                        newBook.cateList.push(cate);
-                    });
-                }
-            });
-        }
-
-        // newBook 准备完毕，存入数据库
-        const query: IQuery = {
-            table: 'Book',
-            item: newBook
-        }
-        this.crud.addItem(query).subscribe((res: IQueryResult) => {
-            this.messageList = [...this.messageList, ...res.message];
-
-            this.bookList.push(res.data as Book);
-
-            this.displayBookListOnShelf();
         });
     }
 }

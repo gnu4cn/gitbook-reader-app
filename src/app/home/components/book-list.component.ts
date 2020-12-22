@@ -77,6 +77,7 @@ export class BookListComponent implements OnInit {
         this.crud.ipcRenderer.send('open-book', book);
         book.openCount += 1;
         book.recycled = false;
+
         const query: IQuery = {
             table: 'Book',
             item: book
@@ -187,10 +188,7 @@ export class BookListComponent implements OnInit {
             await this.crud.updateItem(query).subscribe((queryRes: IQueryResult) => {
                 msg = {
                     event: 'book-recycled',
-                    data: {
-                        message: queryRes.message,
-                        data: queryRes.data
-                    }
+                    data: queryRes
                 }
                 this.msgService.sendMessage(msg);
             });
@@ -205,6 +203,7 @@ export class BookListComponent implements OnInit {
             }
 
             await this.crud.deleteItem(query).subscribe((queryRes: IQueryResult) => {
+                // 这里 queryRes 没有返回 book
                 msg = {
                     event: 'book-deleted',
                     data: {
@@ -228,10 +227,7 @@ export class BookListComponent implements OnInit {
         this.crud.updateItem(query).subscribe((queryRes: IQueryResult) => {
             msg = {
                 event: 'book-recovered',
-                data: {
-                    message: queryRes.message,
-                    data: queryRes.data
-                }
+                data: queryRes
             }
             this.msgService.sendMessage(msg);
         });
