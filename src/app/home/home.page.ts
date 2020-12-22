@@ -101,12 +101,12 @@ export class HomePage implements OnInit {
         document.getElementById(`avatar-${button}`)
             .style.backgroundColor = '#3880ff';
 
-        console.log(button, document.getElementById(`avatar-${button}`));
-
         const index = buttonList.findIndex(b => b === button);
-        buttonList.splice(index, 1).map(b => {
-            document.getElementById(`avatar-${b}`).style.backgroundColor = "#fff";
-            console.log(document.getElementById(`avatar-${b}`));
+        buttonList.splice(index, 1);
+
+        buttonList.map(b => {
+            document.getElementById(`avatar-${b}`)
+                .style.backgroundColor = "#fff";
         });
     } 
 
