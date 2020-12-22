@@ -22,6 +22,7 @@ import {
     providedIn: 'root'
 })
 export class BookService {
+    bookList: Array<Book> = [];
 
     constructor(
         private crud: CrudService,
