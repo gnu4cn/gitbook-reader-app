@@ -23,7 +23,8 @@ import {
     Book,
 } from '../../models';
 
-import { REGEXP_ZH, IEditBookDialogData } from '../../vendor';
+import { REGEXP_ZH } from '../../vendor';
+import { CateService } from '../services/cate.service';
 
 @Component({
     selector: 'edit-book-cate-list-dialog',
@@ -46,7 +47,8 @@ export class EditBookCateListDialog implements OnInit{
 
     constructor(
         public dialogRef: MatDialogRef<EditBookCateListDialog>,
-        @Inject(MAT_DIALOG_DATA) public data: IEditBookDialogData 
+        private cate: CateService,
+        @Inject(MAT_DIALOG_DATA) public data: Book
     ) {
         this.filteredCateList = this.cateListInputControl.valueChanges.pipe(
             startWith(null),
@@ -56,10 +58,10 @@ export class EditBookCateListDialog implements OnInit{
 
     ngOnInit() {
         // 生成备选清单，要把 this.data.book 的 cateList 移除
-        this.tempCateList = this.data.cateList.slice();
-        this.cateList = this.data.cateList.slice();
+        this.cateList = this.cate.list.slice();
+        this.tempCateList = this.cateList.slice();
 
-        this.data.book.cateList.map(c => {
+        this.cateList.map(c => {
             const index = this.tempCateList.findIndex(_c => _c.id === c.id);
             this.tempCateList.splice(index, 1);
         });
@@ -98,12 +100,12 @@ export class EditBookCateListDialog implements OnInit{
             const _cate = this.cateList.find(cate => cate.name === _value);
 
             if(_cate){
-                this.data.book.cateList.push(_cate);
+                this.data.cateList.push(_cate);
             }
             else {
                 const cate = new Category();
                 cate.name = _value;
-                this.data.book.cateList.push(cate);
+                this.data.cateList.push(cate);
             }
 
             // 从备选清单中移除
@@ -114,8 +116,8 @@ export class EditBookCateListDialog implements OnInit{
 
     remove(cate: Category): void {
         // 从 newBook 的 cateList 中移除
-        const index = this.data.book.cateList.findIndex(c => c.name === cate.name);
-        this.data.book.cateList.splice(index, 1);
+        const index = this.data.cateList.findIndex(c => c.name === cate.name);
+        this.data.cateList.splice(index, 1);
 
         // 如果在既有类别清单中，则重新加入到备选清单
         const _cate = this.cateList.find(c => c.name === cate.name);

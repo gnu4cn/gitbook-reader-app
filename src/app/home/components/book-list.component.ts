@@ -11,7 +11,9 @@ import {
 
 import { CrudService } from '../../services/crud.service';
 import { Book, Category } from '../../models';
-import { MessageService } from '../../services/message.service';
+import { BookService } from '../services/book.service';
+import { CateService } from '../services/cate.service';
+import { OpMessageService } from '../services/op-message.service';
 
 import { DeleteBookDialog } from './delete-book-dialog.component';
 import { EditBookCateListDialog } from './edit-book-cate-list.component';
@@ -19,12 +21,14 @@ import { ReadmeDialog } from './readme-dialog.component';
 
 import { 
     sortBy,
-    IQuery,
-    IEditBookDialogData,
-    IDeleteBookDialogResData,
-    IMessage,
-    IQueryResult,
+    IFilter,
 } from '../../vendor';
+
+import { 
+    IDeleteBookDialogResData,
+    TBookSortBy,
+    filterFn,
+} from '../vendor';
 
 @Component({
     selector: 'app-book-list',
@@ -32,26 +36,22 @@ import {
     styleUrls: ['./book-list.component.scss'],
 })
 export class BookListComponent implements OnInit {
-    @Input() bookListDisplay: Array<Book>;
-    @Input() cateList: Array<Category>;
-
-    _cateList: Array<Category>;
+    @Input() filter: IFilter;
+    @Input() sortBy: TBookSortBy;
 
     constructor(
         private crud: CrudService,
-        private msgService: MessageService,
         private dialog: MatDialog,
+        private book: BookService,
+        private opMessage: OpMessageService
     ) {}
 
-    ngOnInit() {
-        this._cateList = this.cateList.slice();
-    }
-
-    selectable: boolean = true;
-    removable: boolean = true;
+    ngOnInit() {}
     
     get bookList () {
-        return sortBy(this.bookListDisplay, 'openCount');
+        return sortBy(this.book.list
+            .filter(b => filterFn(b, this.filter)), 
+            this.sortBy);
     }
 
     startDownload = (book: Book) => {
@@ -62,102 +62,27 @@ export class BookListComponent implements OnInit {
         document
             .getElementById(`delete-book-${book.id}`)
             .setAttribute('disabled', 'true');
-
-    }
-
-    openReadmeDialog = (readme: string) => {
-
-        this.dialog.open(ReadmeDialog, {
-            width: '640px',
-            data: readme
-        });
-    }
-
-    openBook(book: Book) {
-        this.crud.ipcRenderer.send('open-book', book);
-        book.openCount += 1;
-        book.recycled = false;
-
-        const query: IQuery = {
-            table: 'Book',
-            item: book
-        }
-
-        this.crud.updateItem(query).subscribe((queryRes: IQueryResult) => {
-            const msg: IMessage = {
-                event: 'book-updated',
-                data: queryRes
-            };
-
-            this.msgService.sendMessage(msg);
-        });
     }
 
     listBooksUnderCate = (cate: Category) => {
         console.log(cate)
     }
 
-    openEditBookCateListDialog = (book: Book) => {
-        const dataDialog: IEditBookDialogData = {
-            cateList: this.cateList,
-            book: book
-        }
-
-        const dialogRef = this.dialog.open(EditBookCateListDialog, {
-            width: '480px',
-            data: dataDialog
-        });
-
-        dialogRef.afterClosed().subscribe((res: Book) => {
-            if(res) this.updateBook(res);
+    openReadmeDialog = (readme: string) => {
+        this.dialog.open(ReadmeDialog, {
+            width: '640px',
+            data: readme
         });
     }
 
-    updateBook = async (book: Book) => {
-        let query: IQuery;
-        let msg: IMessage;
-        let index: number;
-        let messageList: Array<string|object> = [];
-
-        await book.cateList.map((_c: Category) => {
-            index = this.cateList.findIndex(c => c.name === _c.name);
-
-            if(index<0){
-                const cate = new Category();
-                cate.name = _c.name;
-                index = book.cateList.findIndex(c => c.name === _c.name);
-                book.cateList.splice(index, 1)
-
-                query = {
-                    table: 'Category',
-                    item: cate
-                }
-
-                this.crud.addItem(query).subscribe((queryRes: IQueryResult) => {
-                    messageList = [...messageList, ...queryRes.message];
-                    this._cateList.push(queryRes.data as Category);
-                    book.cateList.push(queryRes.data as Category);
-                });
-            }
+    openEditBookCateListDialog = (book: Book) => {
+        const dialogRef = this.dialog.open(EditBookCateListDialog, {
+            width: '480px',
+            data: book
         });
 
-        query = {
-            table: 'Book',
-            item: book
-        }
-        this.crud.updateItem(query).subscribe((queryRes: IQueryResult) => {
-            messageList = [...messageList, ...queryRes.message];
-
-            msg = {
-                event: 'book-updated',
-                data: {
-                    message: messageList,
-                    data: book,
-                    _data: this._cateList
-                }
-            }
-
-            this.msgService.sendMessage(msg);
+        dialogRef.afterClosed().subscribe((res: Book) => {
+            if(res) this.book.update(res);
         });
     }
 
@@ -168,68 +93,7 @@ export class BookListComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe((res: IDeleteBookDialogResData) => {
-            if(res) this.deleteBook(res);
+            if(res) this.book.recycleRecoverDelete(res);
         });
     }                        
-
-    deleteBook = async (res: IDeleteBookDialogResData) => {
-        let query: IQuery;
-        let msg: IMessage;
-
-        if(res.recycled){
-            res.book.recycled = true;
-            res.book.openCount = 0;
-
-            query = {
-                table: 'Book',
-                item: res.book
-            }
-
-            await this.crud.updateItem(query).subscribe((queryRes: IQueryResult) => {
-                msg = {
-                    event: 'book-recycled',
-                    data: queryRes
-                }
-                this.msgService.sendMessage(msg);
-            });
-
-            return 0;
-        }
-
-        if (!res.recycled && res.remove){
-            query = {
-                table: 'Book',
-                item: res.book
-            }
-
-            await this.crud.deleteItem(query).subscribe((queryRes: IQueryResult) => {
-                // 这里 queryRes 没有返回 book
-                msg = {
-                    event: 'book-deleted',
-                    data: {
-                        message: queryRes.message,
-                        data: res.book
-                    }
-                }
-
-                this.msgService.sendMessage(msg);
-            });
-
-            return 0;
-        }
-
-        res.book.recycled = false;
-        query = {
-            table: 'Book',
-            item: res.book
-        }
-
-        this.crud.updateItem(query).subscribe((queryRes: IQueryResult) => {
-            msg = {
-                event: 'book-recovered',
-                data: queryRes
-            }
-            this.msgService.sendMessage(msg);
-        });
-    }
 }

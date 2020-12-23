@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>修改类别</h1>
+<h1 mat-dialog-title>修改书籍 "{{data.name}}" 类别</h1>
 <div mat-dialog-content>
     <form>
         <!-- bookCateListInput -->
@@ -6,7 +6,7 @@
             <mat-label>书籍分类(<b>不能为空</b>)</mat-label>
             <mat-chip-list #chipList aria-label="Book cate selection">
                 <mat-chip
-                    *ngFor="let cate of data.book.cateList"
+                    *ngFor="let cate of data.cateList"
                     [selectable]="selectable"
                     [removable]="removable"
                     (removed)="remove(cate)">
@@ -32,5 +32,5 @@
 </div>
 <div mat-dialog-actions>
     <button mat-button (click)="onNoClick()">放弃修改</button>
-    <button mat-button [disabled]="data.book.cateList.length === 0" [mat-dialog-close]="data.book">修改</button>
+    <button mat-button [disabled]="data.cateList.length === 0" [mat-dialog-close]="data">修改</button>
 </div>

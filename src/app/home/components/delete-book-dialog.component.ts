@@ -12,7 +12,7 @@ import {
 
 import { 
     IDeleteBookDialogResData,
-} from '../../vendor';
+} from '../vendor';
 
 import { Book } from '../../models';
 

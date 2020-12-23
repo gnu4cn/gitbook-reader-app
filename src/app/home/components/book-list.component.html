@@ -31,7 +31,7 @@
                     <button mat-button *ngIf="book.downloaded" (click)="openReadmeDialog(book.desc)">
                         <ion-icon name="compass-outline"></ion-icon>README.md
                     </button>
-                    <button mat-button *ngIf="book.downloaded" (click)="openBook(book)">
+                    <button mat-button *ngIf="book.downloaded" (click)="book.open(book)">
                         <ion-icon name="book-outline"></ion-icon>阅读
                     </button>
                     <button id="{{ 'download-book-' + book.id }}" mat-button 

@@ -2,6 +2,10 @@ import { Injectable } from '@angular/core';
 
 import { CrudService } from '../../services/crud.service';
 import { Book, Category, Writer, Website } from '../../models';
+import { OpMessageService } from './op-message.service';
+import { WriterService } from './writer.service';
+import { WebsiteService } from './website.service';
+import { CateService } from './cate.service';
 
 import { 
     IQuery,
@@ -18,18 +22,47 @@ import {
     IMessage
 } from '../../vendor';
 
+import {
+    IDeleteBookDialogResData,
+} from '../vendor';
+
 @Injectable({
     providedIn: 'root'
 })
 export class BookService {
-    bookList: Array<Book> = [];
+    private _list: Array<Book>;
 
     constructor(
         private crud: CrudService,
-    ) {}
+        private opMessage: OpMessageService,
+        private website: WebsiteService,
+        private writer: WriterService,
+        private cate: CateService
+    ) {
+        this.crud.getItems({table: 'Book'})
+            .subscribe((res: IQueryResult) => {
+                this.opMessage.newMsg(res.message);
+                const books = res.data as Book[];
+                this._list = books.slice();
+            });
+    }
 
+    get list () {
+        return this._list;
+    }
 
-    saveBook = (res: NewBookDialogResData) => {
+    bookUpdated = (book: Book) => {
+        const index = this._list.findIndex(b => b.id === book.id);
+        this._list.splice(index, 1);
+        this._list.push(book);
+    }
+
+    bookDeleted = (book: Book) => {
+        const index = this._list.findIndex(b => b.id === book.id);
+        this._list.splice(index, 1);
+    }
+
+    save = async (res: NewBookDialogResData) => {
         const newBook = new Book();
         newBook.cateList = [];
 
@@ -40,103 +73,101 @@ export class BookService {
         const re = new RegExp(/\.git$/)
         newBook.name = re.test(name) ? name.replace(re, '') : name;
 
-        const website = this.websiteList.find(w => w.uri === site);
-        if (website){
-            newBook.website = website;
-        }
-        else {
-            const _website = new Website();
-            _website.uri = site;
+        newBook.website = await this.website.newWebsit(site);
+        newBook.writer = await this.writer.newWriter(writerName, newBook.website);
 
-            const query: IQuery = {
-                table: "Website",
-                item: _website
-            }
-            this.crud.addItem(query).subscribe((res: IQueryResult) => {
-                this.messageList = [...this.messageList, ...res.message];
+        newBook.cateList = await this.cate.saveList(res.cateList).slice();
 
-                const website = res.data as Website;
-                newBook.website = website ;
-                this.websiteList.push(website);
-            });
-        }
-
-        const writer: Writer = this.writerList.find(w => w.name === writerName);
-        if (writer){
-            // 查看 website 是否在 writer 的
-            if(writer.websiteList === undefined) writer.websiteList = [];
-            const website = writer.websiteList.find(w => w.uri === newBook.website.uri);
-            if(!website) {
-                writer.websiteList.push(newBook.website);
-
-                const query: IQuery = {
-                    table: 'Writer',
-                    item: writer,
-                }
-                this.crud.updateItem(query).subscribe((res: IQueryResult) => {
-                    this.messageList = [...this.messageList, ...res.message];
-                    newBook.writer = res.data as Writer;
-                });
-            }
-            else newBook.writer = writer;
-        }
-        else {
-            const _writer = new Writer();
-            _writer.name = writerName;
-
-            // 将 newBook.website 写入 _writer.websiteList
-            _writer.websiteList = [];
-            _writer.websiteList.push(newBook.website);
-
-            const query: IQuery = {
-                table: "Writer",
-                item: _writer
-            }
-            this.crud.addItem(query).subscribe((res: IQueryResult) => {
-                this.messageList = [...this.messageList, ...res.message];
-
-                const writer = res.data as Writer;
-                newBook.writer = writer;
-                this.writerList.push(writer);
-            });
-        }
-
-        // 处理 cateList
-        if(res.cateList.length>0){
-            res.cateList.map(c => {
-                const cate = this.cateList.find(cate => cate.name === c.name);
-                if (cate) newBook.cateList.push(cate);
-                else {
-                    const _cate = new Category();
-                    _cate.name = c.name;
-
-                    const query: IQuery = {
-                        table: "Category",
-                        item: _cate
-                    }
-                    this.crud.addItem(query).subscribe((res: IQueryResult) => {
-                        this.messageList = [...this.messageList, ...res.message];
-
-                        const cate = res.data as Category;
-                        this.cateList.push(cate);
-                        newBook.cateList.push(cate);
-                    });
-                }
-            });
-        }
-
-        // newBook 准备完毕，存入数据库
         const query: IQuery = {
             table: 'Book',
             item: newBook
         }
         this.crud.addItem(query).subscribe((res: IQueryResult) => {
-            this.messageList = [...this.messageList, ...res.message];
+            this.opMessage.newMsg(res.message);
 
-            this.bookList.push(res.data as Book);
-
-            this.displayBookListOnShelf();
+            this._list.push(res.data as Book);
         });
     }
-}
+
+    open = (book: Book) => {
+        this.crud.ipcRenderer.send('open-book', book);
+        book.openCount += 1;
+        book.recycled = false;
+
+        const query: IQuery = {
+            table: 'Book',
+            item: book
+        }
+
+        this.crud.updateItem(query).subscribe((queryRes: IQueryResult) => {
+            const msg: IMessage = {
+                event: 'book-updated',
+                data: queryRes
+            };
+            this.opMessage.newMsg(queryRes.message);
+            this.bookUpdated(queryRes.data as Book);
+        });
+    }
+
+    update = async (book: Book) => {
+        let query: IQuery;
+
+        book.cateList = await this.cate.saveList(book.cateList).slice();
+
+        query = {
+            table: 'Book',
+            item: book
+        }
+        this.crud.updateItem(query).subscribe((queryRes: IQueryResult) => {
+            this.opMessage.newMsg(queryRes.message);
+
+            this.bookUpdated(queryRes.data as Book);
+        });
+    }
+
+    recycleRecoverDelete =  async (res: IDeleteBookDialogResData) => {
+        let query: IQuery;
+
+        if(res.recycled){
+            res.book.recycled = true;
+            res.book.openCount = 0;
+
+            query = {
+                table: 'Book',
+                item: res.book
+            }
+
+            await this.crud.updateItem(query).subscribe((queryRes: IQueryResult) => {
+                this.opMessage.newMsg(queryRes.message);
+                this.bookUpdated(queryRes.data as Book);
+            });
+
+            return 0;
+        }
+
+        if (!res.recycled && res.remove){
+            query = {
+                table: 'Book',
+                item: res.book
+            }
+
+            await this.crud.deleteItem(query).subscribe((queryRes: IQueryResult) => {
+                this.opMessage.newMsg(queryRes.message);
+                this.bookDeleted(res.book);
+            });
+
+            return 0;
+        }
+
+        res.book.recycled = false;
+        query = {
+            table: 'Book',
+            item: res.book
+        }
+
+        this.crud.updateItem(query).subscribe((queryRes: IQueryResult) => {
+            this.opMessage.newMsg(queryRes.message);
+            this.bookUpdated(queryRes.data as Book);
+        });
+    }
 }

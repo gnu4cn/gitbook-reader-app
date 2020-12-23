@@ -1,7 +1,6 @@
 import { 
     Component, 
     OnInit, 
-    Inject, 
     ElementRef, 
     ViewChild 
 } from '@angular/core';
@@ -13,7 +12,6 @@ import { map, startWith } from 'rxjs/operators';
 
 import { 
     MatDialogRef, 
-    MAT_DIALOG_DATA 
 } from '@angular/material/dialog';
 import { MatAutocompleteSelectedEvent, MatAutocomplete} from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
@@ -21,12 +19,18 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { 
     Category, 
 } from '../../models';
+
 import { 
-    NewBookDialogResData, 
-    NewBookDialogData,
     IsQualifiedAndNotExistedGitRepoValidatorFn,
     REGEXP_ZH,
 } from '../../vendor';
+
+import { 
+    IAddBookDialogResData, 
+} from '../vendor';
+
+import { BookService } from '../services/book.service';
+import { CateService } from '../services/cate.service';
 
 @Component({
     selector: 'app-new-book-dialog',
@@ -39,7 +43,7 @@ export class NewBookDialog implements OnInit{
     uriInputControl: FormControl = new FormControl();
     cateListInputControl: FormControl = new FormControl();
 
-    newBook: NewBookDialogResData = {
+    newBook: IAddBookDialogResData = {
         bookUri: '',
         cateList: [],
     };
@@ -49,14 +53,14 @@ export class NewBookDialog implements OnInit{
     removable = true;
     separatorKeysCodes: number[] = [ ENTER, COMMA ];
 
-
     filteredCateList: Observable<Array<Category>>;
     tempCateList: Array<Category>;
     cateList: Array<Category>;
 
     constructor(
         public dialogRef: MatDialogRef<NewBookDialog>,
-        @Inject(MAT_DIALOG_DATA) public data: NewBookDialogData
+        private book: BookService,
+        private cate: CateService,
     ) {
         this.filteredCateList = this.cateListInputControl.valueChanges.pipe(
             startWith(null),
@@ -67,9 +71,12 @@ export class NewBookDialog implements OnInit{
     }
 
     ngOnInit() {
-        this.tempCateList = this.data.cateList.slice();
-        this.cateList = this.data.cateList.slice();
-        this.uriInputControl.setValidators(IsQualifiedAndNotExistedGitRepoValidatorFn(this.data.bookList));
+        this.cateList = this.cate.list.slice();
+        this.tempCateList = this.cateList.slice();
+
+        this.uriInputControl.setValidators(IsQualifiedAndNotExistedGitRepoValidatorFn(this.book
+            .list.slice()
+        ));
     }
 
     private _filter(val: string): Array<Category> {
