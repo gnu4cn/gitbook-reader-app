@@ -1,5 +1,4 @@
 import { Component, 
-    ChangeDetectorRef,
     OnInit } from '@angular/core';
 
 import { 
@@ -21,15 +20,12 @@ import { SnackbarComponent } from './components/snackbar.component';
 import { NewBookDialog } from './components/new-book-dialog.component';
 
 import { 
-    IFilterItem,
-    IFilter,
     IProgressMessage,
-    IFilterAction,
+    IAddBookDialogResData,
+    IFilter,
+    TAvatarIds, 
+    TBookSortBy,
 } from '../vendor';
-
-import { IAddBookDialogResData } from './vendor';
-
-import { TAvatarIds } from './vendor';
 
 @Component({
     selector: 'app-home',
@@ -42,22 +38,17 @@ export class HomePage implements OnInit {
 
     downloadingList: Array<number> = [];
 
-    private _filter: IFilter = {
-        displayRecycled: false,
-        isOpened: false,
-        filterList: []
-    };
-
-    get filter () {
-        return this._filter;
-    }
-
+    sortBy: TBookSortBy = 'openCount';
+    displayRecycled: boolean = false;
+    beenOpened: boolean = true;
+    
     constructor(
         private crud: CrudService,
         private snackbar: MatSnackBar,
         private dialog: MatDialog,
         private book: BookService,
     ) {}
+
 
     private changeFabButton = (button: TAvatarIds) => {
         const buttonList = ['currently-reading', 'on-shelf', 'recycled'];
@@ -72,6 +63,29 @@ export class HomePage implements OnInit {
                 .style.backgroundColor = "#fff";
         });
     } 
+
+    get currentlyReadingNumber () {
+        const currentlyReadingFilter: IFilter = {
+            displayRecycled: false,
+            isOpened: true,
+        }
+        return this.book.getList(currentlyReadingFilter).length
+    }
+
+    get onShelfNumber () {
+        const onShelfFilter: IFilter = {
+            displayRecycled: false,
+            isOpened: true,
+        }
+        return this.book.getList(onShelfFilter).length
+    }
+
+    get recycledNumber () {
+        const recycledFilter: IFilter = {
+            displayRecycled: true,
+        }
+        return this.book.getList(recycledFilter).length;
+    }
 
     ngOnInit() {
         this.crud.ipcRenderer.on('error-occured', (ev, book: Book) => {
@@ -109,29 +123,30 @@ export class HomePage implements OnInit {
         });
     }
 
-    changeFilter = (filterAction: IFilterAction) => {
-        let index: number;
-        switch (filterAction.action){
-            case 'add':
-                index = this.filter.filterList.findIndex((filterItem: IFilterItem) => {
-                    const key = Object.keys(filterItem)[0];
-                    const _key = Object.keys(filterAction.filterItem)[0];
-                    return key === _key && filterItem[key].id === filterAction[key].id;
-                });
+    displayBookListCurrentlyReading = () => {
+        this.displayRecycled = false;
+        this.beenOpened = true;
 
-                if(index < 0)this.filter.filterList.push(filterAction.filterItem);
-                break;
-            case 'remove':
-                index = this.filter.filterList.findIndex((filterItem: IFilterItem) => {
-                    const key = Object.keys(filterItem)[0];
-                    const _key = Object.keys(filterAction.filterItem)[0];
-                    return key === _key && filterItem[key].id === filterAction[key].id;
-                });
+        this.sortBy = 'openCount';
 
-                if(index >= 0)this.filter.filterList.splice(index, 1);
-                break;
-        }
+        this.changeFabButton('currently-reading');
+    }
 
+    displayBookListOnShelf = () => {
+        this.displayRecycled = false;
+        this.beenOpened = false;
+
+        this.sortBy = 'dateCreated';
+
+        this.changeFabButton('on-shelf');
+    }
+
+    displayBookListRecycled = () => {
+        this.displayRecycled = true;
+
+        this.sortBy = 'dateUpdated';
+
+        this.changeFabButton('recycled');
     }
 
     openAddBookDialog = () => {

@@ -1,6 +1,8 @@
 import { 
     Component, 
     OnInit, 
+    OnChanges,
+    SimpleChanges,
     Input
 } from '@angular/core';
 
@@ -22,22 +24,30 @@ import { ReadmeDialog } from './readme-dialog.component';
 import { 
     sortBy,
     IFilter,
-} from '../../vendor';
-
-import { 
     IDeleteBookDialogResData,
+    IFilterAction,
+    IFilterItem,
     TBookSortBy,
     filterFn,
-} from '../vendor';
+} from '../../vendor';
 
 @Component({
     selector: 'app-book-list',
     templateUrl: './book-list.component.html',
     styleUrls: ['./book-list.component.scss'],
 })
-export class BookListComponent implements OnInit {
-    @Input() filter: IFilter;
-    @Input() sortBy: TBookSortBy;
+export class BookListComponent implements OnInit, OnChanges {
+    @Input() sortBy: string;
+    @Input() displayRecycled: boolean;
+    @Input() beenOpened: boolean;
+
+    filter: IFilter = {
+        displayRecycled: this.displayRecycled,
+        isOpened: this.beenOpened,
+        filterList: []
+    };
+
+    bookList: Array<Book>;
 
     constructor(
         private crud: CrudService,
@@ -46,14 +56,47 @@ export class BookListComponent implements OnInit {
         private opMessage: OpMessageService
     ) {}
 
-    ngOnInit() {}
-    
-    get bookList () {
-        return sortBy(this.book.list
-            .filter(b => filterFn(b, this.filter)), 
-            this.sortBy);
+    loadBookList = async () => {
+        const bookList = await this.book.getList(this.filter).slice();
+        return sortBy(bookList, this.sortBy);
+    };
+
+    ngOnInit() {
+        this.loadBookList().then(list => this.bookList = list.slice());
     }
 
+    ngOnChanges (changes: SimpleChanges) {
+        if ('sortBy' in changes) {
+            if(changes.displayRecycled) this.filter.displayRecycled = changes.displayRecycled.currentValue;
+            if(changes.beenOpened) this.filter.isOpened = changes.beenOpened.currentValue;
+
+            this.loadBookList().then(list => this.bookList = list.slice());
+        }
+    }
+
+    changeFilter = (filterAction: IFilterAction) => {
+        let index: number;
+        switch (filterAction.action){
+            case 'add':
+                index = this.filter.filterList.findIndex((filterItem: IFilterItem) => {
+                    const key = Object.keys(filterItem)[0];
+                    const _key = Object.keys(filterAction.filterItem)[0];
+                    return key === _key && filterItem[key].id === filterAction[key].id;
+                });
+
+                if(index < 0)this.filter.filterList.push(filterAction.filterItem);
+                break;
+            case 'remove':
+                index = this.filter.filterList.findIndex((filterItem: IFilterItem) => {
+                    const key = Object.keys(filterItem)[0];
+                    const _key = Object.keys(filterAction.filterItem)[0];
+                    return key === _key && filterItem[key].id === filterAction[key].id;
+                });
+
+                if(index >= 0)this.filter.filterList.splice(index, 1);
+                break;
+        }
+    }
     startDownload = (book: Book) => {
         this.crud.ipcRenderer.send('download-book', book);
         document
@@ -73,6 +116,10 @@ export class BookListComponent implements OnInit {
             width: '640px',
             data: readme
         });
+    }
+
+    openBook = (book: Book) => {
+        this.book.open(book);
     }
 
     openEditBookCateListDialog = (book: Book) => {

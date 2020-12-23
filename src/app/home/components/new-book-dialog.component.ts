@@ -16,18 +16,12 @@ import {
 import { MatAutocompleteSelectedEvent, MatAutocomplete} from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 
-import { 
-    Category, 
-} from '../../models';
-
+import { Category } from '../../models';
 import { 
     IsQualifiedAndNotExistedGitRepoValidatorFn,
     REGEXP_ZH,
-} from '../../vendor';
-
-import { 
     IAddBookDialogResData, 
-} from '../vendor';
+} from '../../vendor';
 
 import { BookService } from '../services/book.service';
 import { CateService } from '../services/cate.service';

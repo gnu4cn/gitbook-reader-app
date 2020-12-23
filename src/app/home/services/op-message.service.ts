@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { TOpMessage } from '../vendors';
+import { TOpMessage } from '../../vendor';
 
 @Injectable({
     providedIn: 'root'

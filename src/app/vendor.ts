@@ -1,11 +1,9 @@
+import { Book, Category, Writer, Website } from './models';
 import { ValidatorFn, AbstractControl } from '@angular/forms';
+// typeorm parts
 
 export const sortBy = (list: Array<any>, prop: string) => {
-        return list.sort((a, b) => a[prop] > b[prop] ? -1 : a[prop] === b[prop] ? 0 : 1);
-    }
-
-interface UnknownData {
-    [key: string]: unknown;
+    return list.sort((a, b) => a[prop] > b[prop] ? -1 : a[prop] === b[prop] ? 0 : 1);
 }
 
 export interface IProgressMessage {
@@ -29,8 +27,8 @@ export type IFilterItem = IFilterCate | IFilterWriter | IFilterWebsite
 
 export interface IFilter {
     displayRecycled: boolean;
-    isOpened: boolean;
-    filterList: Array<IFilterItem>
+    isOpened?: boolean;
+    filterList?: Array<IFilterItem>
 }
 
 export interface IFilterAction {
@@ -38,23 +36,18 @@ export interface IFilterAction {
     filterItem: IFilterCate | IFilterWriter | IFilterWebsite
 }
 
-export interface IQueryResult {
-    message: Array<string|object>;
-    data?: IItem | Array<IItem>;
-}
-
-// typeorm parts
-import { Book, Writer, Category, Website } from './models';
-
-export type TableName = "Book" | "Writer" | "Category" | "Website";
+export type TTableName = "Book" | "Writer" | "Category" | "Website";
 
 export type IItem = Book|Writer|Category|Website;
 
-export const Tables = ["Book", "Writer", "Category", "Website"];
-
 export interface IQuery {
-    table: TableName;
+    table: TTableName;
     item: Book|Writer|Category|Website;
+}
+
+export interface IQueryResult {
+    message: Array<string|object>;
+    data?: IItem | Array<IItem>;
 }
 
 export interface IQueryCondition {
@@ -67,7 +60,7 @@ export interface IFindCondition {
 }
 
 export interface IFind {
-    table: TableName
+    table: TTableName
     conditions?: IFindCondition;
 }
 
@@ -81,11 +74,6 @@ export const REGEXP_LOC = new RegExp(/[a-zA-Z0-9][a-zA-Z0-9\_\-\.]{1,253}[a-zA-Z
 export const REGEXP_GIT_URI = new RegExp(/^(((https?\:\/\/)(((([a-zA-Z0-9][a-zA-Z0-9\-\_]{0,252})\.){1,8}[a-zA-Z]{2,63})(\:([1-9][0-9]{1,3}|[1-5][0-9]{1,4}|6[1-4][0-9]{0,3}|65[0-4][0-9]{0,2}|655[1-2]?[0-9]?|6553[0-5]?))?\/))|((ssh\:\/\/)?git\@)(((([a-zA-Z0-9][a-zA-Z0-9\-\_]{0,252})\.){1,8}[a-zA-Z]{2,63})(\:([1-9][0-9]{1,3}|[1-5][0-9]{1,4}|6[1-4][0-9]{0,3}|65[0-4][0-9]{0,2}|655[1-2]?[0-9]?|6553[0-5]?))?\:))([a-zA-Z0-9][a-zA-Z0-9\_\-\.]{1,253}[a-zA-Z0-9])(\/)([a-zA-Z0-9][a-zA-Z0-9\_\-\.]{1,253}[a-zA-Z0-9])((\.git)?)$/);
 
 export const asciiSpecialCharRegEx = new RegExp(/\.|\,|\:|\?|\;|\'|\"|\\|\/|\!|\@|\$|\%|\^|\&|\*|\(|\)|\#/, 'g');
-
-export interface IMessage {
-    event: string;
-    data?: object | string | IQueryResult;
-}
 
 export interface Location {
     path: string;
@@ -126,4 +114,72 @@ export const IsQualifiedAndNotExistedGitRepoValidatorFn = (bookList: Array<Book>
 
         return null;
     };
+}
+
+export interface IAddBookDialogResData {
+    bookUri: string;
+    cateList: Array<Category>;
+}
+
+export type TOpMessage = Array<string|object>;
+
+export interface IDeleteBookDialogResData {
+    recycled: boolean;
+    remove: boolean;
+    book: Book;
+}
+
+export type TAvatarIds = "currently-reading" | "on-shelf" | "recycled";
+
+export type TBookSortBy = "name" | "openCount" | "dateCreated" | "dateUpdated";
+
+// 尚待优化
+export const filterFn = (book: Book, filter: IFilter): boolean => {
+    // 当只显示 回收站 里的书时
+    if(filter.displayRecycled) return book.recycled;
+
+    // 当显示正在看的书时 
+    if(filter.isOpened){ return book.openCount > 0;}
+    else {
+        // 显示书架上的书
+        return !book.recycled && book.openCount === 0;
+    }
+
+    if(filter.filterList.length > 0){
+        let _writer: boolean = false;
+        let _website: boolean = false;
+        let _cate: boolean = false;
+        let _openCount: boolean = false;
+
+        filter.filterList.forEach(filterItem => {
+            const key = Object.keys(filterItem)[0];
+
+            switch(key){
+                case 'writer':
+                    if(book.writer.id === filterItem[key].id) {
+                        _writer = true;
+                    }
+                    break
+                case 'website':
+                    if(book.website.id === filterItem[key].id) {
+                        _website = true;
+                    }
+                    break
+                case 'cate':
+                    const index = book.cateList.findIndex(cate => cate.id === filterItem[key].id);
+                    if(index >= 0) {
+                        _cate = true;
+                    }
+                    break
+            }
+        });
+
+        return _writer || _website || _cate;
+    }
+
+    return true;
+}
+export interface IMessage {
+    event: string;
+    data?: object | string;
 }

@@ -4,7 +4,7 @@ import { ElectronService } from 'ngx-electron';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { Tables, IFind, IQuery, IQueryResult } from '../vendor';
+import { IFind, IQuery, IQueryResult } from '../vendor';
 
 @Injectable({
     providedIn: 'root'

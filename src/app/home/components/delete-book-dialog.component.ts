@@ -12,7 +12,7 @@ import {
 
 import { 
     IDeleteBookDialogResData,
-} from '../vendor';
+} from '../../vendor';
 
 import { Book } from '../../models';
 
@@ -43,6 +43,7 @@ export class DeleteBookDialog implements OnInit{
         remove: false,
         book: this.data
     }
+
     ngOnInit() {}
 
     onNoClick(): void {

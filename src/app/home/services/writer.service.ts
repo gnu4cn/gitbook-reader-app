@@ -1,22 +1,12 @@
 import { Injectable } from '@angular/core';
 
 import { CrudService } from '../../services/crud.service';
-import { Book, Category, Writer, Website } from '../../models';
+import { Writer, Website } from '../../models';
 
 import { OpMessageService } from './op-message.service';
 import { 
     IQuery,
-    REGEXP_SITE, 
-    REGEXP_LOC,
-    NewBookDialogData,
-    NewBookDialogResData,
     IQueryResult,
-    IFilterItem,
-    IFilter,
-    IProgressMessage,
-    IFilterAction,
-    IFind,
-    IMessage
 } from '../../vendor';
 
 @Injectable({

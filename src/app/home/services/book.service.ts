@@ -8,29 +8,27 @@ import { WebsiteService } from './website.service';
 import { CateService } from './cate.service';
 
 import { 
+    IFilter,
+    filterFn,
     IQuery,
+    IQueryResult,
     REGEXP_SITE, 
     REGEXP_LOC,
-    IQueryResult,
-    IFilterItem,
-    IFilter,
-    IProgressMessage,
-    IFilterAction,
-    IFind,
-    IMessage
-} from '../../vendor';
-
-import { IAddBookDialogResData } from '../vendor';
-
-import {
+    IAddBookDialogResData,
     IDeleteBookDialogResData,
-} from '../vendor';
+} from '../../vendor';
 
 @Injectable({
     providedIn: 'root'
 })
 export class BookService {
     private _list: Array<Book>;
+
+    private _filter: IFilter = {
+        displayRecycled: false,
+        isOpened: false,
+        filterList: []
+    };
 
     constructor(
         private crud: CrudService,
@@ -55,6 +53,10 @@ export class BookService {
         const index = this._list.findIndex(b => b.id === book.id);
         this._list.splice(index, 1);
         this._list.push(book);
+    }
+
+    getList = (filter: IFilter) => {
+        return this.list.filter(b => filterFn(b, filter));
     }
 
     bookDeleted = (book: Book) => {
