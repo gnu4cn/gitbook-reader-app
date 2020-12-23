@@ -11,8 +11,6 @@ import {
     IQuery,
     REGEXP_SITE, 
     REGEXP_LOC,
-    NewBookDialogData,
-    NewBookDialogResData,
     IQueryResult,
     IFilterItem,
     IFilter,
@@ -21,6 +19,8 @@ import {
     IFind,
     IMessage
 } from '../../vendor';
+
+import { IAddBookDialogResData } from '../vendor';
 
 import {
     IDeleteBookDialogResData,
@@ -62,7 +62,7 @@ export class BookService {
         this._list.splice(index, 1);
     }
 
-    save = async (res: NewBookDialogResData) => {
+    save = async (res: IAddBookDialogResData) => {
         const newBook = new Book();
         newBook.cateList = [];
 
@@ -75,7 +75,6 @@ export class BookService {
 
         newBook.website = await this.website.newWebsit(site);
         newBook.writer = await this.writer.newWriter(writerName, newBook.website);
-
         newBook.cateList = await this.cate.saveList(res.cateList).slice();
 
         const query: IQuery = {
@@ -100,10 +99,6 @@ export class BookService {
         }
 
         this.crud.updateItem(query).subscribe((queryRes: IQueryResult) => {
-            const msg: IMessage = {
-                event: 'book-updated',
-                data: queryRes
-            };
             this.opMessage.newMsg(queryRes.message);
             this.bookUpdated(queryRes.data as Book);
         });
@@ -120,30 +115,12 @@ export class BookService {
         }
         this.crud.updateItem(query).subscribe((queryRes: IQueryResult) => {
             this.opMessage.newMsg(queryRes.message);
-
             this.bookUpdated(queryRes.data as Book);
         });
     }
 
     recycleRecoverDelete =  async (res: IDeleteBookDialogResData) => {
         let query: IQuery;
-
-        if(res.recycled){
-            res.book.recycled = true;
-            res.book.openCount = 0;
-
-            query = {
-                table: 'Book',
-                item: res.book
-            }
-
-            await this.crud.updateItem(query).subscribe((queryRes: IQueryResult) => {
-                this.opMessage.newMsg(queryRes.message);
-                this.bookUpdated(queryRes.data as Book);
-            });
-
-            return 0;
-        }
 
         if (!res.recycled && res.remove){
             query = {
@@ -157,9 +134,16 @@ export class BookService {
             });
 
             return 0;
+        } 
+
+        if(res.recycled){
+            res.book.recycled = true;
+            res.book.openCount = 0;
+
+        } else {
+            res.book.recycled = false;
         }
 
-        res.book.recycled = false;
         query = {
             table: 'Book',
             item: res.book
