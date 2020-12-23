@@ -13,26 +13,32 @@ import {
     providedIn: 'root'
 })
 export class WriterService {
-    private _writerList: Array<Writer>
+    constructor(
+        private crud: CrudService,
+        private opMessage: OpMessageService,
+    ) {}
 
-        constructor(
-            private crud: CrudService,
-            private opMessage: OpMessageService,
-        ) { 
-            this.crud.getItems({table: 'Writer'})
-                .subscribe((res: IQueryResult) => {
-                    this.opMessage.newMsg(res.message);
-                    const writers = res.data as Writer[];
-                    this._writerList = writers.slice();
-                });
-        }
+    getList = async () => {
+        let list: Array<Writer>;
 
+        await this.crud.getItems({table: 'Writer'})
+            .subscribe((res: IQueryResult) => {
+                this.opMessage.newMsg(res.message);
+                const writers = res.data as Writer[];
+                list = writers.slice();
+            });
 
-    newWriter = (writerName: string, website: Website) => {
-        const writer = this._writerList.find(w => w.name === writerName);
+        return list;
+    }
+
+    newWriter = async (writerName: string, website: Website) => {
+        const list = await this.getList();
+
+        const writer = list.find(w => w.name === writerName);
         if (writer){
             // 查看 website 是否在 writer 的
             if(writer.websiteList === undefined) writer.websiteList = [];
+
             const index = writer.websiteList.findIndex(w => w.uri === website.uri);
             if(index < 0) {
                 writer.websiteList.push(website);
@@ -41,10 +47,14 @@ export class WriterService {
                     table: 'Writer',
                     item: writer,
                 }
-                this.crud.updateItem(query).subscribe((res: IQueryResult) => {
+
+                let w: Writer;
+                await this.crud.updateItem(query).subscribe((res: IQueryResult) => {
                     this.opMessage.newMsg(res.message);
-                    return res.data as Writer;
+                    w = res.data as Writer;
                 });
+
+                return w;
             }
             else return writer;
         }
@@ -60,13 +70,15 @@ export class WriterService {
                 table: "Writer",
                 item: _writer
             }
-            this.crud.addItem(query).subscribe((res: IQueryResult) => {
+
+            let w: Writer;
+            await this.crud.addItem(query).subscribe((res: IQueryResult) => {
                 this.opMessage.newMsg(res.message);
 
-                const writer = res.data as Writer;
-                this._writerList.push(writer);
-                return writer;
+                w = res.data as Writer;
             });
+
+            return w;
         }
     }
 }

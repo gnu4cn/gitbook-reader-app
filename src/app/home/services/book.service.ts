@@ -22,8 +22,6 @@ import {
     providedIn: 'root'
 })
 export class BookService {
-    private _list: Array<Book>;
-
     private _filter: IFilter = {
         displayRecycled: false,
         isOpened: false,
@@ -37,31 +35,24 @@ export class BookService {
         private writer: WriterService,
         private cate: CateService
     ) {
-        this.crud.getItems({table: 'Book'})
+    }
+
+    getList = async () => {
+        let list: Array<Book>;
+
+        await this.crud.getItems({table: 'Book'})
             .subscribe((res: IQueryResult) => {
                 this.opMessage.newMsg(res.message);
                 const books = res.data as Book[];
-                this._list = books.slice();
+                list = books.slice();
             });
+
+        return list;
     }
 
-    get list () {
-        return this._list;
-    }
-
-    bookUpdated = (book: Book) => {
-        const index = this._list.findIndex(b => b.id === book.id);
-        this._list.splice(index, 1);
-        this._list.push(book);
-    }
-
-    getList = (filter: IFilter) => {
-        return this.list.filter(b => filterFn(b, filter));
-    }
-
-    bookDeleted = (book: Book) => {
-        const index = this._list.findIndex(b => b.id === book.id);
-        this._list.splice(index, 1);
+    getFilterdList = async (filter: IFilter) => {
+        const list = await this.getList();
+        return list.filter(b => filterFn(b, filter));
     }
 
     save = async (res: IAddBookDialogResData) => {
@@ -77,7 +68,7 @@ export class BookService {
 
         newBook.website = await this.website.newWebsit(site);
         newBook.writer = await this.writer.newWriter(writerName, newBook.website);
-        newBook.cateList = await this.cate.saveList(res.cateList).slice();
+        newBook.cateList = await this.cate.saveList(res.cateList);
 
         const query: IQuery = {
             table: 'Book',
@@ -85,8 +76,6 @@ export class BookService {
         }
         this.crud.addItem(query).subscribe((res: IQueryResult) => {
             this.opMessage.newMsg(res.message);
-
-            this._list.push(res.data as Book);
         });
     }
 
@@ -102,14 +91,13 @@ export class BookService {
 
         this.crud.updateItem(query).subscribe((queryRes: IQueryResult) => {
             this.opMessage.newMsg(queryRes.message);
-            this.bookUpdated(queryRes.data as Book);
         });
     }
 
     update = async (book: Book) => {
         let query: IQuery;
 
-        book.cateList = await this.cate.saveList(book.cateList).slice();
+        book.cateList = await this.cate.saveList(book.cateList);
 
         query = {
             table: 'Book',
@@ -117,7 +105,6 @@ export class BookService {
         }
         this.crud.updateItem(query).subscribe((queryRes: IQueryResult) => {
             this.opMessage.newMsg(queryRes.message);
-            this.bookUpdated(queryRes.data as Book);
         });
     }
 
@@ -132,7 +119,6 @@ export class BookService {
 
             await this.crud.deleteItem(query).subscribe((queryRes: IQueryResult) => {
                 this.opMessage.newMsg(queryRes.message);
-                this.bookDeleted(res.book);
             });
 
             return 0;
@@ -153,7 +139,6 @@ export class BookService {
 
         this.crud.updateItem(query).subscribe((queryRes: IQueryResult) => {
             this.opMessage.newMsg(queryRes.message);
-            this.bookUpdated(queryRes.data as Book);
         });
     }
 }
