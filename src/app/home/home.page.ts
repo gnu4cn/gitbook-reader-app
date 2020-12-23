@@ -1,4 +1,5 @@
 import { Component, 
+    ChangeDetectorRef,
     OnInit } from '@angular/core';
 
 import { 
@@ -15,7 +16,6 @@ import {
 import { Book } from '../models';
 import { CrudService } from '../services/crud.service';
 import { BookService } from './services/book.service';
-import { MessageService } from '../services/message.service';
 
 import { SnackbarComponent } from './components/snackbar.component';
 import { NewBookDialog } from './components/new-book-dialog.component';
@@ -24,7 +24,6 @@ import {
     IProgressMessage,
     IAddBookDialogResData,
     IFilter,
-    IMessage,
     TAvatarIds, 
     filterFn,
     TBookSortBy,
@@ -50,7 +49,7 @@ export class HomePage implements OnInit {
         private crud: CrudService,
         private snackbar: MatSnackBar,
         private dialog: MatDialog,
-        private msgSevice: MessageService,
+        private cdr: ChangeDetectorRef,
         private book: BookService,
     ) {
         this.bookList = this.book.list;
@@ -94,12 +93,6 @@ export class HomePage implements OnInit {
     }
 
     ngOnInit() {
-        this.msgSevice.getMessage().subscribe((msg: IMessage) => {
-            if(msg.event === 'book-list-updated'){
-                this.bookList = msg.data as Array<Book>;
-            }
-        });
-
         this.crud.ipcRenderer.on('error-occured', (ev, book: Book) => {
             this.book.listUpdated(book);
         });
@@ -122,16 +115,15 @@ export class HomePage implements OnInit {
         });
 
         this.crud.ipcRenderer.on('book-downloaded', (ev, msg: IProgressMessage) => {
-            let index: number;
-            index = this.downloadingList.findIndex(id => id === msg.book.id);
-
+            const index = this.downloadingList.findIndex(id => id === msg.book.id);
             this.downloadingList.splice(index, 1);
-
             this.book.listUpdated(msg.book);
 
             if(this.downloadingList.length === 0){
                 this.snackbar.dismiss();
             }
+
+            this.cdr.detectChanges();
         });
     }
 

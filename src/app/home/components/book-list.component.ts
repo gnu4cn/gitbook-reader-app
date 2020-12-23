@@ -16,7 +16,6 @@ import { Book, Category } from '../../models';
 import { BookService } from '../services/book.service';
 import { CateService } from '../services/cate.service';
 import { OpMessageService } from '../services/op-message.service';
-import { MessageService } from '../../services/message.service';
 
 import { DeleteBookDialog } from './delete-book-dialog.component';
 import { EditBookCateListDialog } from './edit-book-cate-list.component';
@@ -26,7 +25,6 @@ import {
     sortBy,
     IFilter,
     IDeleteBookDialogResData,
-    IMessage,
     IFilterAction,
     IFilterItem,
     TBookSortBy,
@@ -55,7 +53,6 @@ export class BookListComponent implements OnInit, OnChanges {
         private crud: CrudService,
         private dialog: MatDialog,
         private book: BookService,
-        private msgService: MessageService,
         private opMessage: OpMessageService
     ) {
         this._bookList = this.book.list;
@@ -66,13 +63,7 @@ export class BookListComponent implements OnInit, OnChanges {
         return sortBy(bookList, this.sortBy);
     }
 
-    ngOnInit() {
-        this.msgService.getMessage().subscribe((msg: IMessage) => {
-            if(msg.event === 'book-list-updated'){
-                this._bookList = msg.data as Array<Book>;
-            }
-        });
-    }
+    ngOnInit() {}
 
     ngOnChanges (changes: SimpleChanges) {
         if ('sortBy' in changes) {

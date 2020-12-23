@@ -153,7 +153,12 @@ export default class Main {
             }
             if(Main.processChildren.length > 0){
                 Main.processChildren.map(p => {
-                    p.kill('SIGINT');
+                    try {
+                        console.log(p.ref());
+                        p.kill('SIGINT');
+                    }catch(e){
+                        console.log(e);
+                    }
                 });
             }
             app.quit();

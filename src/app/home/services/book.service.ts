@@ -6,7 +6,6 @@ import { OpMessageService } from './op-message.service';
 import { WriterService } from './writer.service';
 import { WebsiteService } from './website.service';
 import { CateService } from './cate.service';
-import { MessageService } from '../../services/message.service';
 
 import { 
     IFilter,
@@ -15,7 +14,6 @@ import {
     IQueryResult,
     REGEXP_SITE, 
     REGEXP_LOC,
-    IMessage,
     IAddBookDialogResData,
     IDeleteBookDialogResData,
 } from '../../vendor';
@@ -30,7 +28,6 @@ export class BookService {
         private crud: CrudService,
         private opMessage: OpMessageService,
         private website: WebsiteService,
-        private msgService: MessageService,
         private writer: WriterService,
         private cate: CateService
     ) {
@@ -42,19 +39,11 @@ export class BookService {
             });
     }
 
-    filterdList = async (filter: IFilter) => {
-        return this.list.filter(b => filterFn(b, filter));
-    }
-
-    listUpdated = (book: Book, kept: boolean = true) => {
+    // `deleted` 是可选参数，没有时是 `undefined`, `!undefined`为真，传入`true`时`!true`为假
+    listUpdated = (book: Book, deleted?: boolean) => {
         const index = this.list.findIndex(b => b.id === book.id);
         this.list.splice(index, 1);
-        if(kept) this.list.push(book);
-
-        const msg: IMessage = {
-            event: 'book-list-updated',
-            data: this.list
-        }
+        if(!deleted) this.list.push(book);
     }
 
     save = async (res: IAddBookDialogResData) => {
@@ -125,7 +114,7 @@ export class BookService {
 
             await this.crud.deleteItem(query).subscribe((queryRes: IQueryResult) => {
                 this.opMessage.newMsg(queryRes.message);
-                this.listUpdated(queryRes.data as Book, false);
+                this.listUpdated(queryRes.data as Book, true);
             });
 
             return 0;

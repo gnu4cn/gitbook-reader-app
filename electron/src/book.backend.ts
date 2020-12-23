@@ -58,10 +58,9 @@ export class BookBackend {
         });
 
         const webContents = bookWindow.webContents;
-        webContents.openDevTools();
+        //webContents.openDevTools();
 
         bookWindow.loadURL(this.bookUrl);
-
 
         ipcMain.on('book-loading', () =>{
             this.loadingWin.show();
@@ -106,11 +105,13 @@ export class BookBackend {
             let progressMessage: IProgressMessage;
             switch(title){
                 case 'new-downloading-progress':
-                    progressMessage = {
-                        book: this.book,
-                        progress: msg.data as number
+                    if(msg.data < 100){
+                        progressMessage = {
+                            book: this.book,
+                            progress: msg.data as number
+                        }
+                        this.insideWindow.webContents.send(title, progressMessage);
                     }
-                    this.insideWindow.webContents.send(title, progressMessage);
                     break;
                 case 'book-downloaded':
                     this.book.desc = join(this.bookPath, 'README.md');
