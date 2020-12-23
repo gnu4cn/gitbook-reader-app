@@ -1,6 +1,6 @@
 {
-  "name": "gitbook-reader",
-  "version": "0.1.1",
+  "name": "gitbook-reader-app",
+  "version": "0.3.1",
   "author": "xfoss.com",
   "homepage": "https://gnu4cn.github.io/gitbook-reader/",
   "scripts": {
@@ -126,7 +126,7 @@
     "Ionic",
     "Capacitor"
   ],
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/gnu4cn/gitbook-reader/issues"
   }
