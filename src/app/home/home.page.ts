@@ -15,6 +15,7 @@ import {
 import { Book } from '../models';
 import { CrudService } from '../services/crud.service';
 import { BookService } from './services/book.service';
+import { MessageService } from '../services/message.service';
 
 import { SnackbarComponent } from './components/snackbar.component';
 import { NewBookDialog } from './components/new-book-dialog.component';
@@ -23,7 +24,9 @@ import {
     IProgressMessage,
     IAddBookDialogResData,
     IFilter,
+    IMessage,
     TAvatarIds, 
+    filterFn,
     TBookSortBy,
 } from '../vendor';
 
@@ -41,14 +44,17 @@ export class HomePage implements OnInit {
     sortBy: TBookSortBy = 'openCount';
     displayRecycled: boolean = false;
     beenOpened: boolean = true;
-    
+    private bookList: Array<Book>;
+
     constructor(
         private crud: CrudService,
         private snackbar: MatSnackBar,
         private dialog: MatDialog,
+        private msgSevice: MessageService,
         private book: BookService,
-    ) {}
-
+    ) {
+        this.bookList = this.book.list;
+    }
 
     private changeFabButton = (button: TAvatarIds) => {
         const buttonList = ['currently-reading', 'on-shelf', 'recycled'];
@@ -64,32 +70,38 @@ export class HomePage implements OnInit {
         });
     } 
 
-    get currentlyReadingNumber () {
-        const currentlyReadingFilter: IFilter = {
+    get currentlyReading () {
+        const filter: IFilter = {
             displayRecycled: false,
-            isOpened: true,
+            beenOpened: true,
         }
-        return this.book.getList(currentlyReadingFilter).length
+        return this.bookList.filter(b => filterFn(b, filter)).length;
     }
 
-    get onShelfNumber () {
-        const onShelfFilter: IFilter = {
+    get onShelf () {
+        const filter = {
             displayRecycled: false,
-            isOpened: true,
+            beenOpened: false,
         }
-        return this.book.getList(onShelfFilter).length
+        return this.bookList.filter(b => filterFn(b, filter)).length;
     }
 
-    get recycledNumber () {
-        const recycledFilter: IFilter = {
+    get recycled () {
+        const filter = {
             displayRecycled: true,
         }
-        return this.book.getList(recycledFilter).length;
+        return this.bookList.filter(b => filterFn(b, filter)).length;
     }
 
     ngOnInit() {
+        this.msgSevice.getMessage().subscribe((msg: IMessage) => {
+            if(msg.event === 'book-list-updated'){
+                this.bookList = msg.data as Array<Book>;
+            }
+        });
+
         this.crud.ipcRenderer.on('error-occured', (ev, book: Book) => {
-            this.book.bookUpdated(book);
+            this.book.listUpdated(book);
         });
 
         this.crud.ipcRenderer.on('new-downloading-progress', (ev, msg: IProgressMessage) => {
@@ -115,7 +127,7 @@ export class HomePage implements OnInit {
 
             this.downloadingList.splice(index, 1);
 
-            this.book.bookUpdated(msg.book);
+            this.book.listUpdated(msg.book);
 
             if(this.downloadingList.length === 0){
                 this.snackbar.dismiss();

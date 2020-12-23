@@ -6,6 +6,7 @@ import { OpMessageService } from './op-message.service';
 import { WriterService } from './writer.service';
 import { WebsiteService } from './website.service';
 import { CateService } from './cate.service';
+import { MessageService } from '../../services/message.service';
 
 import { 
     IFilter,
@@ -14,6 +15,7 @@ import {
     IQueryResult,
     REGEXP_SITE, 
     REGEXP_LOC,
+    IMessage,
     IAddBookDialogResData,
     IDeleteBookDialogResData,
 } from '../../vendor';
@@ -22,47 +24,47 @@ import {
     providedIn: 'root'
 })
 export class BookService {
-    private _filter: IFilter = {
-        displayRecycled: false,
-        isOpened: false,
-        filterList: []
-    };
+    list: Array<Book>;
 
     constructor(
         private crud: CrudService,
         private opMessage: OpMessageService,
         private website: WebsiteService,
+        private msgService: MessageService,
         private writer: WriterService,
         private cate: CateService
     ) {
-    }
-
-    getList = async () => {
-        let list: Array<Book>;
-
-        await this.crud.getItems({table: 'Book'})
+        this.crud.getItems({table: 'Book'})
             .subscribe((res: IQueryResult) => {
                 this.opMessage.newMsg(res.message);
                 const books = res.data as Book[];
-                list = books.slice();
+                this.list = books.slice();
             });
-
-        return list;
     }
 
-    getFilterdList = async (filter: IFilter) => {
-        const list = await this.getList();
-        return list.filter(b => filterFn(b, filter));
+    filterdList = async (filter: IFilter) => {
+        return this.list.filter(b => filterFn(b, filter));
+    }
+
+    listUpdated = (book: Book, kept: boolean = true) => {
+        const index = this.list.findIndex(b => b.id === book.id);
+        this.list.splice(index, 1);
+        if(kept) this.list.push(book);
+
+        const msg: IMessage = {
+            event: 'book-list-updated',
+            data: this.list
+        }
     }
 
     save = async (res: IAddBookDialogResData) => {
         const newBook = new Book();
-        newBook.cateList = [];
 
         const newBookUri = res.bookUri;
 
         const site = newBookUri.match(REGEXP_SITE)[0];
         const [ writerName, name ] = newBookUri.replace(REGEXP_SITE, '').match(REGEXP_LOC)[0].split('/');
+
         const re = new RegExp(/\.git$/)
         newBook.name = re.test(name) ? name.replace(re, '') : name;
 
@@ -74,8 +76,10 @@ export class BookService {
             table: 'Book',
             item: newBook
         }
+
         this.crud.addItem(query).subscribe((res: IQueryResult) => {
             this.opMessage.newMsg(res.message);
+            this.list.push(res.data as Book);
         });
     }
 
@@ -91,6 +95,7 @@ export class BookService {
 
         this.crud.updateItem(query).subscribe((queryRes: IQueryResult) => {
             this.opMessage.newMsg(queryRes.message);
+            this.listUpdated(queryRes.data as Book);
         });
     }
 
@@ -105,6 +110,7 @@ export class BookService {
         }
         this.crud.updateItem(query).subscribe((queryRes: IQueryResult) => {
             this.opMessage.newMsg(queryRes.message);
+            this.listUpdated(queryRes.data as Book);
         });
     }
 
@@ -119,6 +125,7 @@ export class BookService {
 
             await this.crud.deleteItem(query).subscribe((queryRes: IQueryResult) => {
                 this.opMessage.newMsg(queryRes.message);
+                this.listUpdated(queryRes.data as Book, false);
             });
 
             return 0;
@@ -139,6 +146,7 @@ export class BookService {
 
         this.crud.updateItem(query).subscribe((queryRes: IQueryResult) => {
             this.opMessage.newMsg(queryRes.message);
+            this.listUpdated(queryRes.data as Book);
         });
     }
 }

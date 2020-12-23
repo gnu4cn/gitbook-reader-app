@@ -27,7 +27,7 @@ export type IFilterItem = IFilterCate | IFilterWriter | IFilterWebsite
 
 export interface IFilter {
     displayRecycled: boolean;
-    isOpened?: boolean;
+    beenOpened?: boolean;
     filterList?: Array<IFilterItem>
 }
 
@@ -139,7 +139,7 @@ export const filterFn = (book: Book, filter: IFilter): boolean => {
     if(filter.displayRecycled) return book.recycled;
 
     // 当显示正在看的书时 
-    if(filter.isOpened){ return book.openCount > 0;}
+    if(filter.beenOpened){ return book.openCount > 0;}
     else {
         // 显示书架上的书
         return !book.recycled && book.openCount === 0;

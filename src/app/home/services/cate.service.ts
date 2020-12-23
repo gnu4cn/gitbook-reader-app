@@ -13,31 +13,26 @@ import {
     providedIn: 'root'
 })
 export class CateService {
+    list: Array<Category>;
+
     constructor(
         private crud: CrudService,
         private opMessage: OpMessageService,
     ) {
-    }
-
-    getList = async () => {
-        let list: Array<Category>;
-
-        await this.crud.getItems({table: 'Category'})
+        this.crud.getItems({table: 'Category'})
             .subscribe((res: IQueryResult) => {
                 this.opMessage.newMsg(res.message);
                 const cates = res.data as Category[];
-                list = cates.slice();
+                this.list = cates.slice();
             });
-
-        return list;
     }
 
     saveList = async (cateList: Array<Category>) => {
         const tempList: Array<Category> = [];
-        const list = await this.getList();
 
         await cateList.map(c => {
-            const cate = list.find(cate => cate.name === c.name);
+            const cate = this.list.find(cate => cate.name === c.name);
+
             if (cate) tempList.push(cate);
             else {
                 const _cate = new Category();

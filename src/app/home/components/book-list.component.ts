@@ -16,6 +16,7 @@ import { Book, Category } from '../../models';
 import { BookService } from '../services/book.service';
 import { CateService } from '../services/cate.service';
 import { OpMessageService } from '../services/op-message.service';
+import { MessageService } from '../../services/message.service';
 
 import { DeleteBookDialog } from './delete-book-dialog.component';
 import { EditBookCateListDialog } from './edit-book-cate-list.component';
@@ -25,6 +26,7 @@ import {
     sortBy,
     IFilter,
     IDeleteBookDialogResData,
+    IMessage,
     IFilterAction,
     IFilterItem,
     TBookSortBy,
@@ -37,40 +39,45 @@ import {
     styleUrls: ['./book-list.component.scss'],
 })
 export class BookListComponent implements OnInit, OnChanges {
-    @Input() sortBy: string;
-    @Input() displayRecycled: boolean;
-    @Input() beenOpened: boolean;
+    @Input() sortBy: string = 'openCount';
+    @Input() displayRecycled: boolean = false;
+    @Input() beenOpened: boolean = true;
 
     filter: IFilter = {
         displayRecycled: this.displayRecycled,
-        isOpened: this.beenOpened,
+        beenOpened: this.beenOpened,
         filterList: []
     };
 
-    bookList: Array<Book>;
+    private _bookList: Array<Book>;
 
     constructor(
         private crud: CrudService,
         private dialog: MatDialog,
         private book: BookService,
+        private msgService: MessageService,
         private opMessage: OpMessageService
-    ) {}
+    ) {
+        this._bookList = this.book.list;
+    }
 
-    loadBookList = async () => {
-        const bookList = await this.book.getList(this.filter).slice();
+    get bookList () {
+        const bookList = this._bookList.filter(b => filterFn(b, this.filter));
         return sortBy(bookList, this.sortBy);
-    };
+    }
 
     ngOnInit() {
-        this.loadBookList().then(list => this.bookList = list.slice());
+        this.msgService.getMessage().subscribe((msg: IMessage) => {
+            if(msg.event === 'book-list-updated'){
+                this._bookList = msg.data as Array<Book>;
+            }
+        });
     }
 
     ngOnChanges (changes: SimpleChanges) {
         if ('sortBy' in changes) {
             if(changes.displayRecycled) this.filter.displayRecycled = changes.displayRecycled.currentValue;
-            if(changes.beenOpened) this.filter.isOpened = changes.beenOpened.currentValue;
-
-            this.loadBookList().then(list => this.bookList = list.slice());
+            if(changes.beenOpened) this.filter.beenOpened = changes.beenOpened.currentValue;
         }
     }
 

@@ -13,30 +13,23 @@ import {
     providedIn: 'root'
 })
 export class WebsiteService {
+    list: Array<Website>;
+
     constructor(
         private crud: CrudService,
         private opMessage: OpMessageService,
     ) {
-    }
-
-    getList = async () => {
-        let list: Array<Website>;
-
-        await this.crud.getItems({table: 'Website'})
+        this.crud.getItems({table: 'Website'})
             .subscribe((res: IQueryResult) => {
                 this.opMessage.newMsg(res.message);
                 const websites = res.data as Website[];
-                list = websites.slice();
+                this.list = websites.slice();
             });
-
-        return list;
-
     }
 
     newWebsit = async (uri: string) => {
-        const list = await this.getList();
+        const website = await this.list.find(w => w.uri === uri);
 
-        const website = list.find(w => w.uri === uri);
         if (website){
             return website;
         }
@@ -54,6 +47,7 @@ export class WebsiteService {
                 this.opMessage.newMsg(res.message);
 
                 w = res.data as Website;
+                this.list.push(w);
             });
 
             return w;

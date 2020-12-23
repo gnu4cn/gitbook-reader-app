@@ -13,33 +13,28 @@ import {
     providedIn: 'root'
 })
 export class WriterService {
+    list: Array<Writer>;
+
     constructor(
         private crud: CrudService,
         private opMessage: OpMessageService,
-    ) {}
-
-    getList = async () => {
-        let list: Array<Writer>;
-
-        await this.crud.getItems({table: 'Writer'})
+    ) {
+        this.crud.getItems({table: 'Writer'})
             .subscribe((res: IQueryResult) => {
                 this.opMessage.newMsg(res.message);
                 const writers = res.data as Writer[];
-                list = writers.slice();
+                this.list = writers.slice();
             });
-
-        return list;
     }
 
     newWriter = async (writerName: string, website: Website) => {
-        const list = await this.getList();
+        const writer = await this.list.find(w => w.name === writerName);
 
-        const writer = list.find(w => w.name === writerName);
         if (writer){
             // 查看 website 是否在 writer 的
             if(writer.websiteList === undefined) writer.websiteList = [];
 
-            const index = writer.websiteList.findIndex(w => w.uri === website.uri);
+            const index = await writer.websiteList.findIndex(w => w.uri === website.uri);
             if(index < 0) {
                 writer.websiteList.push(website);
 
@@ -52,6 +47,7 @@ export class WriterService {
                 await this.crud.updateItem(query).subscribe((res: IQueryResult) => {
                     this.opMessage.newMsg(res.message);
                     w = res.data as Writer;
+                    this.list.push(w);
                 });
 
                 return w;
@@ -76,6 +72,8 @@ export class WriterService {
                 this.opMessage.newMsg(res.message);
 
                 w = res.data as Writer;
+
+                this.list.push(w);
             });
 
             return w;

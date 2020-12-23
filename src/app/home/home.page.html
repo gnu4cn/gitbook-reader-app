@@ -17,7 +17,7 @@
                     <!-- 正在看的书, 打开次数大于 0 的书 -->
                     <ion-col>
                         <ion-badge color="success" style="position: absolute; right: 0px; top: 0px; overflow: visible!important;">
-                            {{currentlyReadingNumber}}
+                            {{currentlyReading}}
                         </ion-badge>
                         <ion-fab-button 
                             color="light" (click)="displayBookListCurrentlyReading()" matTooltip="正在看的书">
@@ -30,7 +30,7 @@
                     <!-- 书架上的书, 打开 0 次的书 -->
                     <ion-col>
                         <ion-badge color="success" style="position: absolute; right: 0px; top: 0px; overflow: visible!important;">
-                            {{onShelfNumber}}
+                            {{onShelf}}
                         </ion-badge>
                         <ion-fab-button color="light" (click)="displayBookListOnShelf()" matTooltip="书架上的书">
                             <ion-avatar id="avatar-on-shelf">
@@ -42,7 +42,7 @@
                     <!-- 准备删除的书 -->
                     <ion-col>
                         <ion-badge color="warning" style="position: absolute; right: 0px; top: 0px; overflow: visible!important;">
-                            {{recycledNumber}}
+                            {{recycled}}
                         </ion-badge>
 
                         <ion-fab-button color="light" (click)="displayBookListRecycled()" matTooltip="暂存在回收站的书">
