@@ -154,7 +154,7 @@ export default class Main {
             if(Main.processChildren.length > 0){
                 Main.processChildren.map(p => {
                     try {
-                        console.log(p.ref());
+                        // 后续加入 Git clone 正在进行
                         p.kill('SIGINT');
                     }catch(e){
                         console.log(e);

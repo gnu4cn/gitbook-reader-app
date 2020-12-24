@@ -20,7 +20,7 @@ export class CRUD {
             synchronize: true,
             logging: false,
             logger: 'simple-console',
-            database: './db.sqlite',
+            database: 'db.sqlite',
             entities: [ Category, Website, Writer, Book ],
         });
 
