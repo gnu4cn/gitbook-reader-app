@@ -37,6 +37,7 @@ export class SectionScrollSpyDirective implements OnInit, OnDestroy {
                 const action = e.isIntersecting ? 'add' : 'delete';
                 this.inScrollHashes[action](e.target.id);
             });
+
             const sections = Array.from(this.inScrollHashes);
             this.updated.emit(sections);
         });

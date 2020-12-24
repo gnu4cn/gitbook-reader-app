@@ -1,6 +1,6 @@
 <div class="docsify-pagination-container">
     <div class="pagination-item pagination-item--previous" *ngIf="prev">
-        <a class="prev" [routerLink]="prev.link" [fragment]="prev.fragment">
+        <a class="prev" [routerLink]="prev.link">
 
             <div class="pagination-item-label">
                 <span>« 上个部分</span>
@@ -9,7 +9,7 @@
         </a>
     </div>
     <div class="pagination-item pagination-item--next" *ngIf="next">
-        <a class="next" [routerLink]="next.link" [fragment]="next.fragment">
+        <a class="next" [routerLink]="next.link">
             <div class="pagination-item-label">
                 <span>下一部分 »</span>
             </div>

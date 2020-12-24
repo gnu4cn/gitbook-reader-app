@@ -1,6 +1,8 @@
 import { Injectable, EventEmitter, SimpleChange, SimpleChanges } from '@angular/core';
-//import { Router, ActivatedRouteSnapshot } from '@angular/router';
-import { Router, ActivatedRouteSnapshot } from '@angular/router';
+import { 
+    Router, 
+//    ActivatedRouteSnapshot 
+} from '@angular/router';
 
 import { goExternal, isAbsolutePath } from '../shared/utils';
 import { getFullPath, VFile } from '../shared/vfile';
@@ -43,7 +45,8 @@ export class RouterService {
         return parse(this.router.url);
     }
 
-    activateRoute(snapshot: ActivatedRouteSnapshot) {
+    //activateRoute(snapshot: ActivatedRouteSnapshot) {
+    activateRoute() {
         let path: string = '';
         try {
             path = decodeURIComponent(this._url.pathname);

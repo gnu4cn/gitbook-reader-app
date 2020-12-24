@@ -9,6 +9,7 @@ import {
 import { Title, Meta, SafeHtml } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { combineLatest } from 'rxjs';
+import { parse } from 'url';
 
 import { Platform } from '@ionic/angular';
 
@@ -96,6 +97,15 @@ export class ReadPage implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.crud.ipcRenderer.once('request-reading-progress', (ev) => {
+            const progress = {
+                url: parse(this.routerService.url).pathname,
+                sections: this.inScrollHashes
+            }
+
+            ev.sender.send('reply-reading-progress', progress);
+        });
+
         if (this.platform.is('electron')) this.crud.ipcRenderer.send('book-loading');
 
         this.activatedRoute.paramMap.subscribe(params => {
@@ -186,7 +196,7 @@ export class ReadPage implements OnInit, AfterViewInit, OnDestroy {
 
             // if the page changes, and no anchor is given, scroll top the top
             if ('anchor' in changes && changes.anchor.currentValue === '') {
-                this.anchor = 'coverPage' in changes ? 'cover-top' : 'content-top';
+                this.anchor = 'content-top';
             }
         }
 
@@ -215,17 +225,8 @@ export class ReadPage implements OnInit, AfterViewInit, OnDestroy {
         // pass that on to router servce
         combineLatest([this.activatedRoute.url, this.activatedRoute.fragment])
             .subscribe(() => {
-                this.routerService.activateRoute(this.activatedRoute.snapshot);
-            });
-
-        combineLatest([this.activatedRoute.url, this.inScrollHashes])
-            .subscribe(() => {
-                const msg: IMessage = {
-                    event: 'new-reading-record',
-                    data: {url: this.activatedRoute.url, sections: this.inScrollHashes}
-                }
-
-                this.message.sendMessage(msg);
+//                this.routerService.activateRoute(this.activatedRoute.snapshot);
+                    this.routerService.activateRoute();
             });
 
         // Respond to changes in the docspa route

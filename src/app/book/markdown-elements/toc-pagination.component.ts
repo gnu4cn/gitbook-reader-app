@@ -18,13 +18,11 @@ import { join } from '../shared/utils';
 import { getBasePath } from '../shared/vfile';
 
 import type { VFile } from '../shared/vfile';
-import { asciiSpecialCharRegEx } from '../../vendor';
 
 interface FileIndexItem {
     title: string;
     path: string;
     link: string | string[];
-    fragment: string;
 }
 
 @Component({
@@ -126,15 +124,10 @@ export class TOCPaginationComponent implements OnInit, OnChanges {
                     link = [link, ''];
                 }
 
-                const _title = file.data.title ? file.data.title : 'README，简介';
-                //const _fragment = _title.split(' ').join('-');
-                const _fragment = _title.toLowerCase().replace(asciiSpecialCharRegEx, '').replace(/ /g, '-');
-
                 const fileIndexItem = {
                     path,
-                    title: _title,
+                    title: file.data.title,
                     link,
-                    fragment: _fragment
                 };
 
                 return file ? [...acc, fileIndexItem] : acc;

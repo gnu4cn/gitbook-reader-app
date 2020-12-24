@@ -66,7 +66,11 @@ export class BookBackend {
             this.loadingWin.show();
         });
 
-        ipcMain.on('summary-request', async (event, bookPath) => {
+        ipcMain.on('new-reading-record', (event, msg) => {
+            console.log(this.book.name, msg);
+        });
+
+        ipcMain.on('summary-request', (event, bookPath) => {
             const bookDir = join(this.booksDir, bookPath);
             event.returnValue = getMdList(bookDir); 
         })
@@ -82,7 +86,13 @@ export class BookBackend {
         });
 
         // set to null
-        bookWindow.on('close', () => {
+        bookWindow.on('close', async () => {
+            webContents.send('request-reading-progress');
+
+            ipcMain.once('reply-reading-progress', (ev, msg) => {
+                console.log(msg);
+            });
+
             bookWindow = null;
             this.loadingWin.hide();
         });
