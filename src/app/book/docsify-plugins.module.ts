@@ -4,7 +4,7 @@ import { SettingsService } from './services/settings.service';
 import { HooksService } from './services/hooks.service';
 import { timestampPlugin } from './plugins/test-docsify-plugin';
 
-import type { VFile } from './book.vendor';
+import type { VFile } from './shared/vfile';
 
 export const DOCSIFYPLUGINS_CONFIG_TOKEN = new InjectionToken<any>( 'DocsifyPluginsModule.forRoot() configuration.' );
 

@@ -3,7 +3,7 @@ import { Injectable, EventEmitter, SimpleChange, SimpleChanges } from '@angular/
 import { Router, ActivatedRouteSnapshot } from '@angular/router';
 
 import { goExternal, isAbsolutePath } from '../shared/utils';
-import { getFullPath } from '../shared/vfile-utils';
+import { getFullPath } from '../shared/vfile';
 import { parse } from 'url';
 
 import { SettingsService } from './settings.service';

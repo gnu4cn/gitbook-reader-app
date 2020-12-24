@@ -11,7 +11,7 @@ import { join as _join } from 'path';
 
 import { isAbsolutePath, join } from './utils';
 
-import type { Link } from '../book.vendor';
+import type { Link } from './ast';
 
 /**
  * Convert markdown links to router links

@@ -21,7 +21,7 @@ import { CrudService } from '../services/crud.service';
 
 import { throttleable } from '../book/shared/throttle';
 
-import type { VFile } from '../book/book.vendor';
+import type { VFile } from '../book/shared/vfile';
 import type { IMessage } from '../vendor';
 
 @Component({

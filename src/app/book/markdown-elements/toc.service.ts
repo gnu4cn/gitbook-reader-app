@@ -23,7 +23,7 @@ import { join } from '../shared/utils';
 import { LocationService } from '../services/location.service';
 import { RouterService } from '../services/router.service';
 
-import type { TOCData, VFile } from '../book.vendor';
+import type { TOCData, VFile } from '../shared/vfile';
 
 interface Link extends MDAST.Link {
     data: any;

@@ -12,7 +12,8 @@ import { LocationService } from '../services/location.service';
 import { HooksService } from '../services/hooks.service';
 import { links, images, removeLinks } from '../shared/links';
 
-import type { VFile } from '../book.vendor';
+import type { VFile } from '../shared/vfile';
+import type { VFileCompatible } from 'vfile';
 
 export const MARKDOWN_CONFIG_TOKEN = new InjectionToken<any>( 'forRoot() configuration.' );
 
@@ -93,5 +94,4 @@ export class MarkdownService {
         await this.hooks.afterEach.promise(err || vf);
         return err || vf;
     }
-
 }

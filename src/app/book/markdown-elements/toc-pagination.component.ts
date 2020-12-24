@@ -15,9 +15,9 @@ import { LocationService } from '../services/location.service';
 import { FetchService } from '../services/fetch.service';
 
 import { join } from '../shared/utils';
-import { getBasePath } from '../shared/vfile-utils';
+import { getBasePath } from '../shared/vfile';
 
-import type { VFile } from '../book.vendor';
+import type { VFile } from '../shared/vfile';
 import { asciiSpecialCharRegEx } from '../../vendor';
 
 interface FileIndexItem {

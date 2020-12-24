@@ -19,7 +19,7 @@ import { LocationService } from './location.service';
 import { TocService } from '../markdown-elements/toc.service';
 import { CrudService } from '../../services/crud.service';
 
-import { VFile } from '../book.vendor';
+import { VFile } from '../shared/vfile';
 import { REGEXP_ZH } from '../../vendor';
 import { join } from '../shared/utils';
 

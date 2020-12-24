@@ -22,7 +22,8 @@ import { TocService } from '../markdown-elements/toc.service';
 
 import { join, isAbsolutePath } from '../shared/utils';
 
-import type { VFile, Heading } from '../book.vendor';
+import type { VFile } from '../shared/vfile';
+import type { Heading } from '../shared/ast';
 
 @Injectable({
     providedIn: 'root'

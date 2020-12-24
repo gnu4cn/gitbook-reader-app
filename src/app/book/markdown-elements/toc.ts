@@ -12,7 +12,7 @@ import { RouterService } from '../services/router.service';
 import { HooksService } from '../services/hooks.service';
 import { TocService } from './toc.service';
 
-import type { VFile } from '../book.vendor';
+import type { VFile } from '../shared/vfile';
 
 @Component({
     selector: 'docspa-toc', // tslint:disable-line
