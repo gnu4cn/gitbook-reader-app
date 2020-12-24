@@ -16,6 +16,7 @@ import {
 import { Book } from '../models';
 import { CrudService } from '../services/crud.service';
 import { BookService } from './services/book.service';
+import { MessageService } from '../services/message.service';
 
 import { SnackbarComponent } from './components/snackbar.component';
 import { NewBookDialog } from './components/new-book-dialog.component';
@@ -24,6 +25,7 @@ import {
     IProgressMessage,
     IAddBookDialogResData,
     IFilter,
+    IMessage,
     TAvatarIds, 
     filterFn,
     TBookSortBy,
@@ -49,6 +51,7 @@ export class HomePage implements OnInit {
         private crud: CrudService,
         private snackbar: MatSnackBar,
         private dialog: MatDialog,
+        private msgService: MessageService,
         private cdr: ChangeDetectorRef,
         private book: BookService,
     ) {
@@ -93,6 +96,10 @@ export class HomePage implements OnInit {
     }
 
     ngOnInit() {
+        this.msgService.getMessage().subscribe((msg: IMessage) => {
+            if(msg.event === 'sections-reading-updated') console.log(msg.data);
+        });
+
         this.crud.ipcRenderer.on('error-occured', (ev, book: Book) => {
             this.book.listUpdated(book);
         });

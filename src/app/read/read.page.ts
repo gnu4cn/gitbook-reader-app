@@ -218,6 +218,16 @@ export class ReadPage implements OnInit, AfterViewInit, OnDestroy {
                 this.routerService.activateRoute(this.activatedRoute.snapshot);
             });
 
+        combineLatest([this.activatedRoute.url, this.inScrollHashes])
+            .subscribe(() => {
+                const msg: IMessage = {
+                    event: 'new-reading-record',
+                    data: {url: this.activatedRoute.url, sections: this.inScrollHashes}
+                }
+
+                this.message.sendMessage(msg);
+            });
+
         // Respond to changes in the docspa route
         this.routerService.changed.subscribe((changes: SimpleChanges) => this.pathChanges(changes));
     }

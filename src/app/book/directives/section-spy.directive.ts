@@ -11,8 +11,9 @@ export class SectionScrollSpyDirective implements OnInit, OnDestroy {
     private mutationObserver: MutationObserver;
     private inScrollHashes: Set<string>;
 
-    constructor(private elm: ElementRef) {
-    }
+    constructor(
+        private elm: ElementRef,
+    ) {}
 
     ngOnInit() {
         this.mutationObserver = new MutationObserver(() => this.setupPageListeners());
@@ -36,7 +37,8 @@ export class SectionScrollSpyDirective implements OnInit, OnDestroy {
                 const action = e.isIntersecting ? 'add' : 'delete';
                 this.inScrollHashes[action](e.target.id);
             });
-            this.updated.emit(Array.from(this.inScrollHashes));
+            const sections = Array.from(this.inScrollHashes);
+            this.updated.emit(sections);
         });
 
         sections.forEach(s => {
