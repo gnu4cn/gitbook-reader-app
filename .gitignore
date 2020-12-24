@@ -35,4 +35,4 @@ dist
 build
 node_modules
 elecrton/src/*.js
-db.sqlite
+db.*
