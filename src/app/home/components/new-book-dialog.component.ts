@@ -56,6 +56,8 @@ export class NewBookDialog implements OnInit{
         private book: BookService,
         private cate: CateService,
     ) {
+        this.cateList = this.cate.list;
+
         this.filteredCateList = this.cateListInputControl.valueChanges.pipe(
             startWith(null),
             map((cateInput: string | null) => cateInput ? this._filter(cateInput) : this.tempCateList.slice())
@@ -65,7 +67,6 @@ export class NewBookDialog implements OnInit{
     }
 
     ngOnInit() {
-        this.cateList = this.cate.list.slice();
         this.tempCateList = this.cateList.slice();
 
         this.uriInputControl.setValidators(IsQualifiedAndNotExistedGitRepoValidatorFn(this.book

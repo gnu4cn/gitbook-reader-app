@@ -46,6 +46,7 @@ export class CateService {
                     this.opMessage.newMsg(res.message);
 
                     const cate = res.data as Category;
+                    this.list.push(cate);
                     tempList.push(cate);
                 });
             }

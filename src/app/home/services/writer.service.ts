@@ -72,7 +72,6 @@ export class WriterService {
                 this.opMessage.newMsg(res.message);
 
                 w = res.data as Writer;
-
                 this.list.push(w);
             });
 
