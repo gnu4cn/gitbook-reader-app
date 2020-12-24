@@ -20,7 +20,6 @@ const codefilesTypes = ['js', 'json'];
 @Component({
     selector: 'docspa-md-include', // tslint:disable-line
     template: ``,
-    styleUrls: ['./embed-file.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
 export class EmbedMarkdownComponent implements OnInit, OnChanges {
