@@ -11,14 +11,17 @@ export class ListCollapseDirective implements OnInit, OnChanges, OnDestroy {
     listCollapse: string[] = [];
 
     // an array of anchors in this element
-    private tocLinks: HTMLAnchorElement[];
+    @Input()
+    tocLinks: HTMLAnchorElement[];
+
     private mutationObserver: MutationObserver;
 
     constructor(private elm: ElementRef, private renderer: Renderer2) {}
 
     ngOnInit() {
-        this.mutationObserver = new MutationObserver(() => {
-            this.getTocLinks();
+        this.mutationObserver = new MutationObserver(async () => {
+            // 这里应该是异步的，否者可能 `this.tocLinks` 没准备好
+            await this.getTocLinks();
             this.markLinks();
         });
         this.mutationObserver.observe(this.elm.nativeElement, { childList : true, subtree: true });

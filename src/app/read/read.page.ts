@@ -11,8 +11,6 @@ import { ActivatedRoute } from '@angular/router';
 import { combineLatest } from 'rxjs';
 import { parse } from 'url';
 
-import { Platform } from '@ionic/angular';
-
 import { HooksService } from '../book/services/hooks.service';
 import { RouterService } from '../book/services/router.service';
 import { SettingsService } from '../book/services/settings.service';
@@ -40,7 +38,6 @@ export class ReadPage implements OnInit, AfterViewInit, OnDestroy {
     rightSidebarPage: string;
     footerPage: string;
     anchor: string;
-    contentHeadings: any[];
     inScrollHashes: Set<string>;
     searchResults: any[];
     private isElectron: boolean;
@@ -60,7 +57,6 @@ export class ReadPage implements OnInit, AfterViewInit, OnDestroy {
         private message: MessageService,
         private printService: PrintService,
         private crud: CrudService,
-        private platform: Platform,
     ) {
         this.setupRouter();
     }
@@ -106,7 +102,7 @@ export class ReadPage implements OnInit, AfterViewInit, OnDestroy {
             ev.sender.send('reply-reading-progress', progress);
         });
 
-        if (this.platform.is('electron')) this.crud.ipcRenderer.send('book-loading');
+        this.crud.ipcRenderer.send('book-loading');
 
         this.activatedRoute.paramMap.subscribe(params => {
             const website = params.get('website');
@@ -180,7 +176,6 @@ export class ReadPage implements OnInit, AfterViewInit, OnDestroy {
         });
 
         this.renderer.addClass(document.body, 'ready');
-        this.contentHeadings = [].slice.call(document.querySelectorAll('h1[id] a, h2[id] a, h3[id] a'));
 
         this.onWindowScroll();
     }
