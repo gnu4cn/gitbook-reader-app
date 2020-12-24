@@ -82,7 +82,6 @@ export class MarkdownService {
             .use(rehypeStringify);
     }
 
-
     @lazyInitialize
     private get linksProcessor() {
         return remark()
@@ -106,6 +105,7 @@ export class MarkdownService {
             .use(sectionize)
             .use(sectionPlugin);
     }
+
     get remarkPlugins(): unified.PluggableList {
         if (Array.isArray(this.config)) {
             return this.config;

@@ -43,7 +43,6 @@ export class BookService {
     listUpdated = (book: Book, deleted?: boolean) => {
         const index = this.list.findIndex(b => b.id === book.id);
         this.list.splice(index, 1);
-        console.log(deleted, !deleted)
         if(!deleted) this.list.push(book);
     }
 

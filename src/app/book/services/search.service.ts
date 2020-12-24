@@ -21,6 +21,7 @@ import { MarkdownService } from '../markdown/markdown.service';
 
 import { removeNodesPlugin } from '../plugins/remove'
 import { tocPlugin } from '../plugins/toc';
+import lazyInitialize from '../shared/lazy-init';
 
 import { VFile } from '../shared/vfile';
 import { REGEXP_ZH } from '../../vendor';
@@ -42,6 +43,7 @@ export class SearchService {
     ) {}
 
     // search segment
+    @lazyInitialize
     private get processor() {
         return remark() // md -> toc -> md + links
             .use(frontmatter)
