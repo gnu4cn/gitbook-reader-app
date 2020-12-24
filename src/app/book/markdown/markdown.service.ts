@@ -11,9 +11,9 @@ const externalLinks = require('remark-external-links');
 import { LocationService } from '../services/location.service';
 import { HooksService } from '../services/hooks.service';
 import { links, images, removeLinks } from '../shared/links';
+import lazyInitialize from '../shared/lazy-init';
 
 import type { VFile } from '../shared/vfile';
-import type { VFileCompatible } from 'vfile';
 
 export const MARKDOWN_CONFIG_TOKEN = new InjectionToken<any>( 'forRoot() configuration.' );
 
@@ -26,13 +26,11 @@ interface Preset extends unified.Preset {
 })
 export class MarkdownService {
     // Lazy init processor
+    @lazyInitialize
     get processor(): unified.Processor {
-        if (this._processor) {
-            return this._processor;
-        }
-        return this._processor = remark()
+        return remark()
             .use(gfm)
-            .use(this.config)
+            .use(this.remarkPlugins)
             .use(links, { locationService: this.locationService })
             .use(images, { locationService: this.locationService })
             .use(externalLinks)
@@ -42,13 +40,11 @@ export class MarkdownService {
             .use(rehypeStringify);
     }
 
+    @lazyInitialize
     get processorPreview(): unified.Processor {
-        if (this._processorPreview) {
-            return this._processorPreview;
-        }
-        return this._processorPreview = remark()
+        return remark()
             .use(gfm)
-            .use(this.config)
+            .use(this.remarkPlugins)
             .use(removeLinks, { locationService: this.locationService })
             .use(links, { locationService: this.locationService })
             .use(images, { locationService: this.locationService })
@@ -65,9 +61,6 @@ export class MarkdownService {
         }
         return this.config.plugins;
     }
-
-    private _processor: any;
-    private _processorPreview: any;
 
     constructor(
         private locationService: LocationService,
