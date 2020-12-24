@@ -18,7 +18,6 @@ import { LocationService } from '../services/location.service';
 import { FetchService } from '../services/fetch.service';
 import { SettingsService } from '../services/settings.service';
 import { MarkdownService } from '../markdown/markdown.service';
-import { TocService } from '../markdown-elements/toc.service';
 
 import { join, isAbsolutePath } from '../shared/utils';
 
@@ -29,63 +28,15 @@ import type { Heading } from '../shared/ast';
     providedIn: 'root'
 })
 export class PrintService {
-    private processor: any;
-    private processLinks: any;
     private summary = 'SUMMARY';
-
+    
     constructor(
         private fetchService: FetchService,
         private locationService: LocationService,
         private sanitizer: DomSanitizer,
         private markdownService: MarkdownService,
-        private tocService: TocService
-
-    ) { 
-        // TODO: use tocService
-        const fixLinks = () => {
-            return (tree: MDAST.Root, file: VFile) => {
-                return visit(tree, 'link', (node: MDAST.Link) => {
-                    if (node && !isAbsolutePath(node.url)) {
-                        const url = locationService.prepareLink(node.url, file.history[0]).replace(/[\/#]/g, '--');
-                        node.url = `#${url}`;
-                    }
-                    return true;
-                });
-            };
-        };
-
-        // TODO: move toc servcie
-        const fixIds = () => {
-            return (tree: MDAST.Root, file: VFile) => {
-                return visit(tree, 'heading', (node: Heading) => {
-                    if (node && node.data && node.data.hProperties && node.data.hProperties.id) {
-                        const id = locationService.prepareLink(`#${node.data.hProperties.id}`, file.history[0]).replace(/[\/#]/g, '--');
-                        node.data.hProperties.id = node.data.id = id;
-                    }
-                    return true;
-                });
-            };
-        };
-
-        this.processLinks = remark()
-            .use(frontmatter)
-            .use(slug)
-            .use(this.tocService.linkPlugin)
-            .use(remark2rehype, { allowDangerousHtml: true })
-            .use(raw)
-            .use(rehypeStringify);
-
-        this.processor = remark()
-            .use(this.markdownService.remarkPlugins)
-            .use(fixLinks)
-            .use(fixIds)
-            .use(images, { locationService })
-            .use(remark2rehype, { allowDangerousHtml: true })
-            .use(raw)
-            .use(rehypeStringify);
-
-    }
-
+    ) {}
+    
     async printWholeBook(showToc: boolean, coverpage: string, safe: boolean){
         const paths = await this.loadSummary(this.summary);
 
@@ -111,13 +62,11 @@ export class PrintService {
 
     async printCurrent(safe: boolean, contentPage){
         const toc_vfile = this.locationService.pageToFile('toc');
-        const res = await this.tocService.tocVfile(contentPage).toPromise();
+        const res = await this.markdownService.getPageToc(contentPage).toPromise();
 
-        toc_vfile.contents = res.contents;
-        const toc = await this.processor.process(toc_vfile);
         const f = await this.fetchVfile(contentPage);
 
-        const content =`<h2 float="left">目 录</h2><br>${toc.contents}<hr><article class="print-page">${f.contents}</article>`; 
+        const content =`<h2 float="left">目 录</h2><br>${res.contents}<hr><article class="print-page">${f.contents}</article>`; 
         return safe ? this.sanitizer.bypassSecurityTrustHtml(content) : content;
     }
 
@@ -126,7 +75,7 @@ export class PrintService {
         const url = join(vfile.cwd, vfile.path);
         const res = await this.fetchService.get(url).toPromise();
         vfile.contents = res.contents;
-        return this.processor.process(vfile);
+        return this.markdownService.process(vfile);
     }
 
     private loadSummary(summary: string): Promise<string[]> {
@@ -137,7 +86,7 @@ export class PrintService {
             mergeMap(resource => {
                 vfile.contents = resource.contents;
                 vfile.data = vfile.data || {};
-                return resource.notFound ? of(null) : this.processLinks.process(vfile);
+                return resource.notFound ? of(null) : this.markdownService.processLinks(vfile);
             }),
             map((_: any) => {
                 return _.data.tocSearch.map(__ => {

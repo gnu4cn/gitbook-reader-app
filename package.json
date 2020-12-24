@@ -71,6 +71,7 @@
     "remark-sectionize": "^1.1.1",
     "remark-slug": "^6.0.0",
     "remark-stringify": "^9.0.1",
+    "remark-strip-html": "^1.0.1",
     "rxjs": "^6.6.3",
     "space-separated-tokens": "^1.1.5",
     "style-loader": "^2.0.0",

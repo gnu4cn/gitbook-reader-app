@@ -69,7 +69,7 @@ export function getBasePath(_: VFile) {
   return _.history[0];
 }
 
-export function getFullPath(_: VFILE.VFile) {
+export function getFullPath(_: VFile) {
   return join(_.cwd, _.path);
 }
 

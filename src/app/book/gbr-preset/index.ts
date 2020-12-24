@@ -1,5 +1,6 @@
 import headings from '@rigor789/remark-autolink-headings';
 import frontmatter from 'remark-frontmatter';
+import gfm from 'remark-gfm';
 import math from 'remark-math';
 import katex from 'remark-html-katex';
 import gemojiToEmoji from 'remark-gemoji-to-emoji';
@@ -7,6 +8,7 @@ import parseFrontmatter from 'remark-parse-yaml';
 import slug from 'remark-slug';
 import reporter from 'vfile-reporter';
 import sectionize from 'remark-sectionize';
+import externalLinks from 'remark-external-links';
 
 import { readMatter, getTitle } from './plugins/frontmatter';
 import { infoString, infoStringToAttr } from './plugins/misc';
@@ -36,12 +38,14 @@ export function moveIds(): Transformer {
 
 export const plugins = [
     frontmatter,
+    gfm,
     parseFrontmatter,
     readMatter,
     getTitle,
     infoString,
     slug,
     [ headings, { behaviour: 'append' } ],
+    [ externalLinks,  {target: '_blank', rel: ['nofollow']}],
     sectionize,
     moveIds,
     math,

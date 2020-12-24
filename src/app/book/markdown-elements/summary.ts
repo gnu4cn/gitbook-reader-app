@@ -6,8 +6,8 @@ import {
 } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
-import { TocService } from './toc.service';
 import { SearchService } from '../services/search.service';
+import { MarkdownService } from '../markdown/markdown.service';
 
 @Component({
     selector: 'docspa-toc', // tslint:disable-line
@@ -23,7 +23,7 @@ export class SummaryComponent implements OnInit {
     constructor(
         private sanitizer: DomSanitizer,
         private searchService: SearchService,
-        private tocService: TocService,
+        private markdownService: MarkdownService,
     ) {}
 
     ngOnInit() {
@@ -44,7 +44,7 @@ export class SummaryComponent implements OnInit {
 
         // 这里 paths 是个对象，字符串数组是第一个元素
         const promises = paths.map(_ => {
-            return this.tocService.tocVfile(_)
+            return this.markdownService.getPageToc(_)
                 .toPromise();
         });
 

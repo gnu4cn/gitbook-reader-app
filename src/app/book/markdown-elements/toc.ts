@@ -1,16 +1,20 @@
 import {
     Component,
     Input,
+    OnChanges,
     OnInit,
     ViewEncapsulation,
     HostBinding
 } from '@angular/core';
-
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { mergeMap } from 'rxjs/operators';
 
+import { FetchService } from '../services/fetch.service';
 import { RouterService } from '../services/router.service';
+import { LocationService } from '../services/location.service';
 import { HooksService } from '../services/hooks.service';
-import { TocService } from './toc.service';
+import { join } from '../shared/utils';
+import { MarkdownService } from '../markdown/markdown.service';
 
 import type { VFile } from '../shared/vfile';
 
@@ -19,7 +23,7 @@ import type { VFile } from '../shared/vfile';
     template: ``,
     encapsulation: ViewEncapsulation.None
 })
-export class TOCComponent implements OnInit {
+export class TOCComponent implements OnChanges, OnInit {
     static readonly is = 'md-toc';
 
     @Input()
@@ -29,10 +33,10 @@ export class TOCComponent implements OnInit {
     plugins = false;
 
     @Input()
-    minDepth = 1;
+    minDepth: 1 | 2 | 3 | 4 | 5 | 6 = 1;
 
     @Input()
-    maxDepth = 6;
+    maxDepth: 1 | 2 | 3 | 4 | 5 | 6 = 6;
 
     @Input()
     tight = true;
@@ -42,17 +46,17 @@ export class TOCComponent implements OnInit {
 
     private lastPath: string;
 
-    private page;
-
     constructor(
+        private fetchService: FetchService,
         private routerService: RouterService,
+        private locationService: LocationService,
         private sanitizer: DomSanitizer,
         private hooks: HooksService,
-        private tocService: TocService
-    ) {}
+        private markdownService: MarkdownService
+    ) {
+    }
 
     ngOnInit() {
-
         this.hooks.doneEach.tap('main-content-loaded', (page: VFile) => {
             if (page.data.gbr.isPageContent) {
                 // load or update after main content changes
@@ -61,8 +65,12 @@ export class TOCComponent implements OnInit {
         });
     }
 
+    ngOnChanges() {
+        this.load();
+    }
+
     private load() {
-        const page  = this.path || decodeURI(this.routerService.contentPage);
+        const page = this.path || this.routerService.contentPage;
 
         // Not a page, clear
         if (typeof page !== 'string' || page.trim() === '') {
@@ -74,7 +82,7 @@ export class TOCComponent implements OnInit {
         // TOC content hasn't changed,
         if (page === this.lastPath) { return; }
 
-        this.tocService.tocVfile(page).subscribe(_vfile => {
+        this.markdownService.getPageToc(page, this.minDepth, this.maxDepth, this.tight).subscribe(_vfile => {
             this.html = this.sanitizer.bypassSecurityTrustHtml(_vfile.contents as string);
             this.lastPath = page;
         });

@@ -11,13 +11,16 @@ import stringify from 'remark-stringify';
 import slug from 'remark-slug';
 import { links, images } from '../shared/links';
 import frontmatter from 'remark-frontmatter';
-import { getTitle } from '../gbr-preset/index';
 
+import { getTitle } from '../gbr-preset/index';
 import { FetchService } from './fetch.service';
 import { SettingsService } from './settings.service';
 import { LocationService } from './location.service';
-import { TocService } from '../markdown-elements/toc.service';
 import { CrudService } from '../../services/crud.service';
+import { MarkdownService } from '../markdown/markdown.service';
+
+import { removeNodesPlugin } from '../plugins/remove'
+import { tocPlugin } from '../plugins/toc';
 
 import { VFile } from '../shared/vfile';
 import { REGEXP_ZH } from '../../vendor';
@@ -28,14 +31,14 @@ import { join } from '../shared/utils';
 })
 export class SearchService {
     private minDepth = 1;
-    private maxDepth = 6;
+    private maxDepth: 1 | 6 | 2 | 3 | 4 | 5 = 6;
     private searchIndex;
 
     constructor(private fetchService: FetchService,
         private locationService: LocationService,
         private settings: SettingsService,
+        private markdownService: MarkdownService,
         private crud: CrudService,
-        private tocService: TocService
     ) {}
 
     // search segment
@@ -44,11 +47,11 @@ export class SearchService {
             .use(frontmatter)
             .use(slug)
             .use(getTitle as any)
-            .use(this.tocService.removeNodesPlugin, this.minDepth)
-            .use(this.tocService.tocPlugin, { maxDepth: this.maxDepth })
+            .use(removeNodesPlugin, {minDepth: this.minDepth})
+            .use(tocPlugin, {maxDepth: this.maxDepth })
             .use(links, { locationService: this.locationService })
             .use(images, { locationService: this.locationService })
-            .use(this.tocService.linkPlugin)
+            .use(this.markdownService.linkPlugin)
             .use(stringify);
     }
 

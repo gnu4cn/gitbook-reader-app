@@ -19,7 +19,6 @@ import { TOCComponent } from './toc';
 import { EnvVarComponent } from './env-var.component';
 import { TOCPaginationComponent } from './toc-pagination.component';
 import { EmbedMarkdownComponent } from './embed-file';
-import { TocService } from './toc.service';
 import { MdLinkComponent } from './md-link';
 import { SummaryComponent } from './summary';
 
@@ -69,7 +68,6 @@ const elements = [
         SummaryComponent,
     ],
     providers: [
-        TocService,
         { provide: MARKDOWNELEMENTS_CONFIG_TOKEN, useValue: elements },
     ]
 })

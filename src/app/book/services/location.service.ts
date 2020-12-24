@@ -3,8 +3,7 @@ import { LocationStrategy, PlatformLocation } from '@angular/common';
 import { Router } from '@angular/router';
 
 import { extname, dirname, join as _join, resolve} from 'path';
-import VFILE from 'vfile';
-
+import { VFile } from '../shared/vfile';
 import { isAbsolutePath, stripBaseHref  } from '../shared/utils';
 import { join } from '../shared/utils';
 
@@ -65,14 +64,14 @@ export class LocationService {
     }
 
 
-    pageToFile(page: string = ''): VFILE.VFile {
+    pageToFile(page: string = ''): VFile {
         page = page.replace(/^#/, '');
         if (page === '') {
             page = '/';
         }
 
         // 测试 page 是本地还是远程的 md 文件，以加入对远程 md 文件的支持
-        const vfile = VFILE({ path: page, cwd: isAbsolutePath(page) ? '' : this.bookLoc});
+        const vfile = VFile({ path: page, cwd: isAbsolutePath(page) ? '' : this.bookLoc});
 
         if (vfile.basename === '') {
             vfile.basename = this.settings.homepage;

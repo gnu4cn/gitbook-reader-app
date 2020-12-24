@@ -3,15 +3,13 @@ import { Injectable, EventEmitter, SimpleChange, SimpleChanges } from '@angular/
 import { Router, ActivatedRouteSnapshot } from '@angular/router';
 
 import { goExternal, isAbsolutePath } from '../shared/utils';
-import { getFullPath } from '../shared/vfile';
+import { getFullPath, VFile } from '../shared/vfile';
 import { parse } from 'url';
 
 import { SettingsService } from './settings.service';
 import { FetchService } from './fetch.service';
 import { LocationService } from './location.service';
 import { join } from '../shared/utils';
-
-import { VFile } from 'vfile';
 
 @Injectable({
     providedIn: 'root'
