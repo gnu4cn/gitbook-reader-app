@@ -10,6 +10,7 @@
     - 改写前端，实现“正在看的书”、“书架上的书”和“暂存在回收站的书”的分离，并加入视觉反馈
     - 从`src/app/home/home.page.ts`、`src/app/home/components/book-list.component.ts`中分离出`book`、`writer`、`website`、`category`等数据模型的业务逻辑，`home.page.ts`与`book-list.component.ts`只负责视图控制，他们的行数变得更少，实现了较大重构，代码更清晰，后期功能增加就变得容易可行了
     - 尝试从 github.com 的 `search API` 获取书籍，搜索参数为 `search?q="gitbook"+"python"+filename:SUMMARY.md&type=Repositories`
+    - 尝试修改 `loadSummary` 方法，重新实现从 `SUMMARY.md` 加载目录，而不是从后台扫描的 `md list` 加载目录
 
 + 2020-12-21
 
