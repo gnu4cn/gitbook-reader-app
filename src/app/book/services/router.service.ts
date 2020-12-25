@@ -68,8 +68,8 @@ export class RouterService {
             root = path.endsWith('/') ? path : path+'/';
         }
 
-        // 去掉前面的 '/'
-        url = url.replace(/^\//, '');
+        // 去掉首尾的 '/'
+        url = url.replace(/^\//, '').replace(/\/$/, '');
 
         path = url+fragment;
         this.go(path, root);
