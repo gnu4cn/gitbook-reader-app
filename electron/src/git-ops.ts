@@ -2,7 +2,6 @@ const Git = require('nodegit');
 import { remove, ensureDirSync } from 'fs-extra';
 import * as yargs from 'yargs';
 
-import { escapeFileNames } from './fs-ops';
 import { IIpcMessage, IBookDownloaded } from './vendor';
 
 export const clone = async (bookDir: string, bookUri: string) => {
@@ -37,7 +36,7 @@ export const clone = async (bookDir: string, bookUri: string) => {
         await ensureDirSync(bookDir);
 
         Git.Clone.clone(bookUri, bookDir, opts)
-            .then(async(repo) => {
+            .then((repo) => {
 //
 // 保留这些行的目的是记住怎么获取 repo 中的文件
 //
@@ -53,8 +52,9 @@ export const clone = async (bookDir: string, bookUri: string) => {
 //            .then(async (blob) => {
 //                //const firstTenLines = blob.toString().split('\n').slice(0, 10).join('\n');
 //                const bookDesc = blob.toString().split('\n').slice(0, 10).join('\n');
+                //  可能不需要做这个处理
                 // 处理文件、目录中的特殊字符
-                await escapeFileNames(bookDir);
+                //await escapeFileNames(bookDir);
 
                 // 发送消息给父进程
                 const msg: IBookDownloaded = {

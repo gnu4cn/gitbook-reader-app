@@ -63,9 +63,7 @@ export class LocationService {
         return index >= 0;
     }
 
-
     pageToFile(page: string = ''): VFile {
-        page = page.replace(/^#/, '');
         if (page === '') {
             page = '/';
         }
