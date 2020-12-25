@@ -1,13 +1,8 @@
 // typeorm parts
-import { Book, Category, Writer, Website } from './models';
+import { Book, Category, Writer, Website, ReadingRecord } from './models';
 
 interface unknowndata {
     [key: string]: unknown;
-}
-
-export interface IQueryResult {
-    message: Array<string|object>;
-    data?: IItem | Array<IItem>
 }
 
 export interface IProgressMessage {
@@ -65,13 +60,18 @@ export function join(start: string, end: string): string {
 
 export const asciiSpecialCharRegEx = new RegExp(/\.|\,|\:|\?|\;|\'|\"|\\|\/|\!|\@|\$|\%|\^|\&|\*|\(|\)|\#/, 'g');
 
-export type TableName = "Book" | "Writer" | "Category" | "Website";
+export type TTableName = "Book" | "Writer" | "Category" | "Website" | "ReadingRecord";
 
-export type IItem = Book|Writer|Category|Website;
+export type IItem = Book|Writer|Category|Website|ReadingRecord;
 
 export interface IQuery {
-    table: TableName;
-    item: Book|Writer|Category|Website;
+    table: TTableName;
+    item: IItem;
+}
+
+export interface IQueryResult {
+    message: Array<string|object>;
+    data?: IItem | Array<IItem>
 }
 
 export interface IQueryCondition {
@@ -84,6 +84,6 @@ export interface IFindCondition {
 }
 
 export interface IFind {
-    table: TableName
+    table: TTableName
     conditions?: IFindCondition;
 }

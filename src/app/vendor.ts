@@ -1,4 +1,4 @@
-import { Book, Category, Writer, Website } from './models';
+import { Book, Category, Writer, Website, ReadingRecord } from './models';
 import { ValidatorFn, AbstractControl } from '@angular/forms';
 // typeorm parts
 
@@ -36,13 +36,13 @@ export interface IFilterAction {
     filterItem: IFilterCate | IFilterWriter | IFilterWebsite
 }
 
-export type TTableName = "Book" | "Writer" | "Category" | "Website";
+export type TTableName = "Book" | "Writer" | "Category" | "Website" | "ReadingRecord";
 
-export type IItem = Book|Writer|Category|Website;
+export type IItem = Book|Writer|Category|Website|ReadingRecord;
 
 export interface IQuery {
     table: TTableName;
-    item: Book|Writer|Category|Website;
+    item: IItem;
 }
 
 export interface IQueryResult {

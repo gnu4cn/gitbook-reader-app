@@ -18,15 +18,15 @@ class Meta {
 
     @UpdateDateColumn()
     dateUpdated: Date;
-
-    @Column({default: ''})
-    name: string;
 }
 
 @Entity()
 export class Category extends Meta{
     @ManyToMany(type => Book, book => book.cateList)
     bookList: Book[];
+
+    @Column({default: ''})
+    name: string;
 }
 
 @Entity()
@@ -49,6 +49,9 @@ export class Writer extends Meta{
 
     @OneToMany(type => Book, book => book.writer)
     bookList: Book[];
+
+    @Column({default: ''})
+    name: string;
 }
 
 @Entity() 
@@ -58,6 +61,9 @@ export class Book extends Meta{
 
     @Column({default: ''})
     commit: string;
+
+    @Column({default: ''})
+    name: string;
 
     @Column({default: ''})
     errMsg: string; 
@@ -83,4 +89,17 @@ export class Book extends Meta{
 
     @ManyToOne(type => Website, website => website.bookList)
     website: Website;
+
+    @OneToMany(type=> ReadingRecord, readingRecord => readingRecord.book)
+    readingRecordList: ReadingRecord[];
 }
+
+@Entity() 
+export class ReadingRecord extends Meta {
+    @Column()
+    uri: string;
+
+    @ManyToOne(type => Book, book => book.readingRecordList)
+    book: Book;
+}
+
