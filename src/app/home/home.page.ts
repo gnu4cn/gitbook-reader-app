@@ -13,9 +13,11 @@ import {
     MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
 
-import { Book } from '../models';
 import { CrudService } from '../services/crud.service';
+
+import { Book } from '../models';
 import { BookService } from './services/book.service';
+import { OpMessageService } from './services/op-message.service';
 
 import { SnackbarComponent } from './components/snackbar.component';
 import { NewBookDialog } from './components/new-book-dialog.component';
@@ -24,8 +26,9 @@ import {
     IProgressMessage,
     IAddBookDialogResData,
     IFilter,
-    TAvatarIds, 
     filterFn,
+    IQueryResult,
+    TAvatarIds, 
     TBookSortBy,
 } from '../vendor';
 
@@ -49,6 +52,7 @@ export class HomePage implements OnInit {
         private crud: CrudService,
         private snackbar: MatSnackBar,
         private dialog: MatDialog,
+        private opMessage: OpMessageService,
         private cdr: ChangeDetectorRef,
         private book: BookService,
     ) {
@@ -93,6 +97,12 @@ export class HomePage implements OnInit {
     }
 
     ngOnInit() {
+        this.crud.ipcRenderer.on('book-updated', (ev, msg: IQueryResult) => {
+            console.log(msg);
+            this.opMessage.newMsg(msg.message);
+            this.book.listUpdated(msg.data as Book);
+        });
+
         this.crud.ipcRenderer.on('error-occured', (ev, book: Book) => {
             this.book.listUpdated(book);
         });

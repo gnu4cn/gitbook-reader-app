@@ -12,7 +12,7 @@ import {
 
 @Component({
     selector: 'readme-dialog',
-    templateUrl: 'readme-dialog.component.html',
+    templateUrl: 'readme.dialog.html',
 })
 export class ReadmeDialog implements OnInit{
     constructor(

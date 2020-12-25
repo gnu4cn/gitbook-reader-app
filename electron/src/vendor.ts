@@ -5,6 +5,13 @@ interface unknowndata {
     [key: string]: unknown;
 }
 
+export interface IReadingProgress {
+    url: string;
+    sections: Array<string>;
+    bookCommit: string
+}
+
+
 export interface IProgressMessage {
     book: Book;
     progress: number
@@ -21,7 +28,7 @@ export interface IError {
 
 export interface IIpcMessage {
     title: string;
-    data: number|IBookDownloaded|IError;
+    data: number|IBookDownloaded|IError
 }
 
 export const sortFn = (a: string, b: string) => {
@@ -77,7 +84,7 @@ export interface IQueryResult {
 export interface IQueryCondition {
     value: string|number;
 }
-export type FieldName = "id" | "name" | "desc"| "downloaded" | "recycled" | "cateList" | "writer" | "website";
+export type FieldName = "id" | "name" | "desc"| "downloaded" | "recycled" | "cateList" | "writer" | "website" | "commit";
 export interface IFindCondition {
     field: FieldName;
     condition: IQueryCondition;

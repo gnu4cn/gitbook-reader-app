@@ -3,8 +3,11 @@
         <!-- Books added already -->
         <ion-col *ngFor="let book of bookList" sizeXs="12" sizeSm="6" sizeLg="4" sizeXl="3">
             <mat-card class="book-card">
-                <ion-badge color="warning" style="position: absolute; right: -5px; top: -10px;" *ngIf="book.downloaded && book.openCount>0">
-                    {{book.openCount}}次阅读
+                <ion-badge color="warning" 
+                           style="position: absolute; right: -5px; top: -10px;" 
+                           (click)="openReadingRecordDialog(book)"
+                           *ngIf="book.downloaded && book.openCount>0">
+                    <ion-icon name="recording-outline"></ion-icon>{{book.openCount}}次阅读
                 </ion-badge>
                 <mat-card-title>{{book.name | uppercase}}</mat-card-title>
 

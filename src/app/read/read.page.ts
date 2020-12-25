@@ -15,13 +15,13 @@ import { HooksService } from '../book/services/hooks.service';
 import { RouterService } from '../book/services/router.service';
 import { SettingsService } from '../book/services/settings.service';
 import { PrintService } from '../book/services/print.service';
-import { MessageService } from '../services/message.service';
 import { CrudService } from '../services/crud.service';
+import { MessageService } from '../services/message.service';
 
 import { throttleable } from '../book/shared/throttle';
 
 import type { VFile } from '../book/shared/vfile';
-import type { IMessage } from '../vendor';
+import type { IReadingProgress, IMessage } from '../vendor';
 
 @Component({
     selector: 'app-read',
@@ -67,6 +67,14 @@ export class ReadPage implements OnInit, AfterViewInit, OnDestroy {
         return `${this.website}:${this.writer}:${this.book}`
     }
 
+    get readingProgress () {
+        return {
+            url: parse(this.routerService.url).pathname,
+            sections: Array.from(this.inScrollHashes),
+            bookCommit: localStorage.getItem(this.storageId)
+        }
+    }
+
     // TODO: Move to a scroll spy event on EmbedMarkdownComponent
     //@HostListener('window:scroll', [])
 
@@ -99,17 +107,13 @@ export class ReadPage implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.crud.ipcRenderer.once('request-reading-progress', (ev) => {
-            const progress = {
-                url: parse(this.routerService.url).pathname,
-                sections: this.inScrollHashes,
-                bookCommit: localStorage.getItem(this.storageId)
-            }
+        this.crud.ipcRenderer.send('book-loading');
+
+        this.crud.ipcRenderer.on('request-reading-progress', async (ev) => {
+            const progress: IReadingProgress = await this.readingProgress;
 
             ev.sender.send('reply-reading-progress', progress);
         });
-
-        this.crud.ipcRenderer.send('book-loading');
 
         this.activatedRoute.paramMap.subscribe(params => {
             this.website = params.get('website');
@@ -155,6 +159,7 @@ export class ReadPage implements OnInit, AfterViewInit, OnDestroy {
 
     ngOnDestroy() {
         this.hooks.destroy.call();
+
     }
 
     mainContentLoaded(page: VFile) {
@@ -228,8 +233,8 @@ export class ReadPage implements OnInit, AfterViewInit, OnDestroy {
         // pass that on to router servce
         combineLatest([this.activatedRoute.url, this.activatedRoute.fragment])
             .subscribe(() => {
-//                this.routerService.activateRoute(this.activatedRoute.snapshot);
-                    this.routerService.activateRoute();
+                //                this.routerService.activateRoute(this.activatedRoute.snapshot);
+                this.routerService.activateRoute();
             });
 
         // Respond to changes in the docspa route

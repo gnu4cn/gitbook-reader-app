@@ -28,7 +28,7 @@ import { CateService } from '../services/cate.service';
 
 @Component({
     selector: 'app-new-book-dialog',
-    templateUrl: 'new-book-dialog.component.html',
+    templateUrl: 'new-book.dialog.html',
 })
 export class NewBookDialog implements OnInit{
     @ViewChild('cateInput') cateInput: ElementRef<HTMLInputElement>;

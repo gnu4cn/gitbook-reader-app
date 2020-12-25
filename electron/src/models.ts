@@ -90,16 +90,16 @@ export class Book extends Meta{
     @ManyToOne(type => Website, website => website.bookList)
     website: Website;
 
-    @OneToMany(type=> ReadingRecord, readingRecord => readingRecord.book)
-    readingRecordList: ReadingRecord[];
+    @OneToMany(type=> ReadingRecord, record => record.book)
+    @JoinTable()
+    recordList: Array<ReadingRecord>;
 }
 
 @Entity() 
 export class ReadingRecord extends Meta {
     @Column()
-    uri: string;
+    path: string;
 
-    @ManyToOne(type => Book, book => book.readingRecordList)
+    @ManyToOne(type => Book, book => book.recordList)
     book: Book;
 }
-

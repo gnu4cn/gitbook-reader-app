@@ -21,7 +21,7 @@ export class CRUD {
             logging: false,
             logger: 'simple-console',
             database: 'db.sqlite',
-            entities: [ Category, Website, Writer, Book ],
+            entities: [ Category, Website, Writer, Book, ReadingRecord ],
         });
 
         this.conn.connect();
@@ -41,7 +41,7 @@ export class CRUD {
                         .leftJoinAndSelect('book.writer', 'writer')
                         .leftJoinAndSelect('book.website', 'website')
                         .leftJoinAndSelect('book.cateList', 'cateList')
-                        .leftJoinAndSelect('book.readingRecordList', 'readingRecordList')
+                        .leftJoinAndSelect('book.recordList', 'readingRecordList')
                         .getOne();
 
                     message.push('成功获取到书籍')
@@ -333,7 +333,7 @@ export class CRUD {
                         .leftJoinAndSelect('book.writer', 'writer')
                         .leftJoinAndSelect('book.website', 'website')
                         .leftJoinAndSelect('book.cateList', 'cateList')
-                        .leftJoinAndSelect('book.readingRecordList', 'readingRecordList')
+                        .leftJoinAndSelect('book.recordList', 'readingRecordList')
                         .getMany();
 
                     message.push(`获取到 ${itemList.length} 本书籍`);

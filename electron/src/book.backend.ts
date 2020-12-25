@@ -7,13 +7,16 @@ import { CRUD } from './crud';
 import { 
     IError, 
     IIpcMessage, 
+    IFind,
     IItem, 
+    IReadingProgress,
+    IQueryResult,
     IQuery, 
     join as _join, 
     IBookDownloaded, 
     IProgressMessage
 } from './vendor';
-import { Book } from './models';
+import { Book, ReadingRecord } from './models';
 
 export class BookBackend {
     crud = new CRUD();
@@ -80,6 +83,7 @@ export class BookBackend {
             cb(bookWindow);
         });
 
+        // 这里调用外部浏览器打开外部链接
         webContents.on("new-window", (event, url) => {
             event.preventDefault();
             shell.openExternal(url);
@@ -89,8 +93,49 @@ export class BookBackend {
         bookWindow.on('close', async () => {
             webContents.send('request-reading-progress');
 
-            ipcMain.once('reply-reading-progress', (ev, msg) => {
-                console.log(msg);
+            ipcMain.once('reply-reading-progress', (ev, msg: IReadingProgress) => {
+                let query: IFind | IQuery;
+                let message: Array<string|object> = [];
+                query = {
+                    table: 'Book',
+                    conditions: {field: 'commit', condition: {value: msg.bookCommit}}
+                }
+
+                this.crud.getItem(query).then(res => {
+                    const book = res.data as Book;
+                    message = [...message, ...res.message];
+
+                    const record = new ReadingRecord();
+                    const chapterTitle = msg.sections[0];
+                    const sectionTitle = msg.sections[1] ? msg.sections[1] : '';
+
+                    record.path = msg.sections[1] ? `${msg.url}#${sectionTitle}` : `${msg.url}#${chapterTitle}`;
+                    record.desc = `${chapterTitle}:${sectionTitle}`;
+
+                    query = {
+                        table: 'ReadingRecord',
+                        item: record
+                    }
+
+                    this.crud.addItem(query).then(res => {
+                        message = [...message, ...res.message];
+                        book.recordList.push(res.data as ReadingRecord);
+                        
+                        query = {
+                            table: 'Book',
+                            item: book
+                        }
+                        this.crud.updateItem(query).then(res => {
+                            message = [...message, ...res.message];
+
+                            const msg: IQueryResult = {
+                                message: message,
+                                data: res.data
+                            }
+                            this.insideWindow.webContents.send('book-updated', msg);
+                        });
+                    })
+                });
             });
 
             bookWindow = null;

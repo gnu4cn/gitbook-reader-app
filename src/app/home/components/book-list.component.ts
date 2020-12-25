@@ -20,6 +20,7 @@ import { OpMessageService } from '../services/op-message.service';
 import { DeleteBookDialog } from './delete-book-dialog.component';
 import { EditBookCateListDialog } from './edit-book-cate-list.component';
 import { ReadmeDialog } from './readme-dialog.component';
+import { ReadingRecordDialog } from './reading-record-dialog.component';
 
 import { 
     sortBy,
@@ -103,6 +104,13 @@ export class BookListComponent implements OnInit, OnChanges {
         document
             .getElementById(`delete-book-${book.id}`)
             .setAttribute('disabled', 'true');
+    }
+
+    openReadingRecordDialog = (book: Book) => {
+        this.dialog.open(ReadingRecordDialog, {
+            width: '640px',
+            data: book
+        });
     }
 
     listBooksUnderCate = (cate: Category) => {
