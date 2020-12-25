@@ -81,7 +81,6 @@ export class RouterService {
             goExternal(url);
             return Promise.resolve({});
         }
-        url = this.canonicalize(url);
         return this.urlChange(url || '/', root);
     }
 
@@ -123,18 +122,10 @@ export class RouterService {
             changes.sideLoad = new SimpleChange(null, sideLoads, false);
         }
 
+        //return changes;
         if (Object.keys(changes).length > 0) {
             this.changed.emit(changes);
         }
-
-        //return changes;
-    }
-
-    private canonicalize(url: string) {
-        const hp = this.settings.homepage.replace(/\.md$/, '');
-        url = url.replace(/\.md$/, '');
-        url = url.replace(new RegExp(`${hp}\$`), '/');
-        return url;
     }
 
     private async resolveCoverPath(vfile: VFile) {

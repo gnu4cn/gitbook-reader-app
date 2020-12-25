@@ -44,7 +44,7 @@ export class ListCollapseDirective implements OnInit, OnChanges, OnDestroy {
 
     @throttleable(120)
     private markLinks() {
-        if (!this.tocLinks) { return; }
+        if (!this.tocLinks) { return; } 
 
         // clear
         for (let i = 0; i < this.tocLinks.length; i++) {
