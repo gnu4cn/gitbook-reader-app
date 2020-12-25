@@ -28,6 +28,8 @@ export class CRUD {
     }
 
     getItem = async (query: IFind): Promise<IQueryResult> => {
+        const field = query.condition.field;
+        const value = query.condition.value;
         let item: IItem;
         let repo: any;
         let message: Array<string|object> = [];
@@ -37,11 +39,11 @@ export class CRUD {
                     repo = this.conn.getRepository(Book);
                     item = await repo
                         .createQueryBuilder('b')
-                        .where(`b.${query.conditions.field} = :value`, query.conditions.condition)
-                        .leftJoinAndSelect('book.writer', 'writer')
-                        .leftJoinAndSelect('book.website', 'website')
-                        .leftJoinAndSelect('book.cateList', 'cateList')
-                        .leftJoinAndSelect('book.recordList', 'recordList')
+                        .where(`b.${field} = :value`, {value: value})
+                        .leftJoinAndSelect('b.writer', 'writer', 'writer.id = b.writerId')
+                        .leftJoinAndSelect('b.website', 'website', 'website.id = b.websiteId')
+                        .leftJoinAndSelect('b.cateList', 'cateList')
+                        .leftJoinAndSelect('b.recordList', 'recordList')
                         .getOne();
 
                     message.push('成功获取到书籍')
@@ -56,7 +58,7 @@ export class CRUD {
                     repo = this.conn.getRepository(Writer);
                     item = await repo
                         .createQueryBuilder('w')
-                        .where(`w.${query.conditions.field} = :value`, query.conditions.condition)
+                        .where(`w.${field} = :value`, {value: value})
                         .leftJoinAndSelect('w.bookList', 'bookList')
                         .leftJoinAndSelect('w.websiteList', 'websiteList')
                         .getOne();
@@ -71,10 +73,10 @@ export class CRUD {
                 try{
                     repo = this.conn.getRepository(Website);
                     item = await repo
-                        .createQueryBuilder('web')
-                        .where(`web.${query.conditions.field} = :value`, query.conditions.condition)
-                        .leftJoinAndSelect('web.bookList', 'bookList')
-                        .leftJoinAndSelect('web.writerList', 'writerList')
+                        .createQueryBuilder('w')
+                        .where(`w.${field} = :value`, {value: value})
+                        .leftJoinAndSelect('w.bookList', 'bookList')
+                        .leftJoinAndSelect('w.writerList', 'writerList')
                         .getOne();
 
                     message.push('成功获取到托管平台')
@@ -89,7 +91,7 @@ export class CRUD {
                     repo = this.conn.getRepository(Category);
                     item = await repo
                         .createQueryBuilder('c')
-                        .where(`c.${query.conditions.field} = :value`, query.conditions.condition)
+                        .where(`c.${field} = :value`, {value: value})
                         .leftJoinAndSelect('c.bookList', 'bookList')
                         .getOne();
 
@@ -105,18 +107,19 @@ export class CRUD {
     }
 
     deleteItem = async (query: IQuery): Promise<IQueryResult> => {
+        let item: IItem;
         let message: Array<string|object> = [];
         switch(query.table){
             case 'Book':
                 try {
-                    const book = query.item as Book;
+                    item = query.item as Book;
                     await this.conn
                         .createQueryBuilder()
                         .delete()
                         .from(Book)
-                        .where("id = :id", { id: book.id })
+                        .where("id = :id", { id: item.id })
                         .execute();
-                    message.push(`书籍 ${book.name} 成功从数据库移除`);
+                    message.push(`书籍 ${item.name} 成功从数据库移除`);
                 } catch (err) {
                     message.push(err);
                     throw err
@@ -124,15 +127,15 @@ export class CRUD {
                 break;
             case 'Writer':
                 try {
-                    const writer = query.item as Writer;
+                    item = query.item as Writer;
                     await this.conn
                         .createQueryBuilder()
                         .delete()
                         .from(Writer)
-                        .where("id = :id", { id: writer.id })
+                        .where("id = :id", { id: item.id })
                         .execute();
 
-                    message.push(`作者 ${writer.name} 成功从数据库移除`);
+                    message.push(`作者 ${item.name} 成功从数据库移除`);
                 } catch (err) {
                     message.push(err);
                     throw err
@@ -140,15 +143,15 @@ export class CRUD {
                 break;
             case 'Website':
                 try {
-                    const website = query.item as Website;
+                    item = query.item as Website;
                     await this.conn
                         .createQueryBuilder()
                         .delete()
                         .from(Website)
-                        .where("id = :id", { id: website.id })
+                        .where("id = :id", { id: item.id })
                         .execute();
 
-                    message.push(`托管平台 ${website.uri} 成功从数据库移除`);
+                    message.push(`托管平台 ${item.uri} 成功从数据库移除`);
                 } catch (err) {
                     message.push(err);
                     throw err
@@ -156,15 +159,15 @@ export class CRUD {
                 break;
             case 'Category':
                 try {
-                    const cate = query.item as Category;
+                    item = query.item as Category;
                     await this.conn
                         .createQueryBuilder()
                         .delete()
                         .from(Category)
-                        .where("id = :id", { id: cate.id })
+                        .where("id = :id", { id: item.id })
                         .execute();
 
-                    message.push(`类别 ${cate.name} 成功从数据库移除`);
+                    message.push(`类别 ${item.name} 成功从数据库移除`);
                 } catch (err) {
                     message.push(err);
                     throw err
@@ -172,15 +175,15 @@ export class CRUD {
                 break;
             case 'Record':
                 try {
-                    const readingRecord = query.item as Record;
+                    item = query.item as Record;
                     await this.conn
                         .createQueryBuilder()
                         .delete()
                         .from(Record)
-                        .where("id = :id", { id: readingRecord.id })
+                        .where("id = :id", { id: item.id })
                         .execute();
 
-                    message.push(`阅读记录 ${readingRecord.desc} 成功从数据库移除`);
+                    message.push(`阅读记录 ${item.desc} 成功从数据库移除`);
                 } catch (err) {
                     message.push(err);
                     throw err
@@ -329,11 +332,11 @@ export class CRUD {
                 try {
                     repo = this.conn.getRepository(Book);
                     itemList = await repo
-                        .createQueryBuilder('book')
-                        .leftJoinAndSelect('book.writer', 'writer')
-                        .leftJoinAndSelect('book.website', 'website')
-                        .leftJoinAndSelect('book.cateList', 'cateList')
-                        .leftJoinAndSelect('book.recordList', 'recordList')
+                        .createQueryBuilder('b')
+                        .leftJoinAndSelect('b.writer', 'writer', 'writer.id = b.writerId')
+                        .leftJoinAndSelect('b.website', 'website', 'website.id = b.websiteId')
+                        .leftJoinAndSelect('b.cateList', 'cateList')
+                        .leftJoinAndSelect('b.recordList', 'recordList')
                         .getMany();
 
                     message.push(`获取到 ${itemList.length} 本书籍`);
@@ -346,9 +349,9 @@ export class CRUD {
                 try {
                     repo = this.conn.getRepository(Writer);
                     itemList = await repo
-                        .createQueryBuilder('writer')
-                        .leftJoinAndSelect('writer.websiteList', 'websiteList')
-                        .leftJoinAndSelect('writer.bookList', 'bookList')
+                        .createQueryBuilder('w')
+                        .leftJoinAndSelect('w.websiteList', 'websiteList')
+                        .leftJoinAndSelect('w.bookList', 'bookList')
                         .getMany();
 
                     message.push(`获取到 ${itemList.length} 名作者`);
@@ -361,8 +364,8 @@ export class CRUD {
                 try {
                     repo = this.conn.getRepository(Category);
                     itemList = await repo
-                        .createQueryBuilder('cate')
-                        .leftJoinAndSelect('cate.bookList', 'bookList')
+                        .createQueryBuilder('c')
+                        .leftJoinAndSelect('c.bookList', 'bookList')
                         .getMany();
 
                     message.push(`获取到 ${itemList.length} 个类别`);
@@ -375,9 +378,9 @@ export class CRUD {
                 try {
                     repo = this.conn.getRepository(Website);
                     itemList = await repo
-                        .createQueryBuilder('website')
-                        .leftJoinAndSelect('website.writerList', 'writerList')
-                        .leftJoinAndSelect('website.bookList', 'bookList')
+                        .createQueryBuilder('w')
+                        .leftJoinAndSelect('w.writerList', 'writerList')
+                        .leftJoinAndSelect('w.bookList', 'bookList')
                         .getMany();
 
                     message.push(`获取到 ${itemList.length} 个托管平台`);

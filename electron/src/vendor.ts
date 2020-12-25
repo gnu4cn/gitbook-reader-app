@@ -81,16 +81,13 @@ export interface IQueryResult {
     data?: IItem | Array<IItem>
 }
 
-export interface IQueryCondition {
-    value: string|number;
-}
 export type FieldName = "id" | "name" | "desc"| "downloaded" | "recycled" | "cateList" | "writer" | "website" | "commit";
 export interface IFindCondition {
     field: FieldName;
-    condition: IQueryCondition;
+    value: string|number|IItem
 }
 
 export interface IFind {
     table: TTableName
-    conditions?: IFindCondition;
+    condition?: IFindCondition;
 }

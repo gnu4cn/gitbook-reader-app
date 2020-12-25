@@ -1,10 +1,15 @@
 import "reflect-metadata";
-import { Entity, 
+import { 
+    Entity, 
     PrimaryGeneratedColumn, 
     Column, 
     CreateDateColumn,
     UpdateDateColumn,
-    ManyToOne, ManyToMany, OneToMany, JoinTable } from "typeorm";
+    ManyToOne, 
+    ManyToMany, 
+    OneToMany, 
+    JoinTable,
+} from "typeorm";
 
 class Meta {
     @PrimaryGeneratedColumn()

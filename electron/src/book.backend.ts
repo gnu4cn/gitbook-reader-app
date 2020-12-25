@@ -62,15 +62,10 @@ export class BookBackend {
         const webContents = bookWindow.webContents;
         webContents.openDevTools();
 
-        console.log(this.bookUrl);
         bookWindow.loadURL(this.bookUrl);
 
         ipcMain.on('book-loading', () =>{
             this.loadingWin.show();
-        });
-
-        ipcMain.on('new-reading-record', (event, msg) => {
-            console.log(this.book.name, msg);
         });
 
         ipcMain.on('summary-request', (event, bookPath) => {
@@ -93,38 +88,47 @@ export class BookBackend {
         bookWindow.on('close', async () => {
             webContents.send('request-reading-progress');
 
-            ipcMain.once('reply-reading-progress', (ev, msg: IReadingProgress) => {
+            await ipcMain.once('reply-reading-progress', (ev, msg: IReadingProgress) => {
                 let query: IFind | IQuery;
                 let message: Array<string|object> = [];
+
                 query = {
                     table: 'Book',
-                    conditions: {field: 'commit', condition: {value: msg.bookCommit}}
+                    condition: {field: 'commit', value: msg.bookCommit}
                 }
 
-                this.crud.getItem(query).then(res => {
-                    const book = res.data as Book;
-                    message = [...message, ...res.message];
-
-                    const record = new Record();
-                    const chapterTitle = msg.sections[0];
-                    const sectionTitle = msg.sections[1] ? msg.sections[1] : '';
-
-                    record.path = msg.sections[1] ? `${msg.url}#${sectionTitle}` : `${msg.url}#${chapterTitle}`;
-                    record.desc = `${chapterTitle}:${sectionTitle}`;
-                    record.book = book;
-
-                    query = {
-                        table: 'Record',
-                        item: record
-                    }
-
-                    this.crud.addItem(query).then(res => {
+                try {
+                    this.crud.getItem(query).then(res => {
+                        const book = res.data as Book;
                         message = [...message, ...res.message];
-                        book.recordList.push(res.data as Record);
-                        
-                        this.insideWindow.webContents.send('book-updated', msg);
+
+                        const record = new Record();
+                        const chapterTitle = msg.sections[0];
+                        const sectionTitle = msg.sections[1] ? msg.sections[1] : '';
+
+                        record.path = msg.sections[1] ? `${msg.url}#${sectionTitle}` : `${msg.url}#${chapterTitle}`;
+                        record.desc = `${chapterTitle}:${sectionTitle}`;
+                        record.book = book;
+
+                        query = {
+                            table: 'Record',
+                            item: record
+                        }
+
+                        try {
+                            this.crud.addItem(query).then(res => {
+                                message = [...message, ...res.message];
+                                book.recordList.push(res.data as Record);
+
+                                const msg: IQueryResult = {
+                                    message: message,
+                                    data: book
+                                }
+                                this.insideWindow.webContents.send('book-updated', msg);
+                            });
+                        }catch(e){console.log(e)}
                     });
-                });
+                }catch(e){console.log(e)}
             });
 
             bookWindow = null;
