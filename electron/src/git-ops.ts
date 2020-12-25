@@ -5,7 +5,6 @@ import * as yargs from 'yargs';
 import { IIpcMessage, IBookDownloaded } from './vendor';
 
 export const clone = async (bookDir: string, bookUri: string) => {
-    let bookCommit = '';
     let progress = 1;
     const opts = {
         fetchOpts: {
@@ -37,26 +36,25 @@ export const clone = async (bookDir: string, bookUri: string) => {
 
         Git.Clone.clone(bookUri, bookDir, opts)
             .then((repo) => {
-//
-// 保留这些行的目的是记住怎么获取 repo 中的文件
-//
-//                return repo.getMasterCommit();
-//            })
-//            .then(commit => {
-//                bookCommit = commit.sha();
-//                return commit.getEntry("README.md");
-//            })
-//            .then(entry => {
-//                return entry.getBlob();
-//            })
-//            .then(async (blob) => {
-//                //const firstTenLines = blob.toString().split('\n').slice(0, 10).join('\n');
-//                const bookDesc = blob.toString().split('\n').slice(0, 10).join('\n');
+                return repo.getHeadCommit();
+            })
+            .then(commit => {
+                return commit.sha();
+                //                return commit.getEntry("README.md");
+                //            })
+                //            .then(entry => {
+                //                return entry.getBlob();
+                //            })
+                //            .then(async (blob) => {
+                //                //const firstTenLines = blob.toString().split('\n').slice(0, 10).join('\n');
+                //                const bookDesc = blob.toString().split('\n').slice(0, 10).join('\n');
                 //  可能不需要做这个处理
                 // 处理文件、目录中的特殊字符
                 //await escapeFileNames(bookDir);
 
                 // 发送消息给父进程
+            })
+            .then((bookCommit) => {
                 const msg: IBookDownloaded = {
                     commit: bookCommit
                 }

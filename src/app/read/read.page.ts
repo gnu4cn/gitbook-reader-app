@@ -41,7 +41,9 @@ export class ReadPage implements OnInit, AfterViewInit, OnDestroy {
     inScrollHashes: Set<string>;
     searchResults: any[];
     private isElectron: boolean;
-    book: string;
+    private website: string = '';
+    private writer: string = '';
+    book: string = '';
     private bookPath: string;
 
     private sidebarClose = false;
@@ -59,6 +61,10 @@ export class ReadPage implements OnInit, AfterViewInit, OnDestroy {
         private crud: CrudService,
     ) {
         this.setupRouter();
+    }
+
+    get storageId () {
+        return `${this.website}:${this.writer}:${this.book}`
     }
 
     // TODO: Move to a scroll spy event on EmbedMarkdownComponent
@@ -96,7 +102,8 @@ export class ReadPage implements OnInit, AfterViewInit, OnDestroy {
         this.crud.ipcRenderer.once('request-reading-progress', (ev) => {
             const progress = {
                 url: parse(this.routerService.url).pathname,
-                sections: this.inScrollHashes
+                sections: this.inScrollHashes,
+                bookCommit: localStorage.getItem(this.storageId)
             }
 
             ev.sender.send('reply-reading-progress', progress);
@@ -105,18 +112,19 @@ export class ReadPage implements OnInit, AfterViewInit, OnDestroy {
         this.crud.ipcRenderer.send('book-loading');
 
         this.activatedRoute.paramMap.subscribe(params => {
-            const website = params.get('website');
-            const writer = params.get('writer');
+            this.website = params.get('website');
+            this.writer = params.get('writer');
             this.book = params.get('book');
-            this.settings.bookPath = this.bookPath = `/${website}/${writer}/${this.book}`;
+            this.settings.bookPath = this.bookPath = `/${this.website}/${this.writer}/${this.book}`;
         })
 
         this.activatedRoute.queryParamMap.subscribe(params => {
-            const commit = params.get('commit');
-            const _commit = localStorage.getItem(this.bookPath) || '';
-            if (commit !== _commit) {
+            const commit = params.get('bookCommit');
+
+            const _commit = localStorage.getItem(this.storageId) || '';
+            if (commit && commit !== _commit) {
                 this.settings.updated = true;
-                localStorage.setItem(this.bookPath, commit);
+                localStorage.setItem(this.storageId, commit);
             }
             else this.settings.updated = false;
         });

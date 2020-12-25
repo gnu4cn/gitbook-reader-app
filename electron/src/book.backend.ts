@@ -39,8 +39,7 @@ export class BookBackend {
 
     get bookUrl () {
         // capacitor-electron://-/#/home
-        return _join('capacitor-electron://-/#/', 
-            join(this.book.website.uri, this.book.writer.name, `${this.book.name}?commit=${this.book.commit}`)); 
+        return _join('capacitor-electron://-/#/', `${this.bookPath}?bookCommit=${this.book.commit}`); 
     }
 
     open = async (cb) => {
@@ -60,6 +59,7 @@ export class BookBackend {
         const webContents = bookWindow.webContents;
         webContents.openDevTools();
 
+        console.log(this.bookUrl);
         bookWindow.loadURL(this.bookUrl);
 
         ipcMain.on('book-loading', () =>{
