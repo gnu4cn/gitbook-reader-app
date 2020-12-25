@@ -16,7 +16,7 @@ import {
     IBookDownloaded, 
     IProgressMessage
 } from './vendor';
-import { Book, ReadingRecord } from './models';
+import { Book, Record } from './models';
 
 export class BookBackend {
     crud = new CRUD();
@@ -105,36 +105,25 @@ export class BookBackend {
                     const book = res.data as Book;
                     message = [...message, ...res.message];
 
-                    const record = new ReadingRecord();
+                    const record = new Record();
                     const chapterTitle = msg.sections[0];
                     const sectionTitle = msg.sections[1] ? msg.sections[1] : '';
 
                     record.path = msg.sections[1] ? `${msg.url}#${sectionTitle}` : `${msg.url}#${chapterTitle}`;
                     record.desc = `${chapterTitle}:${sectionTitle}`;
+                    record.book = book;
 
                     query = {
-                        table: 'ReadingRecord',
+                        table: 'Record',
                         item: record
                     }
 
                     this.crud.addItem(query).then(res => {
                         message = [...message, ...res.message];
-                        book.recordList.push(res.data as ReadingRecord);
+                        book.recordList.push(res.data as Record);
                         
-                        query = {
-                            table: 'Book',
-                            item: book
-                        }
-                        this.crud.updateItem(query).then(res => {
-                            message = [...message, ...res.message];
-
-                            const msg: IQueryResult = {
-                                message: message,
-                                data: res.data
-                            }
-                            this.insideWindow.webContents.send('book-updated', msg);
-                        });
-                    })
+                        this.insideWindow.webContents.send('book-updated', msg);
+                    });
                 });
             });
 

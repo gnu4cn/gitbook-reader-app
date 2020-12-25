@@ -22,11 +22,11 @@ class Meta {
 
 @Entity()
 export class Category extends Meta{
-    @ManyToMany(type => Book, book => book.cateList)
-    bookList: Book[];
-
     @Column({default: ''})
     name: string;
+
+    @ManyToMany(type => Book, book => book.cateList)
+    bookList: Book[];
 }
 
 @Entity()
@@ -43,27 +43,27 @@ export class Website extends Meta{
 
 @Entity()
 export class Writer extends Meta{
+    @Column({default: ''})
+    name: string;
+
     @ManyToMany(type => Website, website => website.writerList)
     @JoinTable()
     websiteList: Array<Website>;
 
     @OneToMany(type => Book, book => book.writer)
     bookList: Book[];
-
-    @Column({default: ''})
-    name: string;
 }
 
 @Entity() 
 export class Book extends Meta{
     @Column({default: ''})
+    name: string;
+
+    @Column({default: ''})
     title: string;
 
     @Column({default: ''})
     commit: string;
-
-    @Column({default: ''})
-    name: string;
 
     @Column({default: ''})
     errMsg: string; 
@@ -90,13 +90,12 @@ export class Book extends Meta{
     @ManyToOne(type => Website, website => website.bookList)
     website: Website;
 
-    @OneToMany(type=> ReadingRecord, record => record.book)
-    @JoinTable()
-    recordList: Array<ReadingRecord>;
+    @OneToMany(type => Record, record => record.book)
+    recordList: Record[];
 }
 
 @Entity() 
-export class ReadingRecord extends Meta {
+export class Record extends Meta {
     @Column()
     path: string;
 

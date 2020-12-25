@@ -1,5 +1,5 @@
 // typeorm parts
-import { Book, Category, Writer, Website, ReadingRecord } from './models';
+import { Book, Category, Writer, Website, Record } from './models';
 
 interface unknowndata {
     [key: string]: unknown;
@@ -67,9 +67,9 @@ export function join(start: string, end: string): string {
 
 export const asciiSpecialCharRegEx = new RegExp(/\.|\,|\:|\?|\;|\'|\"|\\|\/|\!|\@|\$|\%|\^|\&|\*|\(|\)|\#/, 'g');
 
-export type TTableName = "Book" | "Writer" | "Category" | "Website" | "ReadingRecord";
+export type TTableName = "Book" | "Writer" | "Category" | "Website" | "Record";
 
-export type IItem = Book|Writer|Category|Website|ReadingRecord;
+export type IItem = Book|Writer|Category|Website|Record;
 
 export interface IQuery {
     table: TTableName;

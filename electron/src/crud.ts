@@ -1,6 +1,6 @@
 import { ConnectionManager, Connection } from 'typeorm';
 
-import { Book, Category, Writer, Website, ReadingRecord } from './models';
+import { Book, Category, Writer, Website, Record } from './models';
 
 import { 
     TTableName, 
@@ -21,7 +21,7 @@ export class CRUD {
             logging: false,
             logger: 'simple-console',
             database: 'db.sqlite',
-            entities: [ Category, Website, Writer, Book, ReadingRecord ],
+            entities: [ Category, Website, Writer, Book, Record ],
         });
 
         this.conn.connect();
@@ -41,7 +41,7 @@ export class CRUD {
                         .leftJoinAndSelect('book.writer', 'writer')
                         .leftJoinAndSelect('book.website', 'website')
                         .leftJoinAndSelect('book.cateList', 'cateList')
-                        .leftJoinAndSelect('book.recordList', 'readingRecordList')
+                        .leftJoinAndSelect('book.recordList', 'recordList')
                         .getOne();
 
                     message.push('成功获取到书籍')
@@ -170,13 +170,13 @@ export class CRUD {
                     throw err
                 };
                 break;
-            case 'ReadingRecord':
+            case 'Record':
                 try {
-                    const readingRecord = query.item as ReadingRecord;
+                    const readingRecord = query.item as Record;
                     await this.conn
                         .createQueryBuilder()
                         .delete()
-                        .from(ReadingRecord)
+                        .from(Record)
                         .where("id = :id", { id: readingRecord.id })
                         .execute();
 
@@ -244,9 +244,9 @@ export class CRUD {
                     throw err
                 };
                 break;
-            case 'ReadingRecord':
+            case 'Record':
                 try {
-                    repo = this.conn.getRepository(ReadingRecord);
+                    repo = this.conn.getRepository(Record);
                     item = await repo.create(query.item);
                     await repo.save(item)
 
@@ -333,7 +333,7 @@ export class CRUD {
                         .leftJoinAndSelect('book.writer', 'writer')
                         .leftJoinAndSelect('book.website', 'website')
                         .leftJoinAndSelect('book.cateList', 'cateList')
-                        .leftJoinAndSelect('book.recordList', 'readingRecordList')
+                        .leftJoinAndSelect('book.recordList', 'recordList')
                         .getMany();
 
                     message.push(`获取到 ${itemList.length} 本书籍`);
