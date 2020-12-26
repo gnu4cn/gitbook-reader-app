@@ -1,6 +1,6 @@
 {
   "name": "gitbook-reader-app",
-  "version": "0.6.2",
+  "version": "0.6.4",
   "description": "Gitbook 阅读器，60天通过CCNA考试 - ccna60d.xfoss.com",
   "main": "./build/index.js",
   "scripts": {

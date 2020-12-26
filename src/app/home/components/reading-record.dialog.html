@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>{{book.name|uppercase}} 阅读记录 - 共 {{recordList.length}} 条</h1>
+<h2 mat-dialog-title>{{book.name|uppercase}} 阅读记录 - 共 {{recordList.length}} 条</h2>
 <div mat-dialog-content>
     <mgl-timeline [toggle]="toggle" [alternate]="alternate" [side]="side">
         <mgl-timeline-entry *ngFor="let record of recordList; let i = index;" (expand)="onExpandEntry($event, i)">
