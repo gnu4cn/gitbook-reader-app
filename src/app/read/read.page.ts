@@ -117,24 +117,6 @@ export class ReadPage implements OnInit, AfterViewInit, OnDestroy {
             ev.sender.send('reply-reading-progress', progress);
         });
 
-        this.activatedRoute.paramMap.subscribe(params => {
-            this.website = params.get('website');
-            this.writer = params.get('writer');
-            this.book = params.get('book');
-            this.settings.bookPath = this.bookPath = `/${this.website}/${this.writer}/${this.book}`;
-        })
-
-        this.activatedRoute.queryParamMap.subscribe(params => {
-            const commit = params.get('bookCommit');
-
-            const _commit = localStorage.getItem(this.storageId) || '';
-            if (commit && commit !== _commit) {
-                this.settings.updated = true;
-                localStorage.setItem(this.storageId, commit);
-            }
-            else this.settings.updated = false;
-        });
-
         const sidebar = localStorage.getItem('GbrComponent#sidebarClose') || 'false';
         this.toggleSidebar(sidebar === 'true');
 
@@ -233,7 +215,26 @@ export class ReadPage implements OnInit, AfterViewInit, OnDestroy {
         // Watch for changes in the this component's actived route,
         // pass that on to router servce
         combineLatest([this.activatedRoute.url, this.activatedRoute.fragment])
-            .subscribe(() => {
+            .subscribe(async () => {
+
+                await this.activatedRoute.paramMap.subscribe(params => {
+                    this.website = params.get('website');
+                    this.writer = params.get('writer');
+                    this.book = params.get('book');
+                    this.settings.bookPath = this.bookPath = `/${this.website}/${this.writer}/${this.book}`;
+                })
+
+                await this.activatedRoute.queryParamMap.subscribe(params => {
+                    const commit = params.get('bookCommit');
+
+                    const _commit = localStorage.getItem(this.storageId) || '';
+                    if (commit && commit !== _commit) {
+                        this.settings.updated = true;
+                        localStorage.setItem(this.storageId, commit);
+                    }
+                    else this.settings.updated = false;
+                });
+
                 //                this.routerService.activateRoute(this.activatedRoute.snapshot);
                 this.routerService.activateRoute();
             });
