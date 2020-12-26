@@ -5,8 +5,14 @@ interface unknowndata {
     [key: string]: unknown;
 }
 
+export interface IBookWithPath {
+    book: Book;
+    path: string
+}
+
 export interface IReadingProgress {
     url: string;
+    title: string;
     sections: Array<string>;
     bookCommit: string
 }

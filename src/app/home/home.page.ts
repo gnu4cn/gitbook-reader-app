@@ -43,7 +43,7 @@ export class HomePage implements OnInit {
 
     downloadingList: Array<number> = [];
 
-    sortBy: TBookSortBy = 'openCount';
+    sortBy: TBookSortBy = 'recordList:length';
     displayRecycled: boolean = false;
     beenOpened: boolean = true;
     private bookList: Array<Book>;
@@ -141,7 +141,7 @@ export class HomePage implements OnInit {
         this.displayRecycled = false;
         this.beenOpened = true;
 
-        this.sortBy = 'openCount';
+        this.sortBy = 'recordList:length';
 
         this.changeFabButton('currently-reading');
     }

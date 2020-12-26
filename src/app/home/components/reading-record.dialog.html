@@ -3,14 +3,27 @@
     <mgl-timeline [toggle]="toggle" [alternate]="alternate" [side]="side">
         <mgl-timeline-entry *ngFor="let record of data.recordList; let i = index;" (expand)="onExpandEntry($event, i)">
             <mgl-timeline-entry-header (click)="onHeaderClick($event)">
-                <div>{{record.dateCreated}}</div>
+                <div>
+                    <ion-text color="dark">{{record.dateCreated | date : 'yyyy-M-d H:m:s' : 'GMT+8' }}</ion-text>
+                </div>
             </mgl-timeline-entry-header>
             <mgl-timeline-entry-content 
                 [expandAnimationTiming]="contentAnimation ? '200ms ease' : '0ms'"      
                 [collapseAnimationTiming]="contentAnimation ? '100ms ease' : '0ms'">
                 <div>
-                    <div>{{record.desc}}</div>
-                    <div>{{record.path}}</div>
+                    <div>
+                        <ion-button color="medium" (click)="moveTo(record.path)">
+                            <ion-icon name="arrow-redo-outline"></ion-icon>
+                            {{record.chapterTitle}}
+                        </ion-button>
+
+                        <ion-button size="small" 
+                                    color="medium" 
+                                    (click)="moveTo(record.path, record.sectionAnchor)" *ngIf="record.sectionAnchor.length > 0">
+                            <ion-icon name="arrow-redo-outline"></ion-icon>
+                            {{record.sectionAnchor | uppercase}}
+                        </ion-button>
+                    </div>
                 </div>
             </mgl-timeline-entry-content>
             <mgl-timeline-entry-dot [class]="color ? 'primary' : 'accent'" 

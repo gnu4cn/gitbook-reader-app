@@ -45,6 +45,7 @@ export class ReadPage implements OnInit, AfterViewInit, OnDestroy {
     private writer: string = '';
     book: string = '';
     private bookPath: string;
+    private subTitle: string;
 
     private sidebarClose = false;
 
@@ -70,6 +71,7 @@ export class ReadPage implements OnInit, AfterViewInit, OnDestroy {
     get readingProgress () {
         return {
             url: parse(this.routerService.url).pathname,
+            title: this.subTitle,
             sections: Array.from(this.inScrollHashes),
             bookCommit: localStorage.getItem(this.storageId)
         }
@@ -164,16 +166,15 @@ export class ReadPage implements OnInit, AfterViewInit, OnDestroy {
 
     mainContentLoaded(page: VFile) {
         let title = this.settings.name;
-        let subTitle: string;
         if (page.data) {
             if (page.data.matter && page.data.matter.title) {
-                subTitle = page.data.matter.title;
+                this.subTitle = page.data.matter.title;
             } else if (page.data.title) {
-                subTitle = page.data.title;
+                this.subTitle = page.data.title;
             }
         }
-        if (subTitle && subTitle !== title) {
-            title += ' - ' + subTitle;
+        if (this.subTitle && this.subTitle !== title) {
+            title += ' - ' + this.subTitle;
         }
 
         // TODO: move these to a plugin, make optional

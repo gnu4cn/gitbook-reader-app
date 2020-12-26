@@ -76,9 +76,6 @@ export class Book extends Meta{
     @Column({default: false})
     downloaded: boolean;
 
-    @Column({default: 0})
-    openCount: number;
-
     @Column({default: false})
     recycled: boolean;
 
@@ -103,6 +100,12 @@ export class Book extends Meta{
 export class Record extends Meta {
     @Column()
     path: string;
+
+    @Column()
+    chapterTitle: string;
+
+    @Column({default: ''})
+    sectionAnchor: string;
 
     @ManyToOne(type => Book, book => book.recordList)
     book: Book;

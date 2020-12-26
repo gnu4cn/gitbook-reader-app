@@ -22,7 +22,9 @@ $candy-app-theme: mat-light-theme($candy-app-primary, $candy-app-accent, $candy-
 // that you are using.
 @include angular-material-theme($candy-app-theme);
 @include mgl-timeline-theme($candy-app-theme);
-
+mgl-timeline{
+    font-color: black;
+}
 mgl-timeline:not(.mobile) {
     padding: 50px 20px;
 }

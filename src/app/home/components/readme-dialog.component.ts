@@ -16,7 +16,7 @@ import {
 })
 export class ReadmeDialog implements OnInit{
     constructor(
-        public dialogRef: MatDialogRef<ReadmeDialog>,
+        private dialogRef: MatDialogRef<ReadmeDialog>,
         @Inject(MAT_DIALOG_DATA) public data: string
     ) {}
 

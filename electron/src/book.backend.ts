@@ -25,7 +25,8 @@ export class BookBackend {
         private booksDir: string, 
         private book: Book, 
         private insideWindow: BrowserWindow, 
-        private loadingWin: BrowserWindow
+        private loadingWin: BrowserWindow,
+        private path?: string
     ) {}
 
     get bookPath () {
@@ -42,7 +43,11 @@ export class BookBackend {
 
     get bookUrl () {
         // capacitor-electron://-/#/home
-        return _join('capacitor-electron://-/#/', `${this.bookPath}?bookCommit=${this.book.commit}`); 
+        const url = this.path ? 
+            _join(this.bookPath, `${this.path}?bookCommit=${this.book.commit}`)
+            : `${this.bookPath}?bookCommit=${this.book.commit}`;
+
+        return _join('capacitor-electron://-/#/', url); 
     }
 
     open = async (cb) => {
@@ -62,6 +67,7 @@ export class BookBackend {
         const webContents = bookWindow.webContents;
         webContents.openDevTools();
 
+        console.log(this.bookUrl);
         bookWindow.loadURL(this.bookUrl);
 
         ipcMain.on('book-loading', () =>{
@@ -103,11 +109,9 @@ export class BookBackend {
                         message = [...message, ...res.message];
 
                         const record = new Record();
-                        const chapterTitle = msg.sections[0];
-                        const sectionTitle = msg.sections[1] ? msg.sections[1] : '';
-
-                        record.path = msg.sections[1] ? `${msg.url}#${sectionTitle}` : `${msg.url}#${chapterTitle}`;
-                        record.desc = `${chapterTitle}:${sectionTitle}`;
+                        record.chapterTitle = msg.title;
+                        record.sectionAnchor = msg.sections[1] ? msg.sections[1] : '';
+                        record.path = msg.url;
                         record.book = book;
 
                         query = {

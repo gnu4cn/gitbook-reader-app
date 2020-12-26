@@ -38,7 +38,7 @@ import {
     styleUrls: ['./book-list.component.scss'],
 })
 export class BookListComponent implements OnInit, OnChanges {
-    @Input() sortBy: string = 'openCount';
+    @Input() sortBy: string = 'recordList:length';
     @Input() displayRecycled: boolean = false;
     @Input() beenOpened: boolean = true;
 
@@ -61,7 +61,8 @@ export class BookListComponent implements OnInit, OnChanges {
 
     get bookList () {
         const bookList = this._bookList.filter(b => filterFn(b, this.filter));
-        return sortBy(bookList, this.sortBy);
+        return /\:/.test(this.sortBy) ? sortBy(bookList, this.sortBy.split(':')[0], this.sortBy.split(':')[1])
+            : sortBy(bookList, this.sortBy);
     }
 
     ngOnInit() {}

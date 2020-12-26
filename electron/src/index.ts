@@ -9,6 +9,7 @@ import {
     IItem, 
     IQuery,
     IFind,
+    IBookWithPath,
     IQueryResult
 } from './vendor';
 import { Book } from './models';
@@ -82,13 +83,14 @@ export default class Main {
             loadingWin.hide();
         });
 
-        ipcMain.on('open-book', (event, book) => {
-            const bookItem = {
-                id: book.id,
-                book: new BookBackend(booksDir, book, mainWindow, loadingWin)
-            }
+        ipcMain.on('open-book', (event, book: Book) => {
+            const _book = new BookBackend(booksDir, book, mainWindow, loadingWin)
+            _book.open(w => Main.winChildren.push(w));
+        });
 
-            bookItem.book.open(w => Main.winChildren.push(w));
+        ipcMain.on('open-book-with-path', (event, msg: IBookWithPath) => {
+            const book = new BookBackend(booksDir, msg.book, mainWindow, loadingWin, msg.path)
+            book.open(w => Main.winChildren.push(w));
         });
 
         ipcMain.on('download-book', (event, book: Book) => {

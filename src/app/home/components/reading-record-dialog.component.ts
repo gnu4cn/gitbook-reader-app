@@ -11,6 +11,9 @@ import {
 } from '@angular/material/dialog';
 
 import { Book } from '../../models';
+import { CrudService } from '../../services/crud.service';
+import { IBookWithPath } from '../../vendor';
+
 @Component({
     selector: 'reading-record-dialog',
     styleUrls: ['./reading-record.dialog.scss'],
@@ -20,14 +23,15 @@ export class ReadingRecordDialog implements OnInit{
     alternate: boolean = true;
     toggle: boolean = true;
     color: boolean = false;
-    size: number = 40;
+    size: number = 30;
     expandEnabled: boolean = true;
     contentAnimation: boolean = true;
     dotAnimation: boolean = true;
     side = 'left';
 
     constructor(
-        public dialogRef: MatDialogRef<ReadingRecordDialog>,
+        private dialogRef: MatDialogRef<ReadingRecordDialog>,
+        private crud: CrudService,
         @Inject(MAT_DIALOG_DATA) public data: Book
     ) {
     }
@@ -38,6 +42,14 @@ export class ReadingRecordDialog implements OnInit{
         if (!this.expandEnabled) {
             event.stopPropagation();
         }
+    }
+
+    moveTo = (path: string, sectionAnchor?: string) => {
+        const msg: IBookWithPath = {
+            book: this.data,
+            path: sectionAnchor ? `${path}#${sectionAnchor}` : path
+        }
+        this.crud.ipcRenderer.send('open-book-with-path', msg);
     }
 
     onDotClick(event) {

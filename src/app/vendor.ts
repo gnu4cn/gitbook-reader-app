@@ -2,8 +2,14 @@ import { Book, Category, Writer, Website, Record } from './models';
 import { ValidatorFn, AbstractControl } from '@angular/forms';
 // typeorm parts
 
-export const sortBy = (list: Array<any>, prop: string) => {
-    return list.sort((a, b) => a[prop] > b[prop] ? -1 : a[prop] === b[prop] ? 0 : 1);
+export const sortBy = (list: Array<any>, prop: string, subProp?: string) => {
+    return subProp ? list.sort((a, b) => a[prop][subProp] > b[prop][subProp] ? -1 : a[prop][subProp] === b[prop][subProp] ? 0 : 1) 
+        : list.sort((a, b) => a[prop] > b[prop] ? -1 : a[prop] === b[prop] ? 0 : 1);
+}
+
+export interface IBookWithPath {
+    book: Book;
+    path: string
 }
 
 export interface IProgressMessage {
@@ -133,7 +139,7 @@ export interface IDeleteBookDialogResData {
 
 export type TAvatarIds = "currently-reading" | "on-shelf" | "recycled";
 
-export type TBookSortBy = "name" | "openCount" | "dateCreated" | "dateUpdated";
+export type TBookSortBy = "name" | "recordList:length" | "dateCreated" | "dateUpdated";
 
 // 尚待优化
 export const filterFn = (book: Book, filter: IFilter): boolean => {
@@ -141,17 +147,16 @@ export const filterFn = (book: Book, filter: IFilter): boolean => {
     if(filter.displayRecycled) return book.recycled;
 
     // 当显示正在看的书时 
-    if(filter.beenOpened){ return book.openCount > 0;}
+    if(filter.beenOpened){ return book.recordList ? book.recordList.length>0 : false;}
     else {
         // 显示书架上的书
-        return !book.recycled && book.openCount === 0;
+        return !book.recycled && (book.recordList ? book.recordList.length === 0 : true);
     }
 
     if(filter.filterList.length > 0){
         let _writer: boolean = false;
         let _website: boolean = false;
         let _cate: boolean = false;
-        let _openCount: boolean = false;
 
         filter.filterList.forEach(filterItem => {
             const key = Object.keys(filterItem)[0];

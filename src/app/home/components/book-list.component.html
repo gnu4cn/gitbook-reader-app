@@ -6,8 +6,8 @@
                 <ion-badge color="warning" 
                            style="position: absolute; right: -5px; top: -10px;" 
                            (click)="openReadingRecordDialog(book)"
-                           *ngIf="book.downloaded && book.openCount>0">
-                    <ion-icon name="recording-outline"></ion-icon>{{book.openCount}}次阅读
+                           *ngIf="book.recordList && book.downloaded && book.recordList.length>0">
+                    <ion-icon name="recording-outline"></ion-icon>{{book.recordList.length}}次阅读
                 </ion-badge>
                 <mat-card-title>{{book.name | uppercase}}</mat-card-title>
 

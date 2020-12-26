@@ -74,7 +74,6 @@ export class BookService {
 
     open = (book: Book) => {
         this.crud.ipcRenderer.send('open-book', book);
-        book.openCount += 1;
         book.recycled = false;
 
         const query: IQuery = {
@@ -122,7 +121,6 @@ export class BookService {
 
         if(res.recycled){
             res.book.recycled = true;
-            res.book.openCount = 0;
 
         } else {
             res.book.recycled = false;
