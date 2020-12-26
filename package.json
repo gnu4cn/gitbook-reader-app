@@ -39,6 +39,7 @@
     "@ungap/global-this": "^0.4.3",
     "@webcomponents/custom-elements": "^1.4.3",
     "angular-mgl-timeline": "^0.3.3",
+    "date-fns": "^2.16.1",
     "deepmerge": "^4.2.2",
     "docsify": "^4.11.6",
     "docsify-copy-code": "^2.1.1",

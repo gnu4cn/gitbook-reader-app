@@ -46,6 +46,10 @@ export class BookService {
         if(!deleted) this.list.push(book);
     }
 
+    getBookFromId = (bookId: number) => {
+        return this.list.find(b => b.id === bookId);
+    }
+
     save = async (res: IAddBookDialogResData) => {
         const newBook = new Book();
 

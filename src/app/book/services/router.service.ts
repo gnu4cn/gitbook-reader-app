@@ -72,7 +72,6 @@ export class RouterService {
         url = url.replace(/^\//, '').replace(/\/$/, '');
 
         path = url+fragment;
-        console.log(this._url, path, root)
         this.go(path, root);
     }
 

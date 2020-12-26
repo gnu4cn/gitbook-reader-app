@@ -1,38 +1,38 @@
-<h1 mat-dialog-title>{{data.name|uppercase}} 阅读记录</h1>
+<h1 mat-dialog-title>{{book.name|uppercase}} 阅读记录 - 共 {{recordList.length}} 条</h1>
 <div mat-dialog-content>
     <mgl-timeline [toggle]="toggle" [alternate]="alternate" [side]="side">
         <mgl-timeline-entry *ngFor="let record of recordList; let i = index;" (expand)="onExpandEntry($event, i)">
-            <mgl-timeline-entry-header (click)="onHeaderClick($event)">
-                <div>
-                    <ion-text color="dark">{{record.dateCreated | date : 'yyyy-M-d H:mm:ss' : 'GMT+8' }}</ion-text>
-                </div>
+            <mgl-timeline-entry-header (click)="onHeaderClick($event)" style="height: 40px; padding: 0">
+                <ion-label color="dark" class="ion-align-self-start" style="position: absolute; left: 25px; top: 5px; width: 250px;">
+                    <ion-text style="position: absolute; left: 0; width: 200px;">
+                        <b>{{getReadableDate(record.dateCreated)}}</b> - <i>{{record.dateCreated | date : 'yyyy-M-d H:mm:ss' : 'GMT+8' }}</i>
+                    </ion-text>
+                </ion-label>
             </mgl-timeline-entry-header>
-            <mgl-timeline-entry-content 
-                [expandAnimationTiming]="contentAnimation ? '200ms ease' : '0ms'"      
-                [collapseAnimationTiming]="contentAnimation ? '100ms ease' : '0ms'">
+            <mgl-timeline-entry-content [expandAnimationTiming]="contentAnimation ? '200ms ease' : '0ms'"      
+                              [collapseAnimationTiming]="contentAnimation ? '100ms ease' : '0ms'">
                 <div>
                     <div>
                         <ion-button color="medium" (click)="moveTo(record.path)">
-                            <ion-icon name="arrow-redo-outline"></ion-icon>
                             {{record.chapterTitle}}
+                            <ion-icon name="arrow-redo-outline"></ion-icon>
                         </ion-button>
 
                         <ion-button size="small" 
                                     color="medium" 
                                     (click)="moveTo(record.path, record.sectionAnchor)" *ngIf="record.sectionAnchor.length > 0">
-                            <ion-icon name="arrow-redo-outline"></ion-icon>
                             {{record.sectionAnchor | uppercase}}
+                            <ion-icon name="arrow-redo-outline"></ion-icon>
                         </ion-button>
                     </div>
                 </div>
             </mgl-timeline-entry-content>
             <mgl-timeline-entry-dot [class]="color ? 'primary' : 'accent'" 
-                [size]="size"
-                (click)="onDotClick($event)"
-                [expandAnimationTiming]="dotAnimation ? '200ms ease' : '0ms'"
-                [collapseAnimationTiming]="dotAnimation ? '100ms ease' : '0ms'" >
+                                      [size]="size"
+                                      (click)="onDotClick($event)"
+                                      [expandAnimationTiming]="dotAnimation ? '200ms ease' : '0ms'"
+                                      [collapseAnimationTiming]="dotAnimation ? '100ms ease' : '0ms'" >
             </mgl-timeline-entry-dot>
-            <mgl-timeline-entry-side>2018</mgl-timeline-entry-side>
         </mgl-timeline-entry>
     </mgl-timeline>
 </div>

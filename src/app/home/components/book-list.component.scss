@@ -4,7 +4,11 @@
 }
 
 ion-toolbar, ion-header {
- --min-height: 80px;
+    --min-height: 80px;
+}
+
+mat-chip.cate-chip:hover {
+    cursor: pointer;
 }
 
 mat-card:hover {

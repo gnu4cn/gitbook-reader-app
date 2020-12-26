@@ -97,9 +97,9 @@ export class HomePage implements OnInit {
     }
 
     ngOnInit() {
-        this.crud.ipcRenderer.on('book-updated', async (ev, msg: IQueryResult) => {
+        this.crud.ipcRenderer.on('book-updated', (ev, msg: IQueryResult) => {
             this.opMessage.newMsg(msg.message);
-            await this.book.listUpdated(msg.data as Book);
+            this.book.listUpdated(msg.data as Book);
 
             this.cdr.detectChanges();
         });
@@ -128,6 +128,7 @@ export class HomePage implements OnInit {
         this.crud.ipcRenderer.on('book-downloaded', (ev, msg: IProgressMessage) => {
             const index = this.downloadingList.findIndex(id => id === msg.book.id);
             this.downloadingList.splice(index, 1);
+
             this.book.listUpdated(msg.book);
 
             if(this.downloadingList.length === 0){

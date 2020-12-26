@@ -107,10 +107,10 @@ export class BookListComponent implements OnInit, OnChanges {
             .setAttribute('disabled', 'true');
     }
 
-    openReadingRecordDialog = (book: Book) => {
+    openReadingRecordDialog = (bookId: number) => {
         this.dialog.open(ReadingRecordDialog, {
             width: '640px',
-            data: book
+            data: bookId
         });
     }
 

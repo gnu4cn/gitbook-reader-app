@@ -147,7 +147,9 @@ export const filterFn = (book: Book, filter: IFilter): boolean => {
     if(filter.displayRecycled) return book.recycled;
 
     // 当显示正在看的书时 
-    if(filter.beenOpened){ return book.recordList ? book.recordList.length>0 : false;}
+    if(filter.beenOpened){ 
+        return (book.recordList ? book.recordList.length>0 : false) && !book.recycled; 
+    }
     else {
         // 显示书架上的书
         return !book.recycled && (book.recordList ? book.recordList.length === 0 : true);
