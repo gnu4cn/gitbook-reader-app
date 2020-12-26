@@ -12,7 +12,7 @@ import {
 
 import { Book } from '../../models';
 import { CrudService } from '../../services/crud.service';
-import { IBookWithPath } from '../../vendor';
+import { IBookWithPath, sortBy } from '../../vendor';
 
 @Component({
     selector: 'reading-record-dialog',
@@ -37,6 +37,10 @@ export class ReadingRecordDialog implements OnInit{
     }
 
     ngOnInit() {}
+
+    get recordList () {
+        return sortBy(this.data.recordList, 'dateCreated');
+    }
 
     onHeaderClick(event) {
         if (!this.expandEnabled) {

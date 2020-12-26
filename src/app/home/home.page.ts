@@ -97,10 +97,11 @@ export class HomePage implements OnInit {
     }
 
     ngOnInit() {
-        this.crud.ipcRenderer.on('book-updated', (ev, msg: IQueryResult) => {
-            console.log(msg);
+        this.crud.ipcRenderer.on('book-updated', async (ev, msg: IQueryResult) => {
             this.opMessage.newMsg(msg.message);
-            this.book.listUpdated(msg.data as Book);
+            await this.book.listUpdated(msg.data as Book);
+
+            this.cdr.detectChanges();
         });
 
         this.crud.ipcRenderer.on('error-occured', (ev, book: Book) => {
