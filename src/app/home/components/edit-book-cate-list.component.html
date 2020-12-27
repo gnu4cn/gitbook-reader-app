@@ -31,6 +31,6 @@
     </form>
 </div>
 <div mat-dialog-actions>
-    <button mat-button (click)="onNoClick()">放弃修改</button>
+    <button mat-button matDialogClose>放弃修改</button>
     <button mat-button [disabled]="data.cateList.length === 0" [mat-dialog-close]="data">修改</button>
 </div>

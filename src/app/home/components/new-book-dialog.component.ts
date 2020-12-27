@@ -157,8 +157,4 @@ export class NewBookDialog implements OnInit{
     get bookUriInput(){
         return this.uriInputControl.value;
     }
-
-    onNoClick(): void {
-        this.dialogRef.close();
-    }
 }

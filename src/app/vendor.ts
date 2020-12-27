@@ -58,6 +58,7 @@ export interface IQueryResult {
 
 export interface IReadingProgress {
     url: string;
+    title: string;
     sections: Array<string>;
     bookCommit: string
 }

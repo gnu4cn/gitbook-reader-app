@@ -31,7 +31,7 @@
 
                 <!-- 操作 -->
                 <mat-card-actions fxLayout="row" fxLayoutGap="0px">
-                    <button mat-button *ngIf="book.recordList" (click)="openReadingRecordDialog(book.id)">
+                    <button mat-button *ngIf="book.recordList" (click)="openReadingRecordDialog(book)">
                             <ion-icon name="list-outline"></ion-icon>阅读记录
                     </button>
                     <button mat-button *ngIf="book.downloaded" (click)="openReadmeDialog(book.desc)">

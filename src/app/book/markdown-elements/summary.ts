@@ -31,7 +31,7 @@ export class SummaryComponent implements OnInit {
 
     private load() {
         this.markdownService.loadSummary('SUMMARY.md')
-            .then(_ => _.subscribe(paths => this.generateSummary(paths)));
+            .then(_ => this.generateSummary(_));
     }
 
     private generateSummary(paths: Array<string>) {

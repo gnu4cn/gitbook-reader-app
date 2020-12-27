@@ -74,7 +74,7 @@ export class ReadPage implements OnInit, AfterViewInit, OnDestroy {
             title: this.subTitle,
             sections: Array.from(this.inScrollHashes),
             bookCommit: localStorage.getItem(this.storageId)
-        }
+        } as IReadingProgress;
     }
 
     // TODO: Move to a scroll spy event on EmbedMarkdownComponent

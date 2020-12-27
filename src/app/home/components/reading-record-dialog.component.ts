@@ -2,6 +2,7 @@ import {
     Component, 
     OnInit, 
     Inject, 
+    ChangeDetectorRef,
     ElementRef, 
 } from '@angular/core';
 
@@ -19,10 +20,14 @@ import {
     differenceInMinutes
 } from 'date-fns';
 
-import { Book } from '../../models';
+import { Book, Record } from '../../models';
 import { CrudService } from '../../services/crud.service';
-import { BookService } from '../services/book.service';
-import { IBookWithPath, sortBy } from '../../vendor';
+import { MessageService } from '../../services/message.service';
+import { 
+    IBookWithPath, 
+    sortBy, 
+    IMessage 
+} from '../../vendor';
 
 @Component({
     selector: 'reading-record-dialog',
@@ -39,30 +44,37 @@ export class ReadingRecordDialog implements OnInit{
     dotAnimation: boolean = true;
     side = 'left';
 
+    private _recordList: Array<Record>;
+
     constructor(
         private dialogRef: MatDialogRef<ReadingRecordDialog>,
         private crud: CrudService,
-        private bookService: BookService,
-        @Inject(MAT_DIALOG_DATA) public data: number 
-    ) {}
-
-    get book () {
-        return this.bookService.getBookFromId(this.data);
-    } 
-
-    ngOnInit() {}
-
-    onNoClick(): void {
-        this.dialogRef.close();
+        private cdr: ChangeDetectorRef,
+        private message: MessageService,
+        @Inject(MAT_DIALOG_DATA) public data: Book
+    ) {
+        this._recordList = data.recordList.slice();
     }
 
     get recordList () {
-        return sortBy(this.book.recordList, 'dateCreated');
+        return sortBy(this._recordList, 'dateCreated');
+    } 
+
+    ngOnInit() {
+        this.message.getMessage().subscribe((msg: IMessage) => {
+            if(msg.event === 'book-list-updated'){
+                this._recordList = (msg.data as Array<Book>)
+                    .find(b => b.id === this.data.id)
+                    .recordList.slice();
+
+                this.cdr.detectChanges();
+            }
+        });
     }
 
     moveTo = (path: string, sectionAnchor?: string) => {
         const msg: IBookWithPath = {
-            book: this.book,
+            book: this.data,
             path: sectionAnchor ? `${path}#${sectionAnchor}` : path
         }
         this.crud.ipcRenderer.send('open-book-with-path', msg);

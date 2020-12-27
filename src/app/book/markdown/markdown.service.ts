@@ -237,13 +237,13 @@ export class MarkdownService {
         return file.data.tocSearch;
     }
 
-    loadSummaryFromBackend = (): Observable<string[]> => {
+    loadSummaryFromBackend = (): Promise<string[]> => {
         return of(this.crud.ipcRenderer.sendSync('summary-request', this.bookPath)).pipe(
             catchError((err: any) => Observable.throw(err.json))
-        );
+        ).toPromise();
     }
 
-    loadSummaryFromFile = (_vfile: VFile, summaryPath: string): Observable<string[]> => {
+    loadSummaryFromFile = (_vfile: VFile, summaryPath: string): Promise<string[]> => {
         return this.fetchService.get(summaryPath).pipe(
             mergeMap(resource => {
                 _vfile.contents = resource.contents;
@@ -264,7 +264,7 @@ export class MarkdownService {
                     }, []) as Array<string>;
             }),
             catchError((err: any) => Observable.throw(err.json))
-        );
+        ).toPromise();
     }
 
     loadSummary = async (summary: string) => {
@@ -272,7 +272,19 @@ export class MarkdownService {
 
         const fullPath = await this.fetchService.find(_vfile.cwd, _vfile.path);
 
-        return fullPath ?  this.loadSummaryFromFile(_vfile, fullPath) : this.loadSummaryFromBackend();
+        const pathsFromBackend: Array<string> = await this.loadSummaryFromBackend();
+
+        if(fullPath){
+            const pathsFromFile: Array<string> = await this.loadSummaryFromFile(_vfile, fullPath);
+
+            return pathsFromBackend.reduce((acc: Array<string>, _: string): Array<string> => {
+                return _ && (acc.findIndex(__ => __ === _) < 0)
+                ? [...acc, _]
+                : acc;
+            }, pathsFromFile.slice()) as Array<string>;
+        }
+
+        return pathsFromBackend;
     }
 
     getPageToc = (page: string, minDepth: number = 1, maxDepth: number = 6, tight: boolean = true) => {

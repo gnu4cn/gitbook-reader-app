@@ -132,8 +132,4 @@ export class EditBookCateListDialog implements OnInit{
         this.cateInput.nativeElement.value = '';
         this.cateListInputControl.setValue(null);
     }
-
-    onNoClick(): void {
-        this.dialogRef.close();
-    }
 }

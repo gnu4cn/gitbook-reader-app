@@ -41,6 +41,6 @@
     </form>
 </div>
 <div mat-dialog-actions>
-    <button mat-button (click)="onNoClick()">暂不添加</button>
+    <button mat-button matDialogClose>暂不添加</button>
     <button mat-button [disabled]="!uriInputControl.valid || newBook.cateList.length === 0" [mat-dialog-close]="newBook">添加</button>
 </div>

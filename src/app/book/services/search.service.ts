@@ -86,7 +86,7 @@ export class SearchService {
     init = async () => {
         if(!this.searchIndex){
             this.markdownService.loadSummary('SUMMARY.md')
-                .then(_ => _.subscribe(paths => this.generateSearchIndex(paths)));
+                .then(_ => this.generateSearchIndex(_));
         }
     }
 

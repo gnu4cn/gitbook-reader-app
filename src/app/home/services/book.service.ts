@@ -6,12 +6,14 @@ import { OpMessageService } from './op-message.service';
 import { WriterService } from './writer.service';
 import { WebsiteService } from './website.service';
 import { CateService } from './cate.service';
+import { MessageService } from '../../services/message.service';
 
 import { 
     IFilter,
     filterFn,
     IQuery,
     IQueryResult,
+    IMessage,
     REGEXP_SITE, 
     REGEXP_LOC,
     IAddBookDialogResData,
@@ -28,6 +30,7 @@ export class BookService {
         private crud: CrudService,
         private opMessage: OpMessageService,
         private website: WebsiteService,
+        private message: MessageService,
         private writer: WriterService,
         private cate: CateService
     ) {
@@ -44,6 +47,13 @@ export class BookService {
         const index = this.list.findIndex(b => b.id === book.id);
         this.list.splice(index, 1);
         if(!deleted) this.list.push(book);
+
+        const msg: IMessage = {
+            event: 'book-list-updated',
+            data: this.list
+        }
+
+        this.message.sendMessage(msg);
     }
 
     getBookFromId = (bookId: number) => {

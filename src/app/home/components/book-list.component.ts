@@ -114,8 +114,6 @@ export class BookListComponent implements OnInit, OnChanges {
             width: '640px',
             data: bookId
         });
-
-        dialogRef.afterClosed().subscribe(() => this.cdr.detectChanges());
     }
 
     listBooksUnderCate = (cate: Category) => {

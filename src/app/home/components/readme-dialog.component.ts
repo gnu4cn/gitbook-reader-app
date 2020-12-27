@@ -21,8 +21,4 @@ export class ReadmeDialog implements OnInit{
     ) {}
 
     ngOnInit() {}
-
-    onNoClick(): void {
-        this.dialogRef.close();
-    }
 }
