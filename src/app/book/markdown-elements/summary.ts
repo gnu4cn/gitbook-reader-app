@@ -9,6 +9,8 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { SearchService } from '../services/search.service';
 import { MarkdownService } from '../markdown/markdown.service';
 
+import { VFile } from '../shared/vfile';
+
 @Component({
     selector: 'docspa-toc', // tslint:disable-line
     template: ``,
@@ -47,8 +49,8 @@ export class SummaryComponent implements OnInit {
         });
 
         return Promise.all(promises).then(files => {
-            const _html = (files.reduce((acc: string, f: any): string => {
-                return f ? acc.concat(f.contents) : acc;
+            const _html = (files.reduce((acc: string, f: VFile): string => {
+                return f && !f.notFound ? acc.concat(f.contents as string) : acc;
             }, '') as string);
 
             this.html = this.sanitizer.bypassSecurityTrustHtml(_html);
