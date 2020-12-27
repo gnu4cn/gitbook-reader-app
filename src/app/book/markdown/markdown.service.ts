@@ -252,7 +252,15 @@ export class MarkdownService {
             }),
             map((_: any) => {
                 return _.data.tocSearch.reduce((acc: Array<string>, __: any): Array<string> => {
-                        return __ && /\.md$/.test(__.url) ? [...acc, decodeURI(__.url[0] === '/' ? __.url : '/' + __.url)] : acc;
+                        return __ 
+                        && (/\.md$/.test(__.url.split('#')[0])) 
+                        && (acc.findIndex(path => path === (
+                            /^\//.test(__.url.split('#')[0]) 
+                            ? __.url.split('#')[0] 
+                            : `/${__.url.split('#')[0]}`
+                        )) < 0) 
+                        ? [...acc, decodeURI(/^\//.test(__.url.split('#')[0]) ? __.url.split('#')[0] : `/${__.url.split('#')[0]}`)] 
+                        : acc;
                     }, []) as Array<string>;
             }),
             catchError((err: any) => Observable.throw(err.json))

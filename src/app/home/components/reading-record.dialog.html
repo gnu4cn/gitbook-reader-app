@@ -1,10 +1,13 @@
 <h2 mat-dialog-title>{{book.name|uppercase}} 阅读记录 - 共 {{recordList.length}} 条</h2>
 <div mat-dialog-content>
     <mgl-timeline [toggle]="toggle" [alternate]="alternate" [side]="side">
-        <mgl-timeline-entry *ngFor="let record of recordList; let i = index;" (expand)="onExpandEntry($event, i)">
-            <mgl-timeline-entry-header (click)="onHeaderClick($event)" style="height: 40px; padding: 0">
-                <ion-label color="dark" class="ion-align-self-start" style="position: absolute; left: 25px; top: 5px; width: 250px;">
-                    <ion-text style="position: absolute; left: 0; width: 200px;">
+        <mgl-timeline-entry *ngFor="let record of recordList; let i = index;" 
+            (expand)="onExpandEntry($event, i)">
+            <mgl-timeline-entry-header 
+                (click)="onHeaderClick($event)" 
+                style="height: 40px; padding: 0">
+                <ion-label color="dark" class="ion-float-left" style="width: 360px;">
+                    <ion-text class="ion-float-left" style="width: 350px;">
                         <b>{{getReadableDate(record.dateCreated)}}</b> - <i>{{record.dateCreated | date : 'yyyy-M-d H:mm:ss' : 'GMT+8' }}</i>
                     </ion-text>
                 </ion-label>

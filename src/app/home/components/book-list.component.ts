@@ -2,6 +2,7 @@ import {
     Component, 
     OnInit, 
     OnChanges,
+    ChangeDetectorRef,
     SimpleChanges,
     Input
 } from '@angular/core';
@@ -54,6 +55,7 @@ export class BookListComponent implements OnInit, OnChanges {
         private crud: CrudService,
         private dialog: MatDialog,
         private book: BookService,
+        private cdr: ChangeDetectorRef,
         private opMessage: OpMessageService
     ) {
         this._bookList = this.book.list;
@@ -108,10 +110,12 @@ export class BookListComponent implements OnInit, OnChanges {
     }
 
     openReadingRecordDialog = (bookId: number) => {
-        this.dialog.open(ReadingRecordDialog, {
+        const dialogRef = this.dialog.open(ReadingRecordDialog, {
             width: '640px',
             data: bookId
         });
+
+        dialogRef.afterClosed().subscribe(() => this.cdr.detectChanges());
     }
 
     listBooksUnderCate = (cate: Category) => {

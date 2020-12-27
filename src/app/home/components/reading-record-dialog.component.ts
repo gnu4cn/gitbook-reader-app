@@ -52,6 +52,10 @@ export class ReadingRecordDialog implements OnInit{
 
     ngOnInit() {}
 
+    onNoClick(): void {
+        this.dialogRef.close();
+    }
+
     get recordList () {
         return sortBy(this.book.recordList, 'dateCreated');
     }
@@ -97,9 +101,5 @@ export class ReadingRecordDialog implements OnInit{
         if (!this.expandEnabled) {
             event.stopPropagation();
         }
-    }
-
-    onNoClick(): void {
-        this.dialogRef.close();
     }
 }
