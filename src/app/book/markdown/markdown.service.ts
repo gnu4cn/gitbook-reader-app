@@ -1,7 +1,14 @@
 import { Injectable, InjectionToken, Inject, Optional } from '@angular/core';
 
 import { resolve } from 'url';
-import { mergeMap } from 'rxjs/operators';
+
+import { Observable, of } from 'rxjs';
+import { 
+    mergeMap,
+    catchError,
+    map,
+    reduce
+} from 'rxjs/operators';
 
 import unified from 'unified';
 import remark from 'remark';
@@ -20,8 +27,10 @@ import { tocPlugin } from '../plugins/toc';
 import { removeNodesPlugin } from '../plugins/remove';
 import { sectionPlugin } from '../plugins/sections';
 
+import { CrudService } from '../../services/crud.service';
 import { LocationService } from '../services/location.service';
 import { RouterService } from '../services/router.service';
+import { SettingsService } from '../services/settings.service';
 import { HooksService } from '../services/hooks.service';
 import { FetchService } from '../services/fetch.service';
 
@@ -113,9 +122,15 @@ export class MarkdownService {
         return this.config.plugins;
     }
 
+    get bookPath () {
+        return this.settings.bookPath;
+    }
+
     constructor(
         private locationService: LocationService,
         private routerService: RouterService,
+        private crud: CrudService,
+        private settings: SettingsService,
         private fetchService: FetchService,
         private hooks: HooksService,
         @Optional() @Inject(MARKDOWN_CONFIG_TOKEN) private config: Preset
@@ -220,6 +235,36 @@ export class MarkdownService {
         file.data = file.data || {};
         await this.processLinks(file);
         return file.data.tocSearch;
+    }
+
+    loadSummaryFromBackend = (): Observable<string[]> => {
+        return of(this.crud.ipcRenderer.sendSync('summary-request', this.bookPath)).pipe(
+            catchError((err: any) => Observable.throw(err.json))
+        );
+    }
+
+    loadSummaryFromFile = (_vfile: VFile, summaryPath: string): Observable<string[]> => {
+        return this.fetchService.get(summaryPath).pipe(
+            mergeMap(resource => {
+                _vfile.contents = resource.contents;
+                _vfile.data = _vfile.data || {};
+                return resource.notFound ? of(null) : this.processLinks(_vfile);
+            }),
+            map((_: any) => {
+                return _.data.tocSearch.reduce((acc: Array<string>, __: any): Array<string> => {
+                        return __ && /\.md$/.test(__.url) ? [...acc, decodeURI(__.url[0] === '/' ? __.url : '/' + __.url)] : acc;
+                    }, []) as Array<string>;
+            }),
+            catchError((err: any) => Observable.throw(err.json))
+        );
+    }
+
+    loadSummary = async (summary: string) => {
+        const _vfile = this.locationService.pageToFile(summary);
+
+        const fullPath = await this.fetchService.find(_vfile.cwd, _vfile.path);
+
+        return fullPath ?  this.loadSummaryFromFile(_vfile, fullPath) : this.loadSummaryFromBackend();
     }
 
     getPageToc = (page: string, minDepth: number = 1, maxDepth: number = 6, tight: boolean = true) => {

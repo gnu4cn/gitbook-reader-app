@@ -14,9 +14,7 @@ import frontmatter from 'remark-frontmatter';
 
 import { getTitle } from '../gbr-preset/index';
 import { FetchService } from './fetch.service';
-import { SettingsService } from './settings.service';
 import { LocationService } from './location.service';
-import { CrudService } from '../../services/crud.service';
 import { MarkdownService } from '../markdown/markdown.service';
 
 import { removeNodesPlugin } from '../plugins/remove'
@@ -37,9 +35,7 @@ export class SearchService {
 
     constructor(private fetchService: FetchService,
         private locationService: LocationService,
-        private settings: SettingsService,
         private markdownService: MarkdownService,
-        private crud: CrudService,
     ) {}
 
     // search segment
@@ -55,16 +51,6 @@ export class SearchService {
             .use(images, { locationService: this.locationService })
             .use(this.markdownService.linkPlugin)
             .use(stringify);
-    }
-
-    get bookPath() {
-        return this.settings.bookPath;
-    }
-
-    loadSummary() {
-        return of(this.crud.ipcRenderer.sendSync('summary-request', this.bookPath)).pipe(
-            catchError((err: any) => Observable.throw(err.json))
-        );
     }
 
     private generateSearchIndex = (paths: Array<string>) => {
@@ -97,11 +83,10 @@ export class SearchService {
         });
     }
 
-    init = () => {
+    init = async () => {
         if(!this.searchIndex){
-            this.loadSummary().subscribe(paths => this.generateSearchIndex(paths));
-
-            return null;
+            this.markdownService.loadSummary('SUMMARY.md')
+                .then(_ => _.subscribe(paths => this.generateSearchIndex(paths)));
         }
     }
 

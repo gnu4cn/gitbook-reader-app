@@ -44,7 +44,6 @@ export class TOCPaginationComponent implements OnInit, OnChanges {
         private routerService: RouterService,
         private markdownService: MarkdownService,
         private locationService: LocationService,
-        private searchService: SearchService,
     ) {}
 
     ngOnInit() {
@@ -55,13 +54,10 @@ export class TOCPaginationComponent implements OnInit, OnChanges {
         this.load();
     }
 
-    private load = () => {
+    private load = async () => {
         if (!this.files) {
-            this.searchService.loadSummary().subscribe(paths => {
-                this.generatePageIndex(paths).then(() => {
-                    this.load();
-                });
-            });
+            await this.markdownService.loadSummary('SUMMARY.md')
+                .then(_ => _.subscribe(paths => this.generatePageIndex(paths)));
         }
 
         this.routerService.changed.subscribe((changes: SimpleChanges) => {
@@ -76,13 +72,6 @@ export class TOCPaginationComponent implements OnInit, OnChanges {
     private pathChanges = (path: string) => {
         //if(!path) path = 'README.md';
         path = decodeURIComponent(path);
-
-        if(this.files === undefined){
-            this.searchService.loadSummary().subscribe(paths => {
-                this.generatePageIndex(paths);
-            });
-            return 0
-        }
 
         // TODO: make a matches or isActive helper
         path = path.replace(/^\.\//, '');

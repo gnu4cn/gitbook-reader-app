@@ -11,10 +11,10 @@ import {
 } from '@angular/material/dialog';
 
 import {
-    differenceInCalendarYears,
-    differenceInCalendarMonths,
-    differenceInCalendarWeeks,
-    differenceInCalendarDays,
+    differenceInYears,
+    differenceInMonths,
+    differenceInWeeks,
+    differenceInDays,
     differenceInHours,
     differenceInMinutes
 } from 'date-fns';
@@ -66,10 +66,10 @@ export class ReadingRecordDialog implements OnInit{
 
     getReadableDate = (date: Date): string => {
         const now = new Date();
-        const years = differenceInCalendarYears(now, date);
-        const months = differenceInCalendarMonths(now, date);
-        const weeks = differenceInCalendarWeeks(now, date);
-        const days = differenceInCalendarDays(now, date);
+        const years = differenceInYears(now, date);
+        const months = differenceInMonths(now, date);
+        const weeks = differenceInWeeks(now, date);
+        const days = differenceInDays(now, date);
         const hours = differenceInHours(now, date);
         const minutes = differenceInMinutes(now, date);
 

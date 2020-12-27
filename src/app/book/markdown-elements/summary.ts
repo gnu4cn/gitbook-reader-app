@@ -22,7 +22,6 @@ export class SummaryComponent implements OnInit {
 
     constructor(
         private sanitizer: DomSanitizer,
-        private searchService: SearchService,
         private markdownService: MarkdownService,
     ) {}
 
@@ -31,9 +30,8 @@ export class SummaryComponent implements OnInit {
     }
 
     private load() {
-        this.searchService.loadSummary().subscribe(paths => {
-            this.generateSummary(paths);
-        });
+        this.markdownService.loadSummary('SUMMARY.md')
+            .then(_ => _.subscribe(paths => this.generateSummary(paths)));
     }
 
     private generateSummary(paths: Array<string>) {
