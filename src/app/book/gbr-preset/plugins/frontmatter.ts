@@ -5,30 +5,35 @@ import { VFile as _VFile } from 'vfile';
 import { Transformer, Attacher, Settings } from 'unified';
 
 interface VFile extends _VFile {
-  data: {
-    matter?: any;
-    title?: string;
-  };
+    data: {
+        matter?: any;
+        title?: string;
+    };
 }
 
 export function readMatter(): Transformer {
-  return function transformer(node: Root, file: VFile) {
-    if (node.children[0].type === 'yaml') {
-      node.children[0].data = node.children[0].data || {};
-      file.data.matter = node.children[0].data.parsedValue;
-    }
-    return node;
-  };
+    return function transformer(node: Root, file: VFile) {
+        if (node.children[0].type === 'yaml') {
+            node.children[0].data = node.children[0].data || {};
+            file.data.matter = node.children[0].data.parsedValue;
+        }
+        return node;
+    };
 }
 
 export function getTitle(): Transformer {
-  return (tree: Root, file: VFile) => {
-    file.data = file.data || {};
-    return visit(tree, 'heading', (node: Heading) => {
-      if (node.depth === 1 && !file.data.title) {
-        file.data.title = toString(node);
-      }
-      return true;
-    });
-  };
+    return (tree: Root, file: VFile) => {
+        file.data = file.data || {};
+        return visit(tree, 'heading', (node: Heading) => {
+            let title: string;
+
+            for (let i=1; !title && node.depth === i; i++){
+                title = toString(node);
+            }
+
+            file.data.title = title;
+
+            return true;
+        });
+    };
 }
