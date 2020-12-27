@@ -57,7 +57,8 @@ export class TOCPaginationComponent implements OnInit, OnChanges {
     private load = async () => {
         if (!this.files) {
             await this.markdownService.loadSummary('SUMMARY.md')
-                .then(_ => _.subscribe(paths => this.generatePageIndex(paths)));
+                .then(_ => _.subscribe(paths => this.generatePageIndex(paths)
+                    .then(() => this.load())));
         }
 
         this.routerService.changed.subscribe((changes: SimpleChanges) => {
