@@ -277,11 +277,12 @@ export class MarkdownService {
         if(fullPath){
             const pathsFromFile: Array<string> = await this.loadSummaryFromFile(_vfile, fullPath);
 
-            return pathsFromBackend.reduce((acc: Array<string>, _: string): Array<string> => {
-                return _ && (acc.findIndex(__ => __ === _) < 0)
-                ? [...acc, _]
-                : acc;
-            }, pathsFromFile.slice()) as Array<string>;
+            // 把从后台获取的 paths 补充到 pathsFromFile 中
+            pathsFromBackend.map((_: string) => { 
+                if(pathsFromFile.findIndex((__: string) => __ === _) < 0) pathsFromFile.push(_); 
+            });
+
+            return pathsFromFile;
         }
 
         return pathsFromBackend;
