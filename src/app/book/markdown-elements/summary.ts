@@ -42,7 +42,6 @@ export class SummaryComponent implements OnInit {
             return;
         }
 
-        // 这里 paths 是个对象，字符串数组是第一个元素
         const promises = paths.map(_ => {
             return this.markdownService.getPageToc(_)
                 .toPromise();

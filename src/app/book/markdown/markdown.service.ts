@@ -296,6 +296,7 @@ export class MarkdownService {
                 mergeMap(async resource => {
                     vfile.contents = resource.contents;
                     vfile.data = vfile.data || {};
+                    vfile.notFound = resource.notFound;
                     /* const err = */ await this.processTOC(vfile, {
                     minDepth: +minDepth,
                         // @ts-ignore
