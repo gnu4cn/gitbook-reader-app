@@ -79,8 +79,8 @@ export class MarkdownService {
     private get tocProcessor() {
         return remark()
             .use(frontmatter)
-            .use(slug)
             .use(getTitle)
+            .use(slug)
             .use(removeNodesPlugin)
             .use(tocPlugin)
             .use(links, { locationService: this.locationService })

@@ -22,7 +22,6 @@ export function tocPlugin(options?: TOCOptions) {
         return visit(tree, 'listItem', (node: any, index: number, parent: any) => {
             if (node.children.length > 1) {
                 node.data = node.data || {};
-                node.data.title = node.data.title || '无标题';
                 node.data.hProperties = node.data.hProperties || {};
                 node.data.hProperties.class = node.data.hProperties.class || [];
                 node.data.hProperties.class.push('has-children');

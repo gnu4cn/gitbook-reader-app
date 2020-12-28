@@ -115,7 +115,7 @@ export class TOCPaginationComponent implements OnInit, OnChanges {
 
                 const fileIndexItem = {
                     path,
-                    title: _.data.title || '无标题',
+                    title: _.data.title || '未知标题',
                     link,
                 };
 

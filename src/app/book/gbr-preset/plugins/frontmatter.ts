@@ -23,8 +23,18 @@ export function readMatter(): Transformer {
 
 export function getTitle(): Transformer {
     return (tree: Root, file: VFile) => {
+        if(tree.children.findIndex(_ => _.type === 'heading') < 0 && !(/^\_/.test(file.basename))){
+            const heading: Heading = {
+                type: 'heading',
+                depth: 1,
+                children: [{type: 'text', value: '未知标题'}]
+            };
+
+            tree.children.unshift(heading);
+        }
+
         file.data = file.data || {};
-        return visit(tree, 'heading', (node: Heading) => {
+        return visit(tree, 'heading', (node: Heading, index: number, parent: any) => {
             if (node.depth === 1 && !file.data.title) {
                 file.data.title = toString(node);
             }

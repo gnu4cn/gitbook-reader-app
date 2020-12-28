@@ -84,7 +84,7 @@ export class LocationService {
 
         vfile.data = {
             gbr: {
-                url: _url
+                url: _url,
             }
         };
 
