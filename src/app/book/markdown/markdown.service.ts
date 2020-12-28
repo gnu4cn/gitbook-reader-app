@@ -264,7 +264,7 @@ export class MarkdownService {
             }),
             map((_: any) => {
                 return _.data.tocSearch.reduce((acc: Array<string>, __: any): Array<string> => {
-                        return __ 
+                    return __ 
                         && (/\.md$/.test(__.url.split('#')[0])) 
                         && (acc.findIndex(path => path === (
                             /^\//.test(__.url.split('#')[0]) 
@@ -273,7 +273,7 @@ export class MarkdownService {
                         )) < 0)
                         ? [...acc, decodeURI(/^\//.test(__.url.split('#')[0]) ? __.url.split('#')[0] : `/${__.url.split('#')[0]}`)] 
                         : acc;
-                    }, []) as Array<string>;
+                }, []) as Array<string>;
             }),
             catchError((err: any) => Observable.throw(err.json))
         ).toPromise();
@@ -284,7 +284,6 @@ export class MarkdownService {
         const fullPath = await this.fetchService.find(_vfile.cwd, _vfile.path);
 
         const pathsFromBackend: Array<string> = await this.loadSummaryFromBackend();
-
         if(fullPath){
             const pathsFromFile: Array<string> = await this.loadSummaryFromFile(_vfile, fullPath);
 
@@ -295,7 +294,6 @@ export class MarkdownService {
 
             return pathsFromFile;
         }
-
         return pathsFromBackend;
     }
 
@@ -309,12 +307,12 @@ export class MarkdownService {
                     vfile.contents = resource.contents;
                     vfile.data = vfile.data || {};
                     vfile.notFound = resource.notFound;
-                    /* const err = */ await this.processTOC(vfile, {
-                    minDepth: +minDepth,
+                    await this.processTOC(vfile, {
+                        minDepth: +minDepth,
                         // @ts-ignore
                         maxDepth: +maxDepth,
                         tight: tight
-                });
+                    });
                     return vfile;
                 }),
             );

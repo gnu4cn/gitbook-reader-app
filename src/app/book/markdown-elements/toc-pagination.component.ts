@@ -105,7 +105,6 @@ export class TOCPaginationComponent implements OnInit, OnChanges {
 
         return Promise.all(p).then(files => {
             this.files = files.reduce((acc: Array<FileIndexItem>, _: VFile): Array<FileIndexItem> => {
-                console.log(_);
                 const path = getBasePath(_);
                 let link: string | string[] = this.locationService.prepareLink(path, this.routerService.root);
 
@@ -116,7 +115,7 @@ export class TOCPaginationComponent implements OnInit, OnChanges {
 
                 const fileIndexItem = {
                     path,
-                    title: _.data.title,
+                    title: _.data.title || '无标题',
                     link,
                 };
 
