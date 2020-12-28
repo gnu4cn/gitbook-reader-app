@@ -104,8 +104,8 @@ export class TOCPaginationComponent implements OnInit, OnChanges {
         });
 
         return Promise.all(p).then(files => {
-            this.files = files.reduce((acc: Array<FileIndexItem>, file: VFile): Array<FileIndexItem> => {
-                const path = getBasePath(file);
+            this.files = files.reduce((acc: Array<FileIndexItem>, _: VFile): Array<FileIndexItem> => {
+                const path = getBasePath(_);
                 let link: string | string[] = this.locationService.prepareLink(path, this.routerService.root);
 
                 // Hack to preserve trailing slash
@@ -115,11 +115,11 @@ export class TOCPaginationComponent implements OnInit, OnChanges {
 
                 const fileIndexItem = {
                     path,
-                    title: file.data.title,
+                    title: _.data.title,
                     link,
                 };
 
-                return file ? [...acc, fileIndexItem] : acc;
+                return _ && !_.data.gbr.notFound ? [...acc, fileIndexItem] : acc;
 
             }, []) as Array<FileIndexItem>;
         });
