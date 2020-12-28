@@ -23,7 +23,7 @@ import toString from 'mdast-util-to-string';
 import strip from 'remark-strip-html';
 import sectionize from 'remark-sectionize';
 
-import { getTitle } from '../../gbr-preset';
+import { getTitle, correctHeadings } from '../../gbr-preset';
 import { tocPlugin } from '../plugins/toc';
 import { removeNodesPlugin } from '../plugins/remove';
 import { sectionPlugin } from '../plugins/sections';
@@ -80,6 +80,7 @@ export class MarkdownService {
     private get tocProcessor() {
         return remark()
             .use(frontmatter)
+            .use(correctHeadings)
             .use(getTitle)
             .use(slug)
             .use(removeNodesPlugin)
@@ -95,6 +96,7 @@ export class MarkdownService {
     @lazyInitialize
     private get tocPaginationProcessor() {
         return remark()
+            .use(correctHeadings)
             .use(getTitle)
     }
 

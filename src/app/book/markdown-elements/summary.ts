@@ -49,7 +49,9 @@ export class SummaryComponent implements OnInit {
 
         return Promise.all(promises).then(files => {
             const _html = (files.reduce((acc: string, f: VFile): string => {
-                return f && !f.notFound ? acc.concat(f.contents as string) : acc;
+                return f && !f.notFound 
+                    ? acc.concat(f.contents as string) 
+                    : acc;
             }, '') as string);
 
             this.html = this.sanitizer.bypassSecurityTrustHtml(_html);

@@ -10,7 +10,7 @@ import reporter from 'vfile-reporter';
 import sectionize from 'remark-sectionize';
 import externalLinks from 'remark-external-links';
 
-import { readMatter, getTitle } from './plugins/frontmatter';
+import { readMatter, getTitle, correctHeadings } from './plugins/frontmatter';
 import { infoString, infoStringToAttr } from './plugins/misc';
 import { prism } from './plugins/prism';
 import { mermaid } from './plugins/mermaid';
@@ -20,7 +20,7 @@ import { Root } from 'mdast';
 import { VFile } from 'vfile';
 import { Transformer } from 'unified';
 
-export { prism, mermaid, reporter, getTitle };
+export { prism, mermaid, reporter, getTitle, correctHeadings };
 
 export function moveIds(): Transformer {
     return (tree: Root, file: VFile) => {
@@ -41,6 +41,7 @@ export const plugins = [
     gfm,
     parseFrontmatter,
     readMatter,
+    correctHeadings,
     getTitle,
     infoString,
     slug,

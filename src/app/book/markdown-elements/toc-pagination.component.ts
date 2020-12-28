@@ -119,7 +119,9 @@ export class TOCPaginationComponent implements OnInit, OnChanges {
                     link,
                 };
 
-                return _ && !_.data.gbr.notFound ? [...acc, fileIndexItem] : acc;
+                return _ && !_.data.gbr.notFound && _.contents 
+                    ? [...acc, fileIndexItem] 
+                    : acc;
 
             }, []) as Array<FileIndexItem>;
         });

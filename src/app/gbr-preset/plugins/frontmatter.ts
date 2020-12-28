@@ -29,7 +29,7 @@ export function getTitle(): Transformer {
         {
             const heading: Heading = {
                 type: 'heading',
-                depth: 1,
+                depth: 2,
                 children: [{type: 'text', value: '未知标题'}]
             };
 
@@ -49,8 +49,8 @@ export function getTitle(): Transformer {
 export function correctHeadings(): Transformer {
     return (tree: Root, file: VFile) => {
         return visit(tree, 'paragraph', (node: Paragraph, index: number, parent: any) => {
-
             const text: string = node.children[0].value as string;
+
             let re = new RegExp(/^(\#){1,3}/);
             if(re.test(text)){
                 const hashes = text.match(/(\#){1,3}/)[0];
