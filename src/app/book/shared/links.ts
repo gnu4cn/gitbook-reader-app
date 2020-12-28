@@ -47,7 +47,7 @@ export const links = (settings: { locationService: LocationService }): Transform
                 let [routerLink = '', fragment] = node.url.split('#');
                 fragment = fragment ? fragment.replace(/^#/, '') : undefined;
 
-                node.data.hProperties.link = routerLink;
+                node.data.hProperties.link = routerLink.replace(/\/$/, '');
                 node.data.hProperties.fragment = fragment;
                 node.data.hProperties.source = vfile.history[0];
                 node.data.hProperties.klass = node.data.hProperties.class;

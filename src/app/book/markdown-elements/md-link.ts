@@ -24,23 +24,17 @@ import { RouterService } from '../services/router.service';
 export class MdLinkComponent implements OnChanges, AfterContentInit {
     static readonly is = 'md-link';
 
-    @Input()
-    link: string;
+    @Input() link: string;
 
-    @Input('aria-hidden')
-    ariaHidden: any;
+    @Input('aria-hidden') ariaHidden: any;
 
-    @Input()
-    download: boolean;
+    @Input() download: boolean;
 
-    @Input()
-    klass: boolean;
+    @Input() klass: boolean;
 
-    @Input()
-    routerLink: string | string[];
+    @Input() routerLink: string | string[];
 
-    @Input()
-    fragment: string;
+    @Input() fragment: string;
 
     @ViewChild(TemplateRef, { static: true }) private template: TemplateRef<void>;
 
@@ -53,6 +47,7 @@ export class MdLinkComponent implements OnChanges, AfterContentInit {
     get rootPath () {
         return this.routerService.root;
     }
+
     ngAfterContentInit() {
         // Moving link outside of component
         this.vcRef.createEmbeddedView(this.template);

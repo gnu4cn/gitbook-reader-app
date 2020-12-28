@@ -12,7 +12,7 @@ import slug from 'remark-slug';
 import { links, images } from '../shared/links';
 import frontmatter from 'remark-frontmatter';
 
-import { getTitle } from '../gbr-preset/index';
+import { getTitle } from '../../gbr-preset';
 import { FetchService } from './fetch.service';
 import { LocationService } from './location.service';
 import { MarkdownService } from '../markdown/markdown.service';

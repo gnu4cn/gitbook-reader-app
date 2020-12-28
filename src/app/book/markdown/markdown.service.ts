@@ -14,6 +14,7 @@ import unified from 'unified';
 import remark from 'remark';
 import remark2rehype from 'remark-rehype';
 import rehypeStringify from 'rehype-stringify';
+import gfm from 'remark-gfm';
 import raw from 'rehype-raw';
 import frontmatter from 'remark-frontmatter';
 import slug from 'remark-slug';
@@ -22,7 +23,7 @@ import toString from 'mdast-util-to-string';
 import strip from 'remark-strip-html';
 import sectionize from 'remark-sectionize';
 
-import { getTitle } from '../gbr-preset/index';
+import { getTitle } from '../../gbr-preset';
 import { tocPlugin } from '../plugins/toc';
 import { removeNodesPlugin } from '../plugins/remove';
 import { sectionPlugin } from '../plugins/sections';

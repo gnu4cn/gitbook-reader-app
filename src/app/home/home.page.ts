@@ -1,6 +1,8 @@
 import { Component, 
     ChangeDetectorRef,
-    OnInit } from '@angular/core';
+    OnInit,
+    AfterViewInit
+} from '@angular/core';
 
 import { 
     MatDialog, 
@@ -18,6 +20,7 @@ import { CrudService } from '../services/crud.service';
 import { Book } from '../models';
 import { BookService } from './services/book.service';
 import { OpMessageService } from './services/op-message.service';
+import {MessageService} from '../services/message.service';
 
 import { SnackbarComponent } from './components/snackbar.component';
 import { NewBookDialog } from './components/new-book-dialog.component';
@@ -27,6 +30,7 @@ import {
     IAddBookDialogResData,
     IFilter,
     filterFn,
+    IMessage,
     IQueryResult,
     TAvatarIds, 
     TBookSortBy,
@@ -37,7 +41,7 @@ import {
     templateUrl: './home.page.html',
     styleUrls: ['./home.page.scss'],
 })
-export class HomePage implements OnInit {
+export class HomePage implements OnInit, AfterViewInit {
     horizontalPosition: MatSnackBarHorizontalPosition = 'end';
     verticalPosition: MatSnackBarVerticalPosition = 'bottom';
 
@@ -46,18 +50,17 @@ export class HomePage implements OnInit {
     sortBy: TBookSortBy = 'recordList:length';
     displayRecycled: boolean = false;
     beenOpened: boolean = true;
-    private bookList: Array<Book>;
+    bookList: Array<Book>;
 
     constructor(
         private crud: CrudService,
         private snackbar: MatSnackBar,
         private dialog: MatDialog,
         private opMessage: OpMessageService,
+        private message: MessageService,
         private cdr: ChangeDetectorRef,
         private book: BookService,
-    ) {
-        this.bookList = this.book.list;
-    }
+    ) {}
 
     private changeFabButton = (button: TAvatarIds) => {
         const buttonList = ['currently-reading', 'on-shelf', 'recycled'];
@@ -97,10 +100,17 @@ export class HomePage implements OnInit {
     }
 
     ngOnInit() {
+        this.bookList = this.book.list.slice();
+
         this.crud.ipcRenderer.on('book-updated', (ev, msg: IQueryResult) => {
             this.opMessage.newMsg(msg.message);
             this.book.listUpdated(msg.data as Book);
 
+        });
+
+        this.message.getMessage().subscribe((_: IMessage) => {
+            if(_.event === 'book-list-updated') this.bookList = this.book.list.slice();
+            
             this.cdr.detectChanges();
         });
 
@@ -123,6 +133,8 @@ export class HomePage implements OnInit {
             if(index < 0){
                 this.downloadingList.push(msg.book.id);
             }
+
+            this.cdr.detectChanges();
         });
 
         this.crud.ipcRenderer.on('book-downloaded', (ev, msg: IProgressMessage) => {
@@ -134,9 +146,11 @@ export class HomePage implements OnInit {
             if(this.downloadingList.length === 0){
                 this.snackbar.dismiss();
             }
-
-            this.cdr.detectChanges();
         });
+    }
+
+    ngAfterViewInit(){
+        this.changeFabButton('currently-reading');
     }
 
     displayBookListCurrentlyReading = () => {

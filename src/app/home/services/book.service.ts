@@ -82,7 +82,7 @@ export class BookService {
 
         this.crud.addItem(query).subscribe((res: IQueryResult) => {
             this.opMessage.newMsg(res.message);
-            this.list.push(res.data as Book);
+            this.listUpdated(res.data as Book);
         });
     }
 

@@ -42,14 +42,13 @@ export class BookListComponent implements OnInit, OnChanges {
     @Input() sortBy: string = 'recordList:length';
     @Input() displayRecycled: boolean = false;
     @Input() beenOpened: boolean = true;
-
+    @Input() _bookList: Array<Book>;
     filter: IFilter = {
         displayRecycled: this.displayRecycled,
         beenOpened: this.beenOpened,
         filterList: []
     };
 
-    private _bookList: Array<Book>;
 
     constructor(
         private crud: CrudService,
@@ -57,9 +56,7 @@ export class BookListComponent implements OnInit, OnChanges {
         private book: BookService,
         private cdr: ChangeDetectorRef,
         private opMessage: OpMessageService
-    ) {
-        this._bookList = this.book.list;
-    }
+    ) {}
 
     get bookList () {
         const bookList = this._bookList.filter(b => filterFn(b, this.filter));

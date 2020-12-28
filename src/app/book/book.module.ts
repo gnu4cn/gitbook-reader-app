@@ -28,7 +28,7 @@ import { ElementInputDirective } from './directives/element-input.directive';
 
 import { createCustomElement } from '@angular/elements';
 
-import { preset } from './gbr-preset/index';
+import { preset } from '../gbr-preset';
 // import { DocspaStackblitzModule } from '@swimlane/docspa-stackblitz';
 // import * as squeezeParagraphs from 'remark-squeeze-paragraphs';
 
