@@ -72,7 +72,7 @@ export class SearchService {
                 ).toPromise();
         });
 
-        return Promise.all(promises).then(files => {
+        Promise.all(promises).then(files => {
             this.searchIndex = files.reduce((acc: Array<any>, f: VFile): Array<any> => {
                 // 这里这句代码要命，很容易写错..., 少写三个点就完全不一样了的 :)
                 //return f ? [...acc, f.data.tocSearch] : acc;

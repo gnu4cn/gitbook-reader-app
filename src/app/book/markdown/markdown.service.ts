@@ -92,6 +92,12 @@ export class MarkdownService {
     }
 
     @lazyInitialize
+    private get tocPaginationProcessor() {
+        return remark()
+            .use(getTitle)
+    }
+
+    @lazyInitialize
     private get linksProcessor() {
         return remark()
             .use(frontmatter)
@@ -219,6 +225,12 @@ export class MarkdownService {
         return err || file;
     }
 
+    async processTOCPagination(doc: VFileCompatible) {
+        const file = VFile(doc) as VFile;
+        const err = await this.tocPaginationProcessor.process(file) as VFile;
+        return err || file;
+    }
+
     /**
      * Get Sections
      */
@@ -258,7 +270,7 @@ export class MarkdownService {
                             /^\//.test(__.url.split('#')[0]) 
                             ? __.url.split('#')[0] 
                             : `/${__.url.split('#')[0]}`
-                        )) < 0) 
+                        )) < 0)
                         ? [...acc, decodeURI(/^\//.test(__.url.split('#')[0]) ? __.url.split('#')[0] : `/${__.url.split('#')[0]}`)] 
                         : acc;
                     }, []) as Array<string>;
@@ -269,7 +281,6 @@ export class MarkdownService {
 
     loadSummary = async (summary: string) => {
         const _vfile = this.locationService.pageToFile(summary);
-
         const fullPath = await this.fetchService.find(_vfile.cwd, _vfile.path);
 
         const pathsFromBackend: Array<string> = await this.loadSummaryFromBackend();

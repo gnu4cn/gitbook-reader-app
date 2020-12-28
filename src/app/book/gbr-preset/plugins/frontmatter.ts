@@ -25,14 +25,9 @@ export function getTitle(): Transformer {
     return (tree: Root, file: VFile) => {
         file.data = file.data || {};
         return visit(tree, 'heading', (node: Heading) => {
-            let title: string;
-
-            for (let i=1; !title && node.depth === i; i++){
-                title = toString(node);
+            if (node.depth === 1 && !file.data.title) {
+                file.data.title = toString(node);
             }
-
-            file.data.title = title;
-
             return true;
         });
     };

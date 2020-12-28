@@ -99,12 +99,13 @@ export class TOCPaginationComponent implements OnInit, OnChanges {
 
         const p = paths.map(async path => {
             const _vfile = await this.fetch(path);
-            await this.markdownService.process(_vfile);
+            await this.markdownService.processTOCPagination(_vfile);
             return _vfile;
         });
 
         return Promise.all(p).then(files => {
             this.files = files.reduce((acc: Array<FileIndexItem>, _: VFile): Array<FileIndexItem> => {
+                console.log(_);
                 const path = getBasePath(_);
                 let link: string | string[] = this.locationService.prepareLink(path, this.routerService.root);
 
