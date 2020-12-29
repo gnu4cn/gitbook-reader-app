@@ -4,11 +4,25 @@ import { Root, Heading, Paragraph } from 'mdast';
 import { VFile as _VFile } from 'vfile';
 import { Transformer, Attacher, Settings } from 'unified';
 
+type Depth = 2 | 1 | 3 | 4 | 5 | 6;
 interface VFile extends _VFile {
     data: {
         matter?: any;
         title?: string;
     };
+}
+
+const getHeadingFromStr = (text: string) => {
+    const re = new RegExp(/(\#){1,6}/);
+
+    const hashes = text.match(re)[0];
+    const _text = text.replace(hashes, '');
+
+    return {
+        type: 'heading',
+        depth: hashes.length as Depth,
+        children: [{type: 'text', value: _text}]
+    } as Heading;
 }
 
 export function readMatter(): Transformer {
@@ -50,21 +64,15 @@ export function correctHeadings(): Transformer {
     return (tree: Root, file: VFile) => {
         return visit(tree, 'paragraph', (node: Paragraph, index: number, parent: any) => {
             const text: string = node.children[0].value as string;
+            const re = new RegExp(/(\#){1,6}([^\#]){1,}/g)
 
-            let re = new RegExp(/^(\#){1,3}/);
             if(re.test(text)){
-                const hashes = text.match(/(\#){1,3}/)[0];
-                const _text = text.replace(hashes, '');
+                const headings = text.match(re).reduce((acc: Array<Heading>, _: string): Array<Heading> => {
+                    return _ ? [...acc, getHeadingFromStr(_)] : acc;
+                }, []);
 
-                const heading: Heading = {
-                    type: 'heading',
-                    depth: hashes.length as 2 | 1 | 3 | 4 | 5 | 6,
-                    children: [{type: 'text', value: _text}]
-                };
-
-                parent.children.splice(index, 1, heading);
+                parent.children.splice(index, 1, ...headings);
             }
-
         });
     };
 }
