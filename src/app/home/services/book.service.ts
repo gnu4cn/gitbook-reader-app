@@ -45,7 +45,7 @@ export class BookService {
     // `deleted` 是可选参数，没有时是 `undefined`, `!undefined`为真，传入`true`时`!true`为假
     listUpdated = (book: Book, deleted?: boolean) => {
         const index = this.list.findIndex(b => b.id === book.id);
-        this.list.splice(index, 1);
+        if(index >= 0) this.list.splice(index, 1);
         if(!deleted) this.list.push(book);
 
         const msg: IMessage = {
@@ -74,6 +74,7 @@ export class BookService {
         newBook.website = await this.website.newWebsit(site);
         newBook.writer = await this.writer.newWriter(writerName, newBook.website);
         newBook.cateList = await this.cate.saveList(res.cateList);
+        newBook.recordList = [];
 
         const query: IQuery = {
             table: 'Book',
