@@ -120,6 +120,17 @@ export class BookService {
     recycleRecoverDelete =  async (res: IDeleteBookDialogResData) => {
         let query: IQuery;
 
+        if(res.recycled || res.remove) {
+            query = {
+                table: 'Record',
+                item: res.book
+            }
+
+            await this.crud.deleteItem(query).subscribe((res: IQueryResult) => {
+                this.opMessage.newMsg(res.message);
+            });
+        }
+
         if (!res.recycled && res.remove){
             query = {
                 table: 'Book',
@@ -131,15 +142,12 @@ export class BookService {
                 this.listUpdated(res.book, true);
             });
 
-            return 0;
+            return;
         } 
 
-        if(res.recycled){
-            res.book.recycled = true;
-
-        } else {
-            res.book.recycled = false;
-        }
+        if(res.recycled) { res.book.recycled = true; } 
+        else { res.book.recycled = false; }
+        delete res.book.recordList;
 
         query = {
             table: 'Book',

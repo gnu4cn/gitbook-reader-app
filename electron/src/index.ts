@@ -120,10 +120,11 @@ export default class Main {
                 const bookDir = join(booksDir, book.website.uri, book.writer.name, book.name);
                 await remove(bookDir)
                     .then(() => res.message.push('，已成功从文件系统移除'))
-                    .catch(e => res.message.push(e));
+                    .catch((e: Error) => res.message.push(e.message));
+            }
 
-                event.returnValue = res;
-            }});
+            event.returnValue = res;
+        });
 
 
         ipcMain.on('update-item', async (event, query) =>{

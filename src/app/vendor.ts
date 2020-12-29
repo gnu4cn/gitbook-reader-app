@@ -52,7 +52,7 @@ export interface IQuery {
 }
 
 export interface IQueryResult {
-    message: Array<string|object>;
+    message: TOpMessage;
     data?: IItem | Array<IItem>;
 }
 
@@ -130,7 +130,7 @@ export interface IAddBookDialogResData {
     cateList: Array<Category>;
 }
 
-export type TOpMessage = Array<string|object>;
+export type TOpMessage = Array<string>;
 
 export interface IDeleteBookDialogResData {
     recycled: boolean;

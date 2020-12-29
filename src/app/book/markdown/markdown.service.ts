@@ -290,6 +290,8 @@ export class MarkdownService {
         if(fullPath){
             const pathsFromFile: Array<string> = await this.loadSummaryFromFile(_vfile, fullPath);
 
+            console.log(pathsFromBackend, pathsFromFile);
+
             // 把从后台获取的 paths 补充到 pathsFromFile 中
             pathsFromBackend.map((_: string) => { 
                 if(pathsFromFile.findIndex((__: string) => __ === _) < 0) pathsFromFile.push(_); 

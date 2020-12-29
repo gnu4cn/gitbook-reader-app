@@ -32,7 +32,7 @@ export class CRUD {
         const value = query.condition.value;
         let item: IItem;
         let repo: any;
-        let message: Array<string|object> = [];
+        let message: Array<string> = [];
         switch(query.table){
             case 'Book':
                 try {
@@ -48,7 +48,7 @@ export class CRUD {
 
                     message.push('成功获取到书籍')
                 } catch (err) {
-                    message.push(err);
+                    message.push(err.message);
                     throw err
                 }
 
@@ -65,7 +65,7 @@ export class CRUD {
 
                     message.push('成功获取到作者')
                 } catch (err) {
-                    message.push(err);
+                    message.push(err.message);
                     throw err
                 }
                 break
@@ -81,7 +81,7 @@ export class CRUD {
 
                     message.push('成功获取到托管平台')
                 } catch (err) {
-                    message.push(err);
+                    message.push(err.message);
                     throw err
                 }
 
@@ -97,7 +97,7 @@ export class CRUD {
 
                     message.push('成功获取到类别')
                 } catch (err) {
-                    message.push(err);
+                    message.push(err.message);
                     throw err
                 }
                 break
@@ -108,7 +108,7 @@ export class CRUD {
 
     deleteItem = async (query: IQuery): Promise<IQueryResult> => {
         let item: IItem;
-        let message: Array<string|object> = [];
+        let message: Array<string> = [];
         switch(query.table){
             case 'Book':
                 try {
@@ -121,7 +121,7 @@ export class CRUD {
                         .execute();
                     message.push(`书籍 ${item.name} 成功从数据库移除`);
                 } catch (err) {
-                    message.push(err);
+                    message.push(err.message);
                     throw err
                 };
                 break;
@@ -137,7 +137,7 @@ export class CRUD {
 
                     message.push(`作者 ${item.name} 成功从数据库移除`);
                 } catch (err) {
-                    message.push(err);
+                    message.push(err.message);
                     throw err
                 };
                 break;
@@ -153,7 +153,7 @@ export class CRUD {
 
                     message.push(`托管平台 ${item.uri} 成功从数据库移除`);
                 } catch (err) {
-                    message.push(err);
+                    message.push(err.message);
                     throw err
                 };
                 break;
@@ -169,23 +169,23 @@ export class CRUD {
 
                     message.push(`类别 ${item.name} 成功从数据库移除`);
                 } catch (err) {
-                    message.push(err);
+                    message.push(err.message);
                     throw err
                 };
                 break;
             case 'Record':
                 try {
-                    item = query.item as Record;
+                    item = query.item as Book;
                     await this.conn
                         .createQueryBuilder()
                         .delete()
                         .from(Record)
-                        .where("id = :id", { id: item.id })
+                        .where("bookId = :id", { id: item.id })
                         .execute();
 
-                    message.push(`阅读记录 ${item.desc} 成功从数据库移除`);
+                    message.push(`${item.name} 的阅读记录成功从数据库移除`);
                 } catch (err) {
-                    message.push(err);
+                    message.push(err.message);
                     throw err
                 };
                 break;
@@ -197,7 +197,7 @@ export class CRUD {
     addItem = async (query: IQuery): Promise<IQueryResult> => {
         let item: IItem;
         let repo: any;
-        let message: Array<string|object> = [];
+        let message: Array<string> = [];
         switch(query.table){
             case 'Book':
                 try {
@@ -207,7 +207,7 @@ export class CRUD {
 
                     message.push(`书籍 ${item.name} 成功添加`);
                 } catch (err) {
-                    message.push(err);
+                    message.push(err.message);
                     throw err
                 };
                 break;
@@ -219,7 +219,7 @@ export class CRUD {
 
                     message.push(`作者 ${item.name} 成功添加`);
                 } catch (err) {
-                    message.push(err);
+                    message.push(err.message);
                     throw err
                 };
                 break;
@@ -231,7 +231,7 @@ export class CRUD {
 
                     message.push(`托管平台 ${item.uri} 成功添加`);
                 } catch (err) {
-                    message.push(err);
+                    message.push(err.message);
                     throw err
                 };
                 break;
@@ -243,7 +243,7 @@ export class CRUD {
 
                     message.push(`类别 ${item.name} 成功添加`);
                 } catch (err) {
-                    message.push(err);
+                    message.push(err.message);
                     throw err
                 };
                 break;
@@ -255,7 +255,7 @@ export class CRUD {
 
                     message.push(`阅读记录 ${item.desc} 成功添加`);
                 } catch (err) {
-                    message.push(err);
+                    message.push(err.message);
                     throw err
                 };
                 break;
@@ -267,7 +267,7 @@ export class CRUD {
     }
 
     updateItem = async (query: IQuery): Promise<IQueryResult> => {
-        let message: Array<string|object> = [];
+        let message: Array<string> = [];
         let repo: any;
         switch(query.table){
             case 'Book':
@@ -278,7 +278,7 @@ export class CRUD {
 
                     message.push(`书籍 ${book.name} 已成功更新`);
                 } catch (err) {
-                    message.push(err);
+                    message.push(err.message);
                     throw err
                 };
                 break;
@@ -290,7 +290,7 @@ export class CRUD {
 
                     message.push(`作者 ${writer.name} 已成功更新`);
                 } catch (err) {
-                    message.push(err);
+                    message.push(err.message);
                     throw err
                 };
                 break;
@@ -302,7 +302,7 @@ export class CRUD {
 
                     message.push(`托管平台 ${website.uri} 已成功更新`);
                 } catch (err) {
-                    message.push(err);
+                    message.push(err.message);
                     throw err
                 };
                 break;
@@ -314,7 +314,7 @@ export class CRUD {
 
                     message.push(`类别 ${cate.name} 已成功更新`);
                 } catch (err) {
-                    message.push(err);
+                    message.push(err.message);
                     throw err
                 };
                 break;
@@ -325,7 +325,7 @@ export class CRUD {
     getItems = async(getParam: IFind): Promise<IQueryResult> => {
         let itemList: Array<IItem>;
         let repo: any;
-        let message: Array<string|object> = [];
+        let message: Array<string> = [];
 
         switch(getParam.table){
             case 'Book':
@@ -341,7 +341,7 @@ export class CRUD {
 
                     message.push(`获取到 ${itemList.length} 本书籍`);
                 } catch (err){ 
-                    message.push(err);
+                    message.push(err.message);
                     throw err; 
                 }
                 break;
@@ -356,7 +356,7 @@ export class CRUD {
 
                     message.push(`获取到 ${itemList.length} 名作者`);
                 } catch (err){ 
-                    message.push(err);
+                    message.push(err.message);
                     throw err; 
                 }
                 break;
@@ -370,7 +370,7 @@ export class CRUD {
 
                     message.push(`获取到 ${itemList.length} 个类别`);
                 } catch (err){ 
-                    message.push(err);
+                    message.push(err.message);
                     throw err; 
                 }
                 break;
@@ -385,7 +385,7 @@ export class CRUD {
 
                     message.push(`获取到 ${itemList.length} 个托管平台`);
                 } catch (err){ 
-                    message.push(err);
+                    message.push(err.message);
                     throw err; 
                 }
                 break;

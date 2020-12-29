@@ -2,7 +2,7 @@
 <div mat-dialog-content>
     <p>删除注意事项：</p>
     <ul>
-        <li *ngIf="!this.data.recycled">选择放入“回收站”，可在回收站中查看并恢复删除的书籍</li>
+        <li *ngIf="!this.data.recycled">选择放入“回收站”，将<ion-text color="danger" *ngIf="this.data.recordList && this.data.recordList.length > 0">删除该书籍的阅读记录，</ion-text>可在回收站中查看并恢复删除的书籍</li>
         <li>选择彻底删除，<ion-text color="danger">系统将删除下载的该书籍所有文件，并从数据库中移除书籍与该书籍的阅读记录</ion-text></li>
         <li>关闭此对话框，将不进行任何操作</li>
     </ul>
