@@ -66,7 +66,7 @@ export function correctHeadings(): Transformer {
             const text: string = node.children[0].value as string;
             const re = new RegExp(/(\#){1,6}([^\#]){1,}/g)
 
-            if(re.test(text)){
+            if(/^(\#){1,6}/.test(text)){
                 const headings = text.match(re).reduce((acc: Array<Heading>, _: string): Array<Heading> => {
                     return _ ? [...acc, getHeadingFromStr(_)] : acc;
                 }, []);
