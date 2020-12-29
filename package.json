@@ -1,6 +1,6 @@
 {
-  "name": "gitbook-reader-app",
-  "version": "0.6.2",
+  "name": "yet-another-gitbook-reader",
+  "version": "0.6.8",
   "author": "xfoss.com",
   "homepage": "https://gnu4cn.github.io/gitbook-reader/",
   "scripts": {
