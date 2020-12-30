@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Observable, of } from 'rxjs';
 import { map, share, catchError } from 'rxjs/operators';
@@ -27,8 +27,9 @@ export class FetchService {
             return this.inFlight.get(url);
         }
 
+        const headers = new HttpHeaders(header);
         const obs: Observable<JSON> = this.http
-        .get(url, {headers: {header}, responseType: 'json'})
+        .get(url, {headers: headers, responseType: 'json'})
         .pipe(
             catchError((e) => {
                 return of(e);
@@ -46,20 +47,20 @@ export class FetchService {
 
     fetchWriterProfile = (writerName: string, websiteUri: string): Observable<JSON> => {
         let url: string;
-        let header: string;
+        let header: object;
         if(/github/.test(websiteUri)) {
             url = `https://api.github.com/users/${writerName}`;
-            header = "Accept: application/vnd.github.v3+json";
+            header = 'Accept: application/vnd.github.v3+json';
         }
 
         if(/gitee/.test(websiteUri)) {
             url = `https://gitee.com/api/v5/users/${writerName}?access_token=e1edaa5796b86a5f0d9a407ee7be4804`;
-            header = "Content-Type: application/json;charset=UTF-8";
+            header = 'Content-Type: application/json;charset=UTF-8';
         }
 
         if(/gitlab/.test(websiteUri)) {
-            url = `https://gitlab.com/api/v4/users?username=${writerName}`
-            header = "PRIVATE-TOKEN: Mq9hCC8FrTZA3wxSjQqF"
+            url = `https://gitlab.com/api/v4/users?username=${writerName}`;
+            header = 'PRIVATE-TOKEN: Mq9hCC8FrTZA3wxSjQqF';
         }
 
         return this.get(url, header);
