@@ -17,7 +17,6 @@ export interface IReadingProgress {
     bookCommit: string
 }
 
-
 export interface IProgressMessage {
     book: Book;
     progress: number
@@ -25,6 +24,7 @@ export interface IProgressMessage {
 
 export interface IBookDownloaded {
     commit: string;
+    branch: string;
 }
 
 export interface IError {

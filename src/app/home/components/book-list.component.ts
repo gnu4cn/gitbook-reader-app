@@ -117,10 +117,10 @@ export class BookListComponent implements OnInit, OnChanges {
         console.log(cate)
     }
 
-    openReadmeDialog = (readme: string) => {
+    openReadmeDialog = (book: Book) => {
         this.dialog.open(ReadmeDialog, {
             width: '640px',
-            data: readme
+            data: book
         });
     }
 

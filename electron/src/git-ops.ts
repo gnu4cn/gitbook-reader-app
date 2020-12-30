@@ -1,4 +1,4 @@
-const Git = require('nodegit');
+import { Clone, Branch, Reference } from 'nodegit';
 import { remove, ensureDirSync } from 'fs-extra';
 import * as yargs from 'yargs';
 
@@ -34,29 +34,14 @@ export const clone = async (bookDir: string, bookUri: string) => {
     await remove(bookDir).then(async () => {
         await ensureDirSync(bookDir);
 
-        Git.Clone.clone(bookUri, bookDir, opts)
-            .then((repo) => {
-                return repo.getHeadCommit();
-            })
-            .then(commit => {
-                return commit.sha();
-                //                return commit.getEntry("README.md");
-                //            })
-                //            .then(entry => {
-                //                return entry.getBlob();
-                //            })
-                //            .then(async (blob) => {
-                //                //const firstTenLines = blob.toString().split('\n').slice(0, 10).join('\n');
-                //                const bookDesc = blob.toString().split('\n').slice(0, 10).join('\n');
-                //  可能不需要做这个处理
-                // 处理文件、目录中的特殊字符
-                //await escapeFileNames(bookDir);
+        Clone.clone(bookUri, bookDir, opts)
+            .then(async (repo) => {
+                const commit = await repo.getHeadCommit();
+                const branch = await repo.getCurrentBranch();
 
-                // 发送消息给父进程
-            })
-            .then((bookCommit) => {
                 const msg: IBookDownloaded = {
-                    commit: bookCommit
+                    commit: commit.sha(),
+                    branch: await Branch.name(branch)
                 }
                 if(process.send){
                     const message: IIpcMessage = {title: 'book-downloaded', data: msg};
