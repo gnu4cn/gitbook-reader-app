@@ -36,25 +36,27 @@ export default class Main {
         const filter = {
             urls: [
                 'http://localhost:10080/*', 
+                'https://api.github.com/*'
             ]
         };
 
-//        session.defaultSession.webRequest.onBeforeSendHeaders(
-//            filter,
-//            (details, callback) => {
-//                //console.log(details);
-//                details.requestHeaders['Origin'] = 'http://localhost:10080';
-//                callback({ requestHeaders: details.requestHeaders });
-//            }
-//        );
+        session.defaultSession.webRequest.onBeforeSendHeaders(
+            filter,
+            (details, callback) => {
+                //console.log(details);
+                details.requestHeaders['Origin'] = 'capacitor-electron://-';
+                details.requestHeaders["Access-Control-Allow-Methods"] = "GET,HEAD,OPTIONS,POST,PUT";
+                details.requestHeaders["Access-Control-Allow-Headers"] = "Access-Control-Allow-Headers, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers";
+
+                callback({ requestHeaders: details.requestHeaders });
+            }
+        );
 
         session.defaultSession.webRequest.onHeadersReceived(
             filter,
             (details, callback) => {
-                //console.log(details);
-                details.responseHeaders['Access-Control-Allow-Origin'] = [
-                    'capacitor-electron://-'
-                ];
+                console.log(details);
+                details.responseHeaders['Access-Control-Allow-Origin'] = ['capacitor-electron://-'];
                 callback({ responseHeaders: details.responseHeaders });
             }
         );

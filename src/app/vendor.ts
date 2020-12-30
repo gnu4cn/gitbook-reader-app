@@ -193,3 +193,28 @@ export interface IMessage {
     event: string;
     data?: object | string;
 }
+
+export const join = (start: string, end: string): string => {
+  if (start.length === 0) {
+    return end;
+  }
+  if (end.length === 0) {
+    return start;
+  }
+  let slashes = 0;
+  if (start.endsWith('/')) {
+    slashes++;
+  }
+  if (end.startsWith('/')) {
+    slashes++;
+  }
+  if (slashes === 2) {
+    return start + end.substring(1);
+  }
+  if (slashes === 1) {
+    return start + end;
+  }
+  return start + '/' + end;
+}
+
+

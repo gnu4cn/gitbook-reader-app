@@ -51,6 +51,15 @@ export class Writer extends Meta{
     @Column({default: ''})
     name: string;
 
+    @Column({default: ''})
+    fullName: string;
+
+    @Column({default: ''})
+    avatar_url: string;
+
+    @Column({default: ''})
+    location: string;
+
     @ManyToMany(type => Website, website => website.writerList)
     @JoinTable()
     websiteList: Array<Website>;

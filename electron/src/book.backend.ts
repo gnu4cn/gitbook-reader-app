@@ -67,7 +67,6 @@ export class BookBackend {
         const webContents = bookWindow.webContents;
         //webContents.openDevTools();
 
-        console.log(this.bookUrl);
         bookWindow.loadURL(this.bookUrl);
 
         ipcMain.on('book-loading', () =>{
