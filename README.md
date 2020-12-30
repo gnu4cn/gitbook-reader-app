@@ -5,6 +5,12 @@
 
 ## 开发日志
 
++ 2020-12-31
+
+    - 2020的最后一天
+    - 准备从 GitHub, Gitee, Gitlab获取书籍信息
+    - 已经准备好 `fetch.service.ts`, 其中涉及 `Restful API`，`HttpHeaders`等内容
+
 + 2020-12-29
 
     - 重写了`loadSummary`，增加了`remark` 的 `correctHeadings` 插件
