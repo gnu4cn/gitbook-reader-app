@@ -77,7 +77,7 @@ export class Book extends Meta{
     title: string;
 
     @Column({default: ''})
-    headBranch: string;
+    defaultBranch: string;
 
     @Column({default: ''})
     commit: string;

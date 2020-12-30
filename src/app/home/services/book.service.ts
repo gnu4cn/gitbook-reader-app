@@ -70,10 +70,6 @@ export class BookService {
         const site = newBookUri.match(REGEXP_SITE)[0];
         const [ writerName, name ] = newBookUri.replace(REGEXP_SITE, '').match(REGEXP_LOC)[0].split('/');
 
-        this.fetchService.fetchWriterProfile(writerName, site).subscribe((res: JSON) => {
-            console.log(res);
-        });
-
         const re = new RegExp(/\.git$/)
         newBook.name = re.test(name) ? name.replace(re, '') : name;
 

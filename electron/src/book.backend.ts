@@ -167,8 +167,9 @@ export class BookBackend {
                 case 'book-downloaded':
                     this.book.desc = join(this.bookPath, 'README.md');
                     this.book.downloaded = true;
-                    const data: IBookDownloaded = msg.data as IBookDownloaded;
-                    this.book.commit = data.commit;
+                    
+                    this.book.commit = (msg.data as IBookDownloaded).commit;
+                    this.book.headBranch = (msg.data as IBookDownloaded).branch;
 
                     query = {
                         table: 'Book',

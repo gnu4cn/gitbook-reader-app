@@ -21,6 +21,8 @@ import { WebsiteService } from './services/website.service';
 import { CateService } from './services/cate.service';
 import { WriterService } from './services/writer.service';
 import { OpMessageService } from './services/op-message.service';
+import { FetchService } from './services/fetch.service';
+import { PrivateTokensService } from './services/private-tokens.service';
 
 import { HomePageRoutingModule } from './home-routing.module';
 import { HomePage } from './home.page';
@@ -50,6 +52,8 @@ import { HomePage } from './home.page';
         WebsiteService,
         CateService,
         OpMessageService,
+        PrivateTokensService,
+        FetchService,
     ]
 })
 export class HomePageModule {}

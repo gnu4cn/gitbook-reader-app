@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Observable, of } from 'rxjs';
 import { map, share, catchError } from 'rxjs/operators';
+import { PrivateTokensService } from './private-tokens.service';
 
 @Injectable({
     providedIn: 'root'
@@ -12,6 +13,7 @@ export class FetchService {
 
     constructor(
         private http: HttpClient,
+        private tokens: PrivateTokensService
     ) {}
 
     /**
@@ -48,19 +50,46 @@ export class FetchService {
     fetchWriterProfile = (writerName: string, websiteUri: string): Observable<JSON> => {
         let url: string;
         let header: string;
+
+        if(/gitlab/.test(websiteUri)) {
+            url = `https://gitlab.com/api/v4/users?username=${writerName}`;
+            header = `PRIVATE-TOKEN: ${this.tokens.gitlabToken}`;
+
+            return this.get(url, header)[0];
+        }
+
         if(/github/.test(websiteUri)) {
             url = `https://api.github.com/users/${writerName}`;
             header = 'Accept: application/vnd.github.v3+json';
         }
 
         if(/gitee/.test(websiteUri)) {
-            url = `https://gitee.com/api/v5/users/${writerName}?access_token=e1edaa5796b86a5f0d9a407ee7be4804`;
+            url = `https://gitee.com/api/v5/users/${writerName}?access_token=${this.tokens.giteeToken}`;
             header = 'Content-Type: application/json;charset=UTF-8';
         }
 
-        if(/gitlab/.test(websiteUri)) {
-            url = `https://gitlab.com/api/v4/users?username=${writerName}`;
-            header = 'PRIVATE-TOKEN: Mq9hCC8FrTZA3wxSjQqF';
+        return this.get(url, header);
+    }
+
+    getRepoProfile = (website: string, repo: string, owner?: string, ownerId?: number): Observable<JSON> => {
+        let url: string;
+        let header: string;
+
+        if(/gitlab/.test(website) && ownerId) {
+            url = `https://gitlab.com/api/v4/users/${ownerId}/projects`;
+            header = `PRIVATE-TOKEN: ${this.tokens.gitlabToken}`;
+
+            return this.get(url, header);
+        }
+
+        if(/github/.test(website)) {
+            url = `https://api.github.com/repos/${owner}/${repo}`;
+            header = "Accept: application/vnd.github.v3+json";
+        }
+
+        if(/gitee/.test(website)) {
+            url = `https://gitee.com/api/v5/repos/${owner}/${repo}?access_token=${this.tokens.gitlabToken}`;
+            header = 'Content-Type: application/json;charset=UTF-8';
         }
 
         return this.get(url, header);
@@ -78,14 +107,14 @@ export class FetchService {
 
         if(/gitee/.test(websiteUri)) {
             const q = encodeURIComponent(keywords);
-            url = `https://gitee.com/api/v5/search/repositories?access_token=e1edaa5796b86a5f0d9a407ee7be4804&q=${q}=1&per_page=20&order=desc`;
+            url = `https://gitee.com/api/v5/search/repositories?access_token=${this.tokens.gitlabToken}&q=${q}=1&per_page=20&order=desc`;
             header = "Content-Type: application/json;charset=UTF-8";
         }
 
         if(/gitlab/.test(websiteUri)){
             const q = encodeURIComponent(keywords);
-            url = `https://gitlab.com/api/v4/search?scope=projects&search=${q}`
-            header = "PRIVATE-TOKEN: Mq9hCC8FrTZA3wxSjQqF"
+            url = `https://gitlab.com/api/v4/search?scope=projects&search=${q}`;
+            header = `PRIVATE-TOKEN: ${this.tokens.gitlabToken}`;
         }
 
         return this.get(url, header);

@@ -37,4 +37,4 @@ node_modules
 elecrton/src/*.js
 *.sqlite
 *.spec.ts
-
+private-tokens.service.ts
