@@ -47,7 +47,7 @@ export class FetchService {
 
     fetchWriterProfile = (writerName: string, websiteUri: string): Observable<JSON> => {
         let url: string;
-        let header: object;
+        let header: string;
         if(/github/.test(websiteUri)) {
             url = `https://api.github.com/users/${writerName}`;
             header = 'Accept: application/vnd.github.v3+json';
