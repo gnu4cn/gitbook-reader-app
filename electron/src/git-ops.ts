@@ -37,11 +37,11 @@ export const clone = async (bookDir: string, bookUri: string) => {
         Clone.clone(bookUri, bookDir, opts)
             .then(async (repo) => {
                 const commit = await repo.getHeadCommit();
-                const branch = await repo.getCurrentBranch();
+                //const branch = await repo.getCurrentBranch();
 
                 const msg: IBookDownloaded = {
                     commit: commit.sha(),
-                    branch: await Branch.name(branch)
+                    //branch: await Branch.name(branch)
                 }
                 if(process.send){
                     const message: IIpcMessage = {title: 'book-downloaded', data: msg};

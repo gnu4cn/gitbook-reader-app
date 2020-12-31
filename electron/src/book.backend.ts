@@ -169,7 +169,6 @@ export class BookBackend {
                     this.book.downloaded = true;
                     
                     this.book.commit = (msg.data as IBookDownloaded).commit;
-                    this.book.headBranch = (msg.data as IBookDownloaded).branch;
 
                     query = {
                         table: 'Book',

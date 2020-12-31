@@ -24,7 +24,6 @@ export interface IProgressMessage {
 
 export interface IBookDownloaded {
     commit: string;
-    branch: string;
 }
 
 export interface IError {

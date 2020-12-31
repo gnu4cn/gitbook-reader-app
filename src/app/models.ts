@@ -48,6 +48,12 @@ export class Website extends Meta{
 
 @Entity()
 export class Writer extends Meta{
+    @Column({default: 0})
+    platformId: number;
+
+    @Column({default: ''})
+    htmlUrl: string;
+
     @Column({default: ''})
     name: string;
 

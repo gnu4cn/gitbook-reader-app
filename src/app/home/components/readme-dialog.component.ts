@@ -10,6 +10,8 @@ import {
     MAT_DIALOG_DATA 
 } from '@angular/material/dialog';
 
+import { join } from 'path';
+
 import { Book } from '../../models';
 
 @Component({
@@ -23,11 +25,23 @@ export class ReadmeDialog implements OnInit{
     ) {}
 
     get readmeUrl () {
-        const giteeReadmeUrl = "https://gitee.com/hainanwu/18.06-linalg-notes/raw/master/README.md";
-        const gitlabReadmeUrl = 'https://gitlab.com/aviman1109/devops/-/raw/master/README.md';
-        const githubReadmeUrl = 'https://raw.githubusercontent.com/gnu4cn/ccna60d/main/README.md';
+        if(/github/.test(this.data.website.uri)) {
+            return this.data.downloaded 
+                ? join(this.data.website.uri, this.data.writer.name, this.data.name, 'README.md') 
+                : join('https://raw.githubusercontent.com', this.data.writer.name, this.data.name, this.data.defaultBranch, 'README.md');
+        }
 
-        return '';
+        if(/gitee/.test(this.data.website.uri)) {
+            return this.data.downloaded
+                ? join(this.data.website.uri, this.data.writer.name, this.data.name, 'README.md')
+                : join('https://gitee.com', this.data.writer.name, this.data.name, 'raw', this.data.defaultBranch, 'README.md');
+        }
+
+        if(/gitlab/.test(this.data.website.uri)) {
+            return this.data.downloaded
+                ? join(this.data.website.uri, this.data.writer.name, this.data.name, 'README.md')
+                : join('https://gitlab.com', this.data.writer.name, this.data.name, '-', 'raw', this.data.defaultBranch, 'README.md');
+        }
     }
 
     ngOnInit() {}

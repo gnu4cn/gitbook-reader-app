@@ -9,7 +9,7 @@ import { PrivateTokensService } from './private-tokens.service';
     providedIn: 'root'
 })
 export class FetchService {
-    private inFlight = new Map<string, Observable<JSON>>();
+    private inFlight = new Map<string, Observable<object|object[]>>();
 
     constructor(
         private http: HttpClient,
@@ -20,7 +20,7 @@ export class FetchService {
      *
      * @param url {string} Full path relative to root
      */
-    get = (url: string, header: string): Observable<JSON> => {
+    get = (url: string, header: string): Observable<object|object[]> => {
         if (!url) {
             return of(JSON.parse(''));
         }
@@ -47,7 +47,7 @@ export class FetchService {
         return obs;
     }
 
-    fetchWriterProfile = (writerName: string, websiteUri: string): Observable<JSON> => {
+    getWriterProfile = (writerName: string, websiteUri: string): Observable<object|object[]> => {
         let url: string;
         let header: string;
 
@@ -71,7 +71,7 @@ export class FetchService {
         return this.get(url, header);
     }
 
-    getRepoProfile = (website: string, repo: string, owner?: string, ownerId?: number): Observable<JSON> => {
+    getRepoProfile = (website: string, repo: string, owner: string, ownerId?: number): Observable<object|object[]> => {
         let url: string;
         let header: string;
 
@@ -95,7 +95,7 @@ export class FetchService {
         return this.get(url, header);
     }
 
-    searchBooks = (websiteUri: string, keywords: string): Observable<JSON> => {
+    searchBooks = (websiteUri: string, keywords: string): Observable<object|object[]> => {
         let url: string;
         let header: string;
 

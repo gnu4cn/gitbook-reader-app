@@ -4,6 +4,8 @@ import { CrudService } from '../../services/crud.service';
 import { Writer, Website } from '../../models';
 
 import { OpMessageService } from './op-message.service';
+import { FetchService } from './fetch.service';
+
 import { 
     IQuery,
     IQueryResult,
@@ -17,6 +19,7 @@ export class WriterService {
 
     constructor(
         private crud: CrudService,
+        private fetchService: FetchService,
         private opMessage: OpMessageService,
     ) {
         this.crud.getItems({table: 'Writer'})
@@ -27,7 +30,7 @@ export class WriterService {
             });
     }
 
-    newWriter = async (writerName: string, website: Website) => {
+    newWriter = async (writerName: string, website: Website, platformName?: string) => {
         const writer = await this.list.find(w => w.name === writerName);
 
         if (writer){
@@ -61,6 +64,18 @@ export class WriterService {
             // 将 newBook.website 写入 _writer.websiteList
             _writer.websiteList = [];
             _writer.websiteList.push(website);
+
+            // 获取writer的更多信息
+            await this.fetchService.getWriterProfile(platformName ? platformName : writerName, website.uri).subscribe(res => {
+                console.log(res);
+
+                _writer.platformId = res['id'];
+                _writer.avatar_url = res['avatar_url'];
+                _writer.fullName = res['name'];
+                _writer.htmlUrl = res['html_url'];
+                _writer.desc = res['bio'];
+                if(/github/.test(website.uri))_writer.location = res['location'];
+            });
 
             const query: IQuery = {
                 table: "Writer",

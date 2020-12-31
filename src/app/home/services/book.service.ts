@@ -74,9 +74,36 @@ export class BookService {
         newBook.name = re.test(name) ? name.replace(re, '') : name;
 
         newBook.website = await this.website.newWebsit(site);
-        newBook.writer = await this.writer.newWriter(writerName, newBook.website);
+        
+        if(/gitee/.test(site)){
+            await this.fetchService.getRepoProfile(site, newBook.name, writerName).subscribe(async (res) => {
+                newBook.writer = await this.writer.newWriter(writerName, newBook.website, res['owner']['login']); 
+            });
+        }
+        else {
+            newBook.writer = await this.writer.newWriter(writerName, newBook.website);
+        }
+
         newBook.cateList = await this.cate.saveList(res.cateList);
         newBook.recordList = [];
+
+        // 这里要获取到 Repository 的更多信息
+        if(/gitlab/.test(site)) {
+            await this.fetchService.getRepoProfile(site, newBook.name, writerName, newBook.writer.platformId)
+                .subscribe(res => {
+                    const repo = (res as object[]).find(repo => repo['path'] === newBook.name)
+
+                    newBook.desc = repo['description'];
+                    newBook.defaultBranch = repo['default_branch'];
+                });
+        }
+        else {
+            await this.fetchService.getRepoProfile(site, newBook.name, writerName)
+                .subscribe(res => {
+                    newBook.desc = res['description'];
+                    newBook.defaultBranch = res['default_branch'];
+                });
+        }
 
         const query: IQuery = {
             table: 'Book',
