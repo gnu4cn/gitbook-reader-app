@@ -69,7 +69,7 @@ export class WriterService {
 
                 _writer.platformId = rawWriterList[0]['id'] as number;
                 _writer.avatarUrl = rawWriterList[0]['avatar_url'];
-                _writer.fullName = rawWriterList[0]['name'];
+                _writer.fullName = rawWriterList[0]['name'] ? rawWriterList[0]['name'] : '';
                 _writer.htmlUrl = rawWriterList[0]['html_url'];
                 _writer.desc = rawWriterList[0]['bio'] ? rawWriterList[0]['bio'] : '';
             }
@@ -81,10 +81,11 @@ export class WriterService {
 
                 _writer.platformId = rawWriter['id'] as number;
                 _writer.avatarUrl = rawWriter['avatar_url'];
-                _writer.fullName = rawWriter['name'];
+                _writer.fullName = rawWriter['name'] ? rawWriter['name'] : '';
                 _writer.htmlUrl = rawWriter['html_url'];
                 _writer.desc = rawWriter['bio'] ? rawWriter['bio'] : '';
-                if(/github/.test(newBook.website.uri))_writer.location = rawWriter['location'];
+                if(/github/.test(newBook.website.uri))_writer.location = rawWriter['location'] 
+                    ? rawWriter['location'] : '';
             }
 
             const query: IQuery = {
