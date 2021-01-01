@@ -105,7 +105,6 @@ export class BookService {
             newBook.defaultBranch = rawRepo['default_branch'];
         }
 
-        console.log(newBook)
         const query: IQuery = {
             table: 'Book',
             item: newBook

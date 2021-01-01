@@ -109,7 +109,7 @@ export class HomePage implements OnInit, AfterViewInit {
         });
 
         this.message.getMessage().subscribe((_: IMessage) => {
-            if(_.event === 'book-list-updated') this.bookList = this.book.list.slice();
+            if(_.event === 'book-list-updated') this.bookList = (_.data as Book[]).slice();
             
             this.cdr.detectChanges();
         });

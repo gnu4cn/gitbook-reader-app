@@ -57,9 +57,7 @@ export class BookListComponent implements OnInit, OnChanges {
         private book: BookService,
         private cdr: ChangeDetectorRef,
         private opMessage: OpMessageService
-    ) {
-        this._bookList = book.list;
-    }
+    ) {}
 
     get bookList () {
         const bookList = this._bookList.filter(b => filterFn(b, this.filter));
@@ -68,9 +66,7 @@ export class BookListComponent implements OnInit, OnChanges {
             : sortBy(bookList, this.sortBy);
     }
 
-    ngOnInit() {
-        console.log(this._bookList)
-    }
+    ngOnInit() {}
 
     ngOnChanges (changes: SimpleChanges) {
         if ('sortBy' in changes) {

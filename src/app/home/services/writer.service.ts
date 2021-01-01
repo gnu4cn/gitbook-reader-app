@@ -67,8 +67,6 @@ export class WriterService {
             if(/gitlab/.test(newBook.website.uri)){
                 const rawWriterList = await this.fetchService.getWriterProfile(writerName, newBook.website.uri);
 
-                console.log(rawWriterList);
-
                 _writer.platformId = rawWriterList[0]['id'] as number;
                 _writer.avatarUrl = rawWriterList[0]['avatar_url'];
                 _writer.fullName = rawWriterList[0]['name'];
