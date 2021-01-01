@@ -9,8 +9,8 @@ import {
     selector: '[uiImageLoader]'
 })
 export class UiImageLoaderDirective {
+    private loader = 'assets/images/loader.svg';
     constructor(
-        @Attribute('loader') public loader: string,
         @Attribute('onErrorSrc') public onErrorSrc: string,
         private renderer: Renderer2,
         private el: ElementRef) {

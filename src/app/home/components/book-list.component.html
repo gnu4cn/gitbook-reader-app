@@ -15,7 +15,6 @@
                     <img mat-card-avatar 
                            uiImageLoader
                            onErrorSrc="assets/images/avatar.png"
-                           loader="assets/images/loader.gif"
                            [src]="book.isFromMainstreamPlatform ? book.writer.avatarUrl : 'assets/images/avatar.png'" 
                            />
                     <mat-card-title>{{book.writer.fullName}}</mat-card-title>
