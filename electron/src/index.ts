@@ -44,8 +44,9 @@ export default class Main {
         request.onBeforeSendHeaders(
             filter,
             (details, callback) => {
-                //console.log(details);
+                console.log(details);
                 details.requestHeaders['Origin'] = 'capacitor-electron://-';
+                details.requestHeaders['Access-Control-Allow-Origin'] = "capacitor-electron://-",
                 details.requestHeaders["Access-Control-Allow-Methods"] = "GET,HEAD,OPTIONS,POST,PUT";
                 details.requestHeaders["Access-Control-Allow-Headers"] = "Access-Control-Allow-Headers, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers";
                 callback({ requestHeaders: details.requestHeaders });

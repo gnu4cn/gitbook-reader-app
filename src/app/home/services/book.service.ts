@@ -37,7 +37,7 @@ export class BookService {
         private cate: CateService
     ) {
         this.crud.getItems({table: 'Book'})
-            .then((res: IQueryResult) => {
+            .subscribe((res: IQueryResult) => {
                 this.opMessage.newMsg(res.message);
                 const books = res.data as Book[];
                 this.list = books.slice();
@@ -79,6 +79,7 @@ export class BookService {
         let rawRepo: object;
         if(/gitee/.test(site)){
             rawRepo = await this.fetchService.getRepoProfile(site, newBook.name, writerName);
+
             newBook.writer = await this.writer.newWriter(writerName, newBook, rawRepo['owner']['login']); 
         }
         else {
@@ -110,9 +111,11 @@ export class BookService {
             item: newBook
         }
 
-        const queryRes:IQueryResult = await this.crud.addItem(query);
-        this.opMessage.newMsg(queryRes.message);
-        this.listUpdated(queryRes.data as Book);
+        this.crud.addItem(query)
+            .subscribe(res => {
+                this.opMessage.newMsg(res.message);
+                this.listUpdated(res.data as Book);
+            });
     }
 
     open = async (book: Book) => {
@@ -124,23 +127,23 @@ export class BookService {
             item: book
         }
 
-        const res: IQueryResult = await this.crud.updateItem(query);
-        this.opMessage.newMsg(res.message);
-        this.listUpdated(res.data as Book);
+        this.crud.updateItem(query).subscribe(res => {
+            this.opMessage.newMsg(res.message);
+            this.listUpdated(res.data as Book);
+        });
     }
 
     update = async (book: Book) => {
-        let query: IQuery;
-
         book.cateList = await this.cate.saveList(book.cateList);
 
-        query = {
+        const query: IQuery = {
             table: 'Book',
             item: book
         }
-        const queryRes: IQueryResult = await this.crud.updateItem(query);
-        this.opMessage.newMsg(queryRes.message);
-        this.listUpdated(queryRes.data as Book);
+        this.crud.updateItem(query).subscribe(queryRes => {
+            this.opMessage.newMsg(queryRes.message);
+            this.listUpdated(queryRes.data as Book);
+        });
     }
 
     recycleRecoverDelete =  async (res: IDeleteBookDialogResData) => {
@@ -152,8 +155,9 @@ export class BookService {
                 item: res.book
             }
 
-            const queryRes: IQueryResult = await this.crud.deleteItem(query);
-            this.opMessage.newMsg(queryRes.message);
+            this.crud.deleteItem(query).subscribe(queryRes => {
+                this.opMessage.newMsg(queryRes.message);
+            });
         }
 
         if (!res.recycled && res.remove){
@@ -162,9 +166,10 @@ export class BookService {
                 item: res.book
             }
 
-            const queryRes:IQueryResult = await this.crud.deleteItem(query);
-            this.opMessage.newMsg(queryRes.message);
-            this.listUpdated(res.book, true);
+            this.crud.deleteItem(query).subscribe(queryRes => {
+                this.opMessage.newMsg(queryRes.message);
+                this.listUpdated(res.book, true);
+            });
 
             return;
         } 
@@ -178,8 +183,9 @@ export class BookService {
             item: res.book
         }
 
-        const queryRes:IQueryResult = await this.crud.updateItem(query);
-        this.opMessage.newMsg(queryRes.message);
-        this.listUpdated(queryRes.data as Book);
+        this.crud.updateItem(query).subscribe(queryRes => {
+            this.opMessage.newMsg(queryRes.message);
+            this.listUpdated(queryRes.data as Book);
+        });
     }
 }

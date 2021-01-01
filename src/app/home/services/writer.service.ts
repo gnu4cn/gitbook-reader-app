@@ -23,7 +23,7 @@ export class WriterService {
         private opMessage: OpMessageService,
     ) {
         this.crud.getItems({table: 'Writer'})
-            .then((res: IQueryResult) => {
+            .subscribe((res: IQueryResult) => {
                 this.opMessage.newMsg(res.message);
                 const writers = res.data as Writer[];
                 this.list = writers.slice();
@@ -46,7 +46,7 @@ export class WriterService {
                     item: writer,
                 }
 
-                const res: IQueryResult = await this.crud.updateItem(query);
+                const res: IQueryResult = await this.crud.updateItem(query).toPromise();
                 this.opMessage.newMsg(res.message);
 
                 const w = res.data as Writer;
@@ -64,14 +64,28 @@ export class WriterService {
             _writer.websiteList.push(newBook.website);
 
             // 获取writer的更多信息
-            if(newBook.isFromMainstreamPlatform){
-                const rawWriter = await this.fetchService.getWriterProfile(platformName ? platformName : writerName, newBook.website.uri);
+            if(/gitlab/.test(newBook.website.uri)){
+                const rawWriterList = await this.fetchService.getWriterProfile(writerName, newBook.website.uri);
+
+                console.log(rawWriterList);
+
+                _writer.platformId = rawWriterList[0]['id'] as number;
+                _writer.avatarUrl = rawWriterList[0]['avatar_url'];
+                _writer.fullName = rawWriterList[0]['name'];
+                _writer.htmlUrl = rawWriterList[0]['html_url'];
+                _writer.desc = rawWriterList[0]['bio'] ? rawWriterList[0]['bio'] : '';
+            }
+
+            if(newBook.isFromMainstreamPlatform && !(/gitlab/.test(newBook.website.uri))){
+                const rawWriter = await this.fetchService.getWriterProfile(platformName 
+                    ? platformName 
+                    : writerName, newBook.website.uri);
 
                 _writer.platformId = rawWriter['id'] as number;
                 _writer.avatarUrl = rawWriter['avatar_url'];
                 _writer.fullName = rawWriter['name'];
                 _writer.htmlUrl = rawWriter['html_url'];
-                _writer.desc = rawWriter['bio'];
+                _writer.desc = rawWriter['bio'] ? rawWriter['bio'] : '';
                 if(/github/.test(newBook.website.uri))_writer.location = rawWriter['location'];
             }
 
@@ -80,7 +94,7 @@ export class WriterService {
                 item: _writer
             }
 
-            const res: IQueryResult = await this.crud.addItem(query);
+            const res: IQueryResult = await this.crud.addItem(query).toPromise();
 
             this.opMessage.newMsg(res.message);
             const w = res.data as Writer;

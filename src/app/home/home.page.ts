@@ -60,7 +60,9 @@ export class HomePage implements OnInit, AfterViewInit {
         private message: MessageService,
         private cdr: ChangeDetectorRef,
         private book: BookService,
-    ) {}
+    ) {
+        this.bookList = book.list;
+    }
 
     private changeFabButton = (button: TAvatarIds) => {
         const buttonList = ['currently-reading', 'on-shelf', 'recycled'];
@@ -100,8 +102,6 @@ export class HomePage implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
-        this.bookList = this.book.list.slice();
-
         this.crud.ipcRenderer.on('book-updated', (ev, msg: IQueryResult) => {
             this.opMessage.newMsg(msg.message);
             this.book.listUpdated(msg.data as Book);

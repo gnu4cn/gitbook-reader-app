@@ -78,7 +78,7 @@ export class FetchService {
             header = "Accept: application/vnd.github.v3+json";
         }
 
-        if(/gitlab/.test(website) && ownerId) {
+        if(/gitlab/.test(website)) {
             url = `https://gitlab.com/api/v4/users/${ownerId}/projects`;
             header = `PRIVATE-TOKEN: ${this.tokens.gitlabToken}`;
         }

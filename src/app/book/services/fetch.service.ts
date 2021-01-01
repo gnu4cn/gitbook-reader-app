@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Observable, of } from 'rxjs';
 import { map, share, catchError } from 'rxjs/operators';
@@ -101,6 +101,7 @@ export class FetchService {
         }
 
         let notFound = url === this.path404;
+
         const obs: Observable<CachePage> = this.http
         .get(url, {responseType: 'text'})
         .pipe(

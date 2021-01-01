@@ -69,9 +69,7 @@ export class NewBookDialog implements OnInit{
     ngOnInit() {
         this.tempCateList = this.cateList.slice();
 
-        this.uriInputControl.setValidators(IsQualifiedAndNotExistedGitRepoValidatorFn(this.book
-            .list.slice()
-        ));
+        this.uriInputControl.setValidators(IsQualifiedAndNotExistedGitRepoValidatorFn(this.book.list.slice()));
     }
 
     private _filter(val: string): Array<Category> {

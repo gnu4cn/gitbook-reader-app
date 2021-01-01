@@ -165,7 +165,6 @@ export class BookBackend {
                     }
                     break;
                 case 'book-downloaded':
-                    this.book.desc = join(this.bookPath, 'README.md');
                     this.book.downloaded = true;
                     
                     this.book.commit = (msg.data as IBookDownloaded).commit;

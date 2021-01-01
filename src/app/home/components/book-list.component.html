@@ -14,11 +14,17 @@
                 <mat-card-header>
                     <img mat-card-avatar [src]="book.isFromMainstreamPlatform ? book.writer.avatarUrl : 'assets/images/avatar.png'" />
                     <mat-card-title>{{book.writer.fullName}}</mat-card-title>
-                    <mat-card-subtitle>{{book.website.uri}}</mat-card-subtitle>
+                    <mat-card-subtitle>
+                        <ion-icon *ngIf="book.writer.location.length > 0" name="location-outline"></ion-icon>{{book.writer.location}} 
+                        @{{book.website.uri}}
+                    </mat-card-subtitle>
                 </mat-card-header>
 
                 <mat-card-content fxLayout="row" fxLayoutGap="5px" class="cate-list">
-                    <mat-label>{{book.desc}}</mat-label>
+                    <mat-label><b>“</b>{{book.desc}}<b>”</b></mat-label>
+                </mat-card-content>
+
+                <mat-card-content fxLayout="row" fxLayoutGap="5px" class="cate-list">
                     <mat-chip-list>
                         <mat-chip class="cate-chip" *ngFor="let cate of book.cateList" (click)="listBooksUnderCate(cate)">
                             <ion-label>{{cate.name}}</ion-label>
@@ -35,7 +41,7 @@
                         (click)="openReadingRecordDialog(book)">
                             <ion-icon name="list-outline"></ion-icon>阅读记录
                     </button>
-                    <button mat-button *ngIf="book.isFromMainstreamPlatform || book.downloaded" (click)="openReadmeDialog(book)">
+                    <button mat-button *ngIf="book.downloaded" (click)="openReadmeDialog(book)">
                             <ion-icon name="compass-outline"></ion-icon>README
                     </button>
                     <button mat-button *ngIf="book.downloaded" (click)="openBook(book)">

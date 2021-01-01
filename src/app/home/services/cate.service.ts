@@ -20,7 +20,7 @@ export class CateService {
         private opMessage: OpMessageService,
     ) {
         this.crud.getItems({table: 'Category'})
-            .then((res: IQueryResult) => {
+            .subscribe((res: IQueryResult) => {
                 this.opMessage.newMsg(res.message);
                 const cates = res.data as Category[];
                 this.list = cates.slice();
@@ -43,7 +43,7 @@ export class CateService {
                     item: _cate
                 }
 
-                const res: IQueryResult = await this.crud.addItem(query);
+                const res: IQueryResult = await this.crud.addItem(query).toPromise();
 
                 this.opMessage.newMsg(res.message);
                 const cate = res.data as Category;
