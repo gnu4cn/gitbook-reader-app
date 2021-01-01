@@ -40,6 +40,7 @@ import { ContentSearchDirective } from './directives/content-search.directive';
 
 import { environment } from '../../environments/environment';
 import { config } from '../gbr.config';
+import { UiImageLoaderDirective } from './directives/ui-image-loader.directive';
 
 @NgModule({
     imports: [
@@ -59,6 +60,7 @@ import { config } from '../gbr.config';
         ElementInputDirective,
         ContentSearchDirective,
         SafeHtmlPipe,
+        UiImageLoaderDirective,
     ],
     providers: [
         SettingsService,
@@ -86,6 +88,7 @@ import { config } from '../gbr.config';
         ElementInputDirective,
         SafeHtmlPipe,
         ContentSearchDirective,
+        UiImageLoaderDirective,
     ]
 })
 export class BookPageModule {

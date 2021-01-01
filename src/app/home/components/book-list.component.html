@@ -12,7 +12,12 @@
 
                 <!-- 作者和来源 -->
                 <mat-card-header>
-                    <img mat-card-avatar [src]="book.isFromMainstreamPlatform ? book.writer.avatarUrl : 'assets/images/avatar.png'" />
+                    <img mat-card-avatar 
+                           uiImageLoader
+                           onErrorSrc="assets/images/avatar.png"
+                           loader="assets/images/loader.gif"
+                           [src]="book.isFromMainstreamPlatform ? book.writer.avatarUrl : 'assets/images/avatar.png'" 
+                           />
                     <mat-card-title>{{book.writer.fullName}}</mat-card-title>
                     <mat-card-subtitle>
                         <ion-icon *ngIf="book.writer.location.length > 0" name="location-outline"></ion-icon>{{book.writer.location}} 

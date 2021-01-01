@@ -65,7 +65,7 @@ export class BookBackend {
         });
 
         const webContents = bookWindow.webContents;
-        //webContents.openDevTools();
+        webContents.openDevTools();
 
         bookWindow.loadURL(this.bookUrl);
 
