@@ -15,6 +15,7 @@
   },
   "private": true,
   "dependencies": {
+    "@akebifiky/remark-simple-plantuml": "^1.0.2",
     "@angular/animations": "^11.0.5",
     "@angular/cdk": "^11.0.3",
     "@angular/common": "^10.2.4",

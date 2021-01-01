@@ -50,6 +50,8 @@ export const MARKDOWN_CONFIG_TOKEN = new InjectionToken<any>( 'forRoot() configu
     providedIn: 'root'
 })
 export class MarkdownService {
+    remarkPlugins: unified.PluggableList;
+
     // Lazy init processor
     @lazyInitialize
     get processor(): unified.Processor {
@@ -124,13 +126,6 @@ export class MarkdownService {
             .use(sectionPlugin);
     }
 
-    get remarkPlugins(): unified.PluggableList {
-        if (Array.isArray(this.config)) {
-            return this.config;
-        }
-        return this.config.plugins;
-    }
-
     get bookPath () {
         return this.settings.bookPath;
     }
@@ -145,7 +140,7 @@ export class MarkdownService {
         @Optional() @Inject(MARKDOWN_CONFIG_TOKEN) private config: Preset
     ) {
         this.config = this.config || { plugins: [] };
-        this.config.plugins = this.config.plugins || [];
+        this.remarkPlugins = this.config.plugins;
     }
 
     linkPlugin = () => {

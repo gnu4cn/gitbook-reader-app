@@ -1,5 +1,6 @@
 import headings from '@rigor789/remark-autolink-headings';
 import frontmatter from 'remark-frontmatter';
+import simplePlantUML from '@akebifiky/remark-simple-plantuml';
 import gfm from 'remark-gfm';
 import math from 'remark-math';
 import katex from 'remark-html-katex';
@@ -52,6 +53,7 @@ export const plugins = [
     math,
     katex,
     gemojiToEmoji,
+    simplePlantUML,
     infoStringToAttr,
     mermaid,
     prism
