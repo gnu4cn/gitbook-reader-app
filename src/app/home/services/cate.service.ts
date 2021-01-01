@@ -20,7 +20,7 @@ export class CateService {
         private opMessage: OpMessageService,
     ) {
         this.crud.getItems({table: 'Category'})
-            .subscribe((res: IQueryResult) => {
+            .then((res: IQueryResult) => {
                 this.opMessage.newMsg(res.message);
                 const cates = res.data as Category[];
                 this.list = cates.slice();
@@ -30,7 +30,7 @@ export class CateService {
     saveList = async (cateList: Array<Category>) => {
         const tempList: Array<Category> = [];
 
-        await cateList.map(c => {
+        await cateList.map(async (c: Category) => {
             const cate = this.list.find(cate => cate.name === c.name);
 
             if (cate) tempList.push(cate);
@@ -42,13 +42,13 @@ export class CateService {
                     table: "Category",
                     item: _cate
                 }
-                this.crud.addItem(query).subscribe((res: IQueryResult) => {
-                    this.opMessage.newMsg(res.message);
 
-                    const cate = res.data as Category;
-                    this.list.push(cate);
-                    tempList.push(cate);
-                });
+                const res: IQueryResult = await this.crud.addItem(query);
+
+                this.opMessage.newMsg(res.message);
+                const cate = res.data as Category;
+                this.list.push(cate);
+                tempList.push(cate);
             }
         });
 

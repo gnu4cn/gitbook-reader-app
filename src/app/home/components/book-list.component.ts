@@ -43,6 +43,7 @@ export class BookListComponent implements OnInit, OnChanges {
     @Input() displayRecycled: boolean = false;
     @Input() beenOpened: boolean = true;
     @Input() _bookList: Array<Book>;
+
     filter: IFilter = {
         displayRecycled: this.displayRecycled,
         beenOpened: this.beenOpened,
@@ -60,17 +61,21 @@ export class BookListComponent implements OnInit, OnChanges {
 
     get bookList () {
         const bookList = this._bookList.filter(b => filterFn(b, this.filter));
-        return /\:/.test(this.sortBy) ? sortBy(bookList, this.sortBy.split(':')[0], this.sortBy.split(':')[1])
+        return /\:/.test(this.sortBy) 
+            ? sortBy(bookList, this.sortBy.split(':')[0], this.sortBy.split(':')[1])
             : sortBy(bookList, this.sortBy);
     }
 
-    ngOnInit() {}
+    ngOnInit() {
+        console.log(this._bookList)
+    }
 
     ngOnChanges (changes: SimpleChanges) {
         if ('sortBy' in changes) {
             if(changes.displayRecycled) this.filter.displayRecycled = changes.displayRecycled.currentValue;
             if(changes.beenOpened) this.filter.beenOpened = changes.beenOpened.currentValue;
         }
+
     }
 
     changeFilter = (filterAction: IFilterAction) => {
@@ -96,6 +101,7 @@ export class BookListComponent implements OnInit, OnChanges {
                 break;
         }
     }
+
     startDownload = (book: Book) => {
         this.crud.ipcRenderer.send('download-book', book);
         document

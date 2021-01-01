@@ -37,7 +37,7 @@ export class BookService {
         private cate: CateService
     ) {
         this.crud.getItems({table: 'Book'})
-            .subscribe((res: IQueryResult) => {
+            .then((res: IQueryResult) => {
                 this.opMessage.newMsg(res.message);
                 const books = res.data as Book[];
                 this.list = books.slice();
@@ -72,16 +72,17 @@ export class BookService {
 
         const re = new RegExp(/\.git$/)
         newBook.name = re.test(name) ? name.replace(re, '') : name;
+        newBook.isFromMainstreamPlatform = /github/.test(site) || /gitee/.test(site) || /gitlab/.test(site);
 
         newBook.website = await this.website.newWebsit(site);
-        
+
+        let rawRepo: object;
         if(/gitee/.test(site)){
-            await this.fetchService.getRepoProfile(site, newBook.name, writerName).subscribe(async (res) => {
-                newBook.writer = await this.writer.newWriter(writerName, newBook.website, res['owner']['login']); 
-            });
+            rawRepo = await this.fetchService.getRepoProfile(site, newBook.name, writerName);
+            newBook.writer = await this.writer.newWriter(writerName, newBook, rawRepo['owner']['login']); 
         }
         else {
-            newBook.writer = await this.writer.newWriter(writerName, newBook.website);
+            newBook.writer = await this.writer.newWriter(writerName, newBook);
         }
 
         newBook.cateList = await this.cate.saveList(res.cateList);
@@ -89,34 +90,32 @@ export class BookService {
 
         // 这里要获取到 Repository 的更多信息
         if(/gitlab/.test(site)) {
-            await this.fetchService.getRepoProfile(site, newBook.name, writerName, newBook.writer.platformId)
-                .subscribe(res => {
-                    const repo = (res as object[]).find(repo => repo['path'] === newBook.name)
+            const rawRepoList = await this.fetchService.getRepoProfile(site, newBook.name, writerName, newBook.writer.platformId);
 
-                    newBook.desc = repo['description'];
-                    newBook.defaultBranch = repo['default_branch'];
-                });
-        }
-        else {
-            await this.fetchService.getRepoProfile(site, newBook.name, writerName)
-                .subscribe(res => {
-                    newBook.desc = res['description'];
-                    newBook.defaultBranch = res['default_branch'];
-                });
+            rawRepo = (rawRepoList as object[]).find(repo => repo['path'] === newBook.name);
+
+            newBook.desc = rawRepo['description'];
+            newBook.defaultBranch = rawRepo['default_branch'];
         }
 
+        if(newBook.isFromMainstreamPlatform && !(/gitlab/.test(site))){
+            rawRepo = rawRepo ? rawRepo : await this.fetchService.getRepoProfile(site, newBook.name, writerName);
+            newBook.desc = rawRepo['description'];
+            newBook.defaultBranch = rawRepo['default_branch'];
+        }
+
+        console.log(newBook)
         const query: IQuery = {
             table: 'Book',
             item: newBook
         }
 
-        this.crud.addItem(query).subscribe((res: IQueryResult) => {
-            this.opMessage.newMsg(res.message);
-            this.listUpdated(res.data as Book);
-        });
+        const queryRes:IQueryResult = await this.crud.addItem(query);
+        this.opMessage.newMsg(queryRes.message);
+        this.listUpdated(queryRes.data as Book);
     }
 
-    open = (book: Book) => {
+    open = async (book: Book) => {
         this.crud.ipcRenderer.send('open-book', book);
         book.recycled = false;
 
@@ -125,10 +124,9 @@ export class BookService {
             item: book
         }
 
-        this.crud.updateItem(query).subscribe((queryRes: IQueryResult) => {
-            this.opMessage.newMsg(queryRes.message);
-            this.listUpdated(queryRes.data as Book);
-        });
+        const res: IQueryResult = await this.crud.updateItem(query);
+        this.opMessage.newMsg(res.message);
+        this.listUpdated(res.data as Book);
     }
 
     update = async (book: Book) => {
@@ -140,10 +138,9 @@ export class BookService {
             table: 'Book',
             item: book
         }
-        this.crud.updateItem(query).subscribe((queryRes: IQueryResult) => {
-            this.opMessage.newMsg(queryRes.message);
-            this.listUpdated(queryRes.data as Book);
-        });
+        const queryRes: IQueryResult = await this.crud.updateItem(query);
+        this.opMessage.newMsg(queryRes.message);
+        this.listUpdated(queryRes.data as Book);
     }
 
     recycleRecoverDelete =  async (res: IDeleteBookDialogResData) => {
@@ -155,9 +152,8 @@ export class BookService {
                 item: res.book
             }
 
-            await this.crud.deleteItem(query).subscribe((res: IQueryResult) => {
-                this.opMessage.newMsg(res.message);
-            });
+            const queryRes: IQueryResult = await this.crud.deleteItem(query);
+            this.opMessage.newMsg(queryRes.message);
         }
 
         if (!res.recycled && res.remove){
@@ -166,10 +162,9 @@ export class BookService {
                 item: res.book
             }
 
-            await this.crud.deleteItem(query).subscribe((queryRes: IQueryResult) => {
-                this.opMessage.newMsg(queryRes.message);
-                this.listUpdated(res.book, true);
-            });
+            const queryRes:IQueryResult = await this.crud.deleteItem(query);
+            this.opMessage.newMsg(queryRes.message);
+            this.listUpdated(res.book, true);
 
             return;
         } 
@@ -183,9 +178,8 @@ export class BookService {
             item: res.book
         }
 
-        this.crud.updateItem(query).subscribe((queryRes: IQueryResult) => {
-            this.opMessage.newMsg(queryRes.message);
-            this.listUpdated(queryRes.data as Book);
-        });
+        const queryRes:IQueryResult = await this.crud.updateItem(query);
+        this.opMessage.newMsg(queryRes.message);
+        this.listUpdated(queryRes.data as Book);
     }
 }

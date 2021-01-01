@@ -42,6 +42,8 @@ export class ReadmeDialog implements OnInit{
                 ? join(this.data.website.uri, this.data.writer.name, this.data.name, 'README.md')
                 : join('https://gitlab.com', this.data.writer.name, this.data.name, '-', 'raw', this.data.defaultBranch, 'README.md');
         }
+
+        return join(this.data.website.uri, this.data.writer.name, this.data.name, 'README.md');
     }
 
     ngOnInit() {}

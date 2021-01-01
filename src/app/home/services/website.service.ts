@@ -20,7 +20,7 @@ export class WebsiteService {
         private opMessage: OpMessageService,
     ) {
         this.crud.getItems({table: 'Website'})
-            .subscribe((res: IQueryResult) => {
+            .then((res: IQueryResult) => {
                 this.opMessage.newMsg(res.message);
                 const websites = res.data as Website[];
                 this.list = websites.slice();
@@ -42,13 +42,11 @@ export class WebsiteService {
                 item: _website
             }
 
-            let w: Website;
-            await this.crud.addItem(query).subscribe((res: IQueryResult) => {
-                this.opMessage.newMsg(res.message);
+            const res:IQueryResult = await this.crud.addItem(query);
+            this.opMessage.newMsg(res.message);
 
-                w = res.data as Website;
-                this.list.push(w);
-            });
+            const w = res.data as Website;
+            this.list.push(w);
 
             return w;
         }

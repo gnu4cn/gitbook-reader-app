@@ -61,7 +61,7 @@ export class Writer extends Meta{
     fullName: string;
 
     @Column({default: ''})
-    avatar_url: string;
+    avatarUrl: string;
 
     @Column({default: ''})
     location: string;
@@ -76,6 +76,9 @@ export class Writer extends Meta{
 
 @Entity() 
 export class Book extends Meta{
+    @Column({default: false})
+    isFromMainstreamPlatform: boolean;
+
     @Column({default: ''})
     name: string;
 

@@ -30,13 +30,13 @@ export class FetchService {
         }
 
         const headers = new HttpHeaders(header);
-        const obs: Observable<JSON> = this.http
+        const obs: Observable<object|object[]> = this.http
         .get(url, {headers: headers, responseType: 'json'})
         .pipe(
             catchError((e) => {
                 return of(e);
             }),
-            map((data: JSON) => {
+            map((data: object | object[]) => {
                 this.inFlight.delete(url);
                 return data;
             }),
@@ -47,20 +47,18 @@ export class FetchService {
         return obs;
     }
 
-    getWriterProfile = (writerName: string, websiteUri: string): Observable<object|object[]> => {
+    getWriterProfile = (writerName: string, websiteUri: string): Promise<object|object[]> => {
         let url: string;
         let header: string;
-
-        if(/gitlab/.test(websiteUri)) {
-            url = `https://gitlab.com/api/v4/users?username=${writerName}`;
-            header = `PRIVATE-TOKEN: ${this.tokens.gitlabToken}`;
-
-            return this.get(url, header)[0];
-        }
 
         if(/github/.test(websiteUri)) {
             url = `https://api.github.com/users/${writerName}`;
             header = 'Accept: application/vnd.github.v3+json';
+        }
+
+        if(/gitlab/.test(websiteUri)) {
+            url = `https://gitlab.com/api/v4/users?username=${writerName}`;
+            header = `PRIVATE-TOKEN: ${this.tokens.gitlabToken}`;
         }
 
         if(/gitee/.test(websiteUri)) {
@@ -68,34 +66,32 @@ export class FetchService {
             header = 'Content-Type: application/json;charset=UTF-8';
         }
 
-        return this.get(url, header);
+        return this.get(url, header).toPromise();
     }
 
-    getRepoProfile = (website: string, repo: string, owner: string, ownerId?: number): Observable<object|object[]> => {
+    getRepoProfile = (website: string, repo: string, owner: string, ownerId?: number): Promise<object|object[]> => {
         let url: string;
         let header: string;
-
-        if(/gitlab/.test(website) && ownerId) {
-            url = `https://gitlab.com/api/v4/users/${ownerId}/projects`;
-            header = `PRIVATE-TOKEN: ${this.tokens.gitlabToken}`;
-
-            return this.get(url, header);
-        }
 
         if(/github/.test(website)) {
             url = `https://api.github.com/repos/${owner}/${repo}`;
             header = "Accept: application/vnd.github.v3+json";
         }
 
+        if(/gitlab/.test(website) && ownerId) {
+            url = `https://gitlab.com/api/v4/users/${ownerId}/projects`;
+            header = `PRIVATE-TOKEN: ${this.tokens.gitlabToken}`;
+        }
+
         if(/gitee/.test(website)) {
-            url = `https://gitee.com/api/v5/repos/${owner}/${repo}?access_token=${this.tokens.gitlabToken}`;
+            url = `https://gitee.com/api/v5/repos/${owner}/${repo}?access_token=${this.tokens.giteeToken}`;
             header = 'Content-Type: application/json;charset=UTF-8';
         }
 
-        return this.get(url, header);
+        return this.get(url, header).toPromise();
     }
 
-    searchBooks = (websiteUri: string, keywords: string): Observable<object|object[]> => {
+    searchBooks = (websiteUri: string, keywords: string): Promise<object|object[]> => {
         let url: string;
         let header: string;
 
@@ -107,7 +103,7 @@ export class FetchService {
 
         if(/gitee/.test(websiteUri)) {
             const q = encodeURIComponent(keywords);
-            url = `https://gitee.com/api/v5/search/repositories?access_token=${this.tokens.gitlabToken}&q=${q}=1&per_page=20&order=desc`;
+            url = `https://gitee.com/api/v5/search/repositories?access_token=${this.tokens.giteeToken}&q=${q}=1&per_page=20&order=desc`;
             header = "Content-Type: application/json;charset=UTF-8";
         }
 
@@ -117,6 +113,6 @@ export class FetchService {
             header = `PRIVATE-TOKEN: ${this.tokens.gitlabToken}`;
         }
 
-        return this.get(url, header);
+        return this.get(url, header).toPromise();
     }
 }
