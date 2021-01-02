@@ -64,29 +64,29 @@ export class WriterService {
             _writer.websiteList.push(newBook.website);
 
             // 获取writer的更多信息
+            let rawWriter: object = {};
             if(/gitlab/.test(newBook.website.uri)){
                 const rawWriterList = await this.fetchService.getWriterProfile(writerName, newBook.website.uri);
-
-                _writer.platformId = rawWriterList[0]['id'] as number;
-                _writer.avatarUrl = rawWriterList[0]['avatar_url'];
-                _writer.fullName = rawWriterList[0]['name'] ? rawWriterList[0]['name'] : '';
-                _writer.htmlUrl = rawWriterList[0]['html_url'];
-                _writer.desc = rawWriterList[0]['bio'] ? rawWriterList[0]['bio'] : '';
+                rawWriter = rawWriterList[0];
             }
 
             if(newBook.isFromMainstreamPlatform && !(/gitlab/.test(newBook.website.uri))){
-                const rawWriter = await this.fetchService.getWriterProfile(platformName 
+                rawWriter = await this.fetchService.getWriterProfile(platformName 
                     ? platformName 
                     : writerName, newBook.website.uri);
+            }
 
-                _writer.platformId = rawWriter['id'] as number;
+            if(newBook.isFromMainstreamPlatform) {
+                _writer.platformId =  rawWriter['id'] as number;
                 _writer.avatarUrl = rawWriter['avatar_url'];
                 _writer.fullName = rawWriter['name'] ? rawWriter['name'] : '';
                 _writer.htmlUrl = rawWriter['html_url'];
                 _writer.desc = rawWriter['bio'] ? rawWriter['bio'] : '';
-                if(/github/.test(newBook.website.uri))_writer.location = rawWriter['location'] 
-                    ? rawWriter['location'] : '';
             }
+
+            if(/github/.test(newBook.website.uri)) _writer.location = rawWriter['location'] 
+                ? rawWriter['location'] 
+                : '';
 
             const query: IQuery = {
                 table: "Writer",

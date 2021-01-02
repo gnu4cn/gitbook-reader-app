@@ -79,7 +79,6 @@ export class BookService {
         let rawRepo: object;
         if(/gitee/.test(site)){
             rawRepo = await this.fetchService.getRepoProfile(site, newBook.name, writerName);
-
             newBook.writer = await this.writer.newWriter(writerName, newBook, rawRepo['owner']['login']); 
         }
         else {
@@ -92,15 +91,14 @@ export class BookService {
         // 这里要获取到 Repository 的更多信息
         if(/gitlab/.test(site)) {
             const rawRepoList = await this.fetchService.getRepoProfile(site, newBook.name, writerName, newBook.writer.platformId);
-
             rawRepo = (rawRepoList as object[]).find(repo => repo['path'] === newBook.name);
-
-            newBook.desc = rawRepo['description'];
-            newBook.defaultBranch = rawRepo['default_branch'];
         }
 
         if(newBook.isFromMainstreamPlatform && !(/gitlab/.test(site))){
             rawRepo = rawRepo ? rawRepo : await this.fetchService.getRepoProfile(site, newBook.name, writerName);
+        }
+
+        if(newBook.isFromMainstreamPlatform) {
             newBook.desc = rawRepo['description'];
             newBook.defaultBranch = rawRepo['default_branch'];
         }
