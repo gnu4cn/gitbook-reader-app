@@ -20,13 +20,13 @@ export class FetchService {
      *
      * @param url {string} Full path relative to root
      */
-    get = (url: string, header: string): Observable<object|object[]> => {
+    get = (url: string, header: string): Promise<object|object[]> => {
         if (!url) {
-            return of(JSON.parse(''));
+            return of(JSON.parse('')).toPromise();
         }
 
         if (this.inFlight.has(url)) {
-            return this.inFlight.get(url);
+            return this.inFlight.get(url).toPromise();
         }
 
         const headers = new HttpHeaders(header);
@@ -44,7 +44,7 @@ export class FetchService {
         );
 
         this.inFlight.set(url, obs);
-        return obs;
+        return obs.toPromise();
     }
 
     getWriterProfile = (writerName: string, websiteUri: string): Promise<object|object[]> => {
@@ -66,7 +66,7 @@ export class FetchService {
             header = 'Content-Type: application/json;charset=UTF-8';
         }
 
-        return this.get(url, header).toPromise();
+        return this.get(url, header);
     }
 
     getRepoProfile = (website: string, repo: string, owner: string, ownerId?: number): Promise<object|object[]> => {
@@ -88,7 +88,7 @@ export class FetchService {
             header = 'Content-Type: application/json;charset=UTF-8';
         }
 
-        return this.get(url, header).toPromise();
+        return this.get(url, header);
     }
 
     searchBooks = (websiteUri: string, keywords: string): Promise<object|object[]> => {
@@ -113,6 +113,6 @@ export class FetchService {
             header = `PRIVATE-TOKEN: ${this.tokens.gitlabToken}`;
         }
 
-        return this.get(url, header).toPromise();
+        return this.get(url, header);
     }
 }
