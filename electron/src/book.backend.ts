@@ -64,6 +64,9 @@ export class BookBackend {
             webPreferences: { nodeIntegration: true }
         });
 
+        bookWindow.setMaximizable(true);
+        bookWindow.setMaximizable(true);
+        bookWindow.setMinimumSize(1024, 768);
         const webContents = bookWindow.webContents;
         webContents.openDevTools();
 

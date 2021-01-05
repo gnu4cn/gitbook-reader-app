@@ -15,10 +15,10 @@ export class FetchService {
         private http: HttpClient,
         private tokens: PrivateTokensService
     ) {}
-
     /**
      *
-     * @param url {string} Full path relative to root
+     * @param url {string} RESTful API endpoint
+     * @param header http get request header
      */
     get = (url: string, header: string): Promise<object|object[]> => {
         if (!url) {
@@ -103,7 +103,7 @@ export class FetchService {
 
         if(/gitee/.test(websiteUri)) {
             const q = encodeURIComponent(keywords);
-            url = `https://gitee.com/api/v5/search/repositories?access_token=${this.tokens.giteeToken}&q=${q}=1&per_page=20&order=desc`;
+            url = `https://gitee.com/api/v5/search/repositories?access_token=${this.tokens.giteeToken}&q=${q}&page=1&per_page=20&order=desc`;
             header = "Content-Type: application/json;charset=UTF-8";
         }
 

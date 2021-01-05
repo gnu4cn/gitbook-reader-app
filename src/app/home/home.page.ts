@@ -51,6 +51,7 @@ export class HomePage implements OnInit, AfterViewInit {
     displayRecycled: boolean = false;
     beenOpened: boolean = true;
     bookList: Array<Book>;
+    search: boolean = false;
 
     constructor(
         private crud: CrudService,
@@ -65,7 +66,7 @@ export class HomePage implements OnInit, AfterViewInit {
     }
 
     private changeFabButton = (button: TAvatarIds) => {
-        const buttonList = ['currently-reading', 'on-shelf', 'recycled'];
+        const buttonList = ['currently-reading', 'on-shelf', 'recycled', 'cloud-search'];
         document.getElementById(`avatar-${button}`)
             .style.backgroundColor = '#3880ff';
 
@@ -154,29 +155,37 @@ export class HomePage implements OnInit, AfterViewInit {
     }
 
     displayBookListCurrentlyReading = () => {
+        this.search = false;
+
         this.displayRecycled = false;
         this.beenOpened = true;
-
         this.sortBy = 'recordList:length';
 
         this.changeFabButton('currently-reading');
     }
 
     displayBookListOnShelf = () => {
+        this.search = false;
+
         this.displayRecycled = false;
         this.beenOpened = false;
-
         this.sortBy = 'dateCreated';
 
         this.changeFabButton('on-shelf');
     }
 
     displayBookListRecycled = () => {
-        this.displayRecycled = true;
+        this.search = false;
 
+        this.displayRecycled = true;
         this.sortBy = 'dateUpdated';
 
         this.changeFabButton('recycled');
+    }
+
+    openSearchPage = () => {
+        this.search = true;
+        this.changeFabButton('cloud-search');
     }
 
     openAddBookDialog = () => {

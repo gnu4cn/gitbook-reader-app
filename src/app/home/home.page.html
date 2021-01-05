@@ -14,6 +14,16 @@
                         </ion-fab-button>
                     </ion-col>
 
+                    <!-- 云上书籍 -->
+                    <ion-col>
+                        <ion-fab-button color="light" (click)="openSearchPage()" matTooltip="打开搜索页面" >
+                            <ion-avatar id="avatar-cloud-search">
+                                <ion-icon name="search-outline" style="position: absolute; right: 5px; bottom: 10px;"></ion-icon>
+                                <img src="assets/images/books-cloud.png" />
+                            </ion-avatar>
+                        </ion-fab-button>
+                    </ion-col>
+
                     <!-- 正在看的书, 打开次数大于 0 的书 -->
                     <ion-col>
                         <ion-badge color="success" style="position: absolute; right: 0px; top: 0px; overflow: visible!important;">
@@ -59,9 +69,11 @@
 <ion-content padding>
     <section class="book-list">
         <app-book-list [_bookList]="bookList" 
+             *ngIf="!search"
              [sortBy]="sortBy" 
              [beenOpened]="beenOpened" 
              [displayRecycled]="displayRecycled">
         </app-book-list>
+        <app-books-cloud-search *ngIf="search"></app-books-cloud-search>
     </section>
 </ion-content>

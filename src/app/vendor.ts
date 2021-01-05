@@ -138,7 +138,7 @@ export interface IDeleteBookDialogResData {
     book: Book;
 }
 
-export type TAvatarIds = "currently-reading" | "on-shelf" | "recycled";
+export type TAvatarIds = "currently-reading" | "on-shelf" | "recycled" | "cloud-search";
 
 export type TBookSortBy = "name" | "recordList:length" | "dateCreated" | "dateUpdated";
 

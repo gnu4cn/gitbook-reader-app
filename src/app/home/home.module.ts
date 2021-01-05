@@ -15,6 +15,7 @@ import { SnackbarComponent } from './components/snackbar.component';
 import { EditBookCateListDialog } from './components/edit-book-cate-list.component';
 import { ReadmeDialog } from './components/readme-dialog.component';
 import { ReadingRecordDialog } from './components/reading-record-dialog.component';
+import { SearchComponent } from './components/search.component';
 
 import { BookService } from './services/book.service';
 import { WebsiteService } from './services/website.service';
@@ -23,6 +24,7 @@ import { WriterService } from './services/writer.service';
 import { OpMessageService } from './services/op-message.service';
 import { FetchService } from './services/fetch.service';
 import { PrivateTokensService } from './services/private-tokens.service';
+
 
 import { HomePageRoutingModule } from './home-routing.module';
 import { HomePage } from './home.page';
@@ -44,7 +46,8 @@ import { HomePage } from './home.page';
         EditBookCateListDialog,
         ReadmeDialog,
         ReadingRecordDialog,
-        SnackbarComponent
+        SnackbarComponent,
+        SearchComponent
     ],
     providers: [
         BookService,

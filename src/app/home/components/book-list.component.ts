@@ -50,7 +50,6 @@ export class BookListComponent implements OnInit, OnChanges {
         filterList: []
     };
 
-
     constructor(
         private crud: CrudService,
         private dialog: MatDialog,

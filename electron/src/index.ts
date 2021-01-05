@@ -70,6 +70,8 @@ export default class Main {
         const mainWindow = Main.myCapacitorApp.getMainWindow();
         const webContents = mainWindow.webContents;
 
+        mainWindow.setMinimumSize(800, 600);
+
         let loadingWin: Electron.BrowserWindow;
         loadingWindow(mainWindow, (win) => { 
             Main.winChildren.push(win);

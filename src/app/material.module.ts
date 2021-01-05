@@ -9,6 +9,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatRadioModule} from '@angular/material/radio';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
@@ -28,6 +29,7 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
         MatSnackBarModule,
         MatDialogModule,
         MatCardModule,
+        MatRadioModule,
         MatToolbarModule,
         MatDividerModule,
         FormsModule,
@@ -47,6 +49,7 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
         MatCardModule,
         MatAutocompleteModule,
         MatSnackBarModule,
+        MatRadioModule,
         FormsModule,
         MatIconModule,
         MatProgressBarModule,
