@@ -91,24 +91,24 @@ export class FetchService {
         return this.get(url, header);
     }
 
-    searchBooks = (websiteUri: string, keywords: string): Promise<object|object[]> => {
+    searchBooks = (websiteUri: string, keywords: string, page: number): Promise<object|object[]> => {
         let url: string;
         let header: string;
 
         if(/github/.test(websiteUri)) {
-            const q = encodeURIComponent(keywords + ' filename:SUMMARY.md');
-            url = `https://api.github.com/search/repositories?q=${q}`;
+            const q = encodeURIComponent(keywords + ' gitbook');
+            url = `https://api.github.com/search/repositories?q=${q}&sort=stars&order=desc&per_page=20&page=${page}`;
             header = "Accept: application/vnd.github.v3+json";
         }
 
         if(/gitee/.test(websiteUri)) {
-            const q = encodeURIComponent(keywords);
-            url = `https://gitee.com/api/v5/search/repositories?access_token=${this.tokens.giteeToken}&q=${q}&page=1&per_page=20&order=desc`;
+            const q = encodeURIComponent(keywords+' gitbook');
+            url = `https://gitee.com/api/v5/search/repositories?access_token=${this.tokens.giteeToken}&q=${q}&page=${page}&per_page=20&order=desc&sort=stars_count`;
             header = "Content-Type: application/json;charset=UTF-8";
         }
 
         if(/gitlab/.test(websiteUri)){
-            const q = encodeURIComponent(keywords);
+            const q = encodeURIComponent(keywords+' gitbook');
             url = `https://gitlab.com/api/v4/search?scope=projects&search=${q}`;
             header = `PRIVATE-TOKEN: ${this.tokens.gitlabToken}`;
         }

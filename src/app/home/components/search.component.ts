@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import {FormControl, FormGroupDirective, NgForm, Validators} from '@angular/forms';
 import {ErrorStateMatcher} from '@angular/material/core';
 
+import { FetchService } from '../services/fetch.service';
+
 /** Error when invalid control is dirty, touched, or submitted. */
 export class MyErrorStateMatcher implements ErrorStateMatcher {
     isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -35,12 +37,16 @@ export class SearchComponent implements OnInit {
     keywords: string = '';
     platformSelected: string = 'github.com';
 
-    constructor() { }
+    constructor(
+        private fetchService: FetchService
+    ) { }
 
     ngOnInit() {}
 
-    search = () => {
-        console.log(this.keywords, this.platformSelected)
+    search = async () => {
+        const res = await this.fetchService.searchBooks(this.platformSelected, this.keywords, 1);
+
+        console.log(res);
     }
 
     matcher = new MyErrorStateMatcher();
