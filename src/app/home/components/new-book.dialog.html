@@ -10,7 +10,7 @@
         <!-- bookUriInput -->
         <mat-form-field fxFill style="font-size: 16px">
             <mat-label>书籍Git Repo地址</mat-label>
-            <input matInput [formControl]="uriInputControl" required (ngModel)="newBook.bookUri" />
+            <input matInput [formControl]="uriInputControl" required [(ngModel)]="newBook.bookUri" />
             <mat-error *ngIf="uriInputControl.invalid">{{getErrorMsg()}}</mat-error>
         </mat-form-field>
 

@@ -5,7 +5,7 @@
             <input type="text" matInput [formControl]="keywordsFormControl" 
                    [(ngModel)]="keywords"
                    [errorStateMatcher]="matcher" />
-            <button mat-button *ngIf="keywords" matSuffix mat-icon-button aria-label="Clear" (click)="keywords=''">
+            <button mat-button *ngIf="keywords" matSuffix mat-icon-button aria-label="Clear" (click)="clearKeywords()">
                 <mat-icon>close</mat-icon>
             </button>
             <mat-hint>搜索用到的关键字，以空格分开</mat-hint>

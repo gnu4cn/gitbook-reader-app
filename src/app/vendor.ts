@@ -7,6 +7,15 @@ export const sortBy = (list: Array<any>, prop: string, subProp?: string) => {
         : list.sort((a, b) => a[prop] > b[prop] ? -1 : a[prop] === b[prop] ? 0 : 1);
 }
 
+export interface ICloudBook {
+    url: string;
+    desc: string;
+    writerName: string;
+    writerAvatarUrl: string;
+    dateUpdated: Date;
+    stars: number
+}
+
 export interface IBookWithPath {
     book: Book;
     path: string

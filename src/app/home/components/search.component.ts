@@ -4,6 +4,7 @@ import {FormControl, FormGroupDirective, NgForm, Validators} from '@angular/form
 import {ErrorStateMatcher} from '@angular/material/core';
 
 import { FetchService } from '../services/fetch.service';
+import { ICloudBook } from '../../vendor';
 
 /** Error when invalid control is dirty, touched, or submitted. */
 export class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -21,7 +22,9 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 export class SearchComponent implements OnInit {
     keywordsFormControl = new FormControl('', [
         Validators.required
-    ])
+    ]);
+
+    bookList: Array<ICloudBook> = [];
 
     platforms = [{
         name: 'github.com',
@@ -36,6 +39,7 @@ export class SearchComponent implements OnInit {
 
     keywords: string = '';
     platformSelected: string = 'github.com';
+    bookListCount: number;
 
     constructor(
         private fetchService: FetchService
@@ -43,10 +47,54 @@ export class SearchComponent implements OnInit {
 
     ngOnInit() {}
 
-    search = async () => {
-        const res = await this.fetchService.searchBooks(this.platformSelected, this.keywords, 1);
+    clearKeywords = () => {
+        this.keywords = '';
+        this.bookList = [].slice();
+    }
 
-        console.log(res);
+    search = async () => {
+        const res = await this.fetchService.searchBooks(this.platformSelected, this.keywords, 1) as object[] | object;
+        console.log(res)
+
+        let _bookList: object[]
+        if(/github/.test(this.platformSelected)){
+            _bookList = res['items'].slice();
+            this.bookListCount = res['total_count'];
+        } else {
+            _bookList = (res as object[]).slice();
+        }
+
+        this.bookList = [].slice();
+        _bookList.map((bookRaw: object) => {
+            const book: ICloudBook = {
+                url: '',
+                desc: '',
+                writerName: '',
+                writerAvatarUrl: '',
+                dateUpdated: new Date(),
+                stars: 0
+            };
+
+            book.desc = bookRaw['description'] ? bookRaw['description'] : '';
+            if(/gitlab/.test(this.platformSelected)){
+                book.dateUpdated = bookRaw['last_activity_at'];
+                book.writerName = bookRaw['namespace']['name'];
+                book.writerAvatarUrl = bookRaw['namespace']['avatar_url'];
+                book.url = bookRaw['http_url_to_repo'];
+                book.stars = bookRaw['star_count'];
+            }
+            if(!(/gitlab/.test(this.platformSelected))){
+                book.dateUpdated = bookRaw['updated_at'];
+                book.writerName = /github/.test(this.platformSelected) ? bookRaw['owner']['login'] : bookRaw['owner']['name'];
+                book.writerAvatarUrl = bookRaw['owner']['avatar_url'];
+                book.url = /github/.test(this.platformSelected) ? bookRaw['clone_url'] : bookRaw['html_url'];
+                book.stars = bookRaw['stargazers_count'];
+            }
+
+            this.bookList.push(book);
+        });
+
+        console.log(this.bookList);
     }
 
     matcher = new MyErrorStateMatcher();
