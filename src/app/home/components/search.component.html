@@ -1,8 +1,9 @@
 <div fxLayout="column" fxLayoutAlign="start stretch" style="background-color: #424242;">
-    <form fxLayout="row" fxLayoutAlign="space-evenly center">
-        <mat-form-field class="search-input-form-field">
+    <form fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">
+        <mat-form-field class="search-input-form-field" fxFlex="25">
             <mat-label>关键字</mat-label>
             <input type="text" matInput [formControl]="keywordsFormControl" 
+                   [(ngModel)]="keywords"
                    [errorStateMatcher]="matcher" />
             <button mat-button *ngIf="keywords" matSuffix mat-icon-button aria-label="Clear" (click)="keywords=''">
                 <mat-icon>close</mat-icon>
@@ -13,14 +14,21 @@
             </mat-error>
         </mat-form-field>
 
-        <mat-radio-group aria-label="Select a platform" fxLayout="row" fxLayoutAlign="space-evenly center" [(ngModel)]="platformSelected">
-            <mat-radio-button *ngFor="let platform of platforms" value="platform.name">
-                <ion-label style="background-color: white;"><ion-icon [src]="platform.icon"></ion-icon>{{platform.name | uppercase}}</ion-label>
+        <mat-radio-group aria-label="Select a platform" 
+                         fxLayout="row" 
+                         fxLayoutAlign="space-evenly center" 
+                         [(ngModel)]="platformSelected" fxLayoutGap="10px">
+            <mat-radio-button *ngFor="let platform of platforms" [value]="platform.name">
+                <mat-chip>
+                    <ion-icon [src]="platform.icon"></ion-icon>{{platform.name}}
+                </mat-chip>
             </mat-radio-button>
         </mat-radio-group>
 
-        <button mat-stroked-button>
-            <ion-text color="white"><ion-icon name="search-outline"></ion-icon>搜索</ion-text>
+        <button mat-stroked-button color="primary" 
+            (click)="search()"
+            [disabled]="!keywordsFormControl.valid">
+            <ion-text color="light"><ion-icon name="search-outline"></ion-icon>搜索</ion-text>
         </button>
     </form>
 

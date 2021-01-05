@@ -19,7 +19,7 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 export class SearchComponent implements OnInit {
     keywordsFormControl = new FormControl('', [
         Validators.required
-    ]);
+    ])
 
     platforms = [{
         name: 'github.com',
@@ -38,6 +38,10 @@ export class SearchComponent implements OnInit {
     constructor() { }
 
     ngOnInit() {}
+
+    search = () => {
+        console.log(this.keywords, this.platformSelected)
+    }
 
     matcher = new MyErrorStateMatcher();
 }
