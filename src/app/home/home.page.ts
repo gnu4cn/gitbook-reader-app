@@ -197,4 +197,11 @@ export class HomePage implements OnInit, AfterViewInit {
             if(res) this.book.save(res);
         });
     }
+
+    onScrollEnd = () => {
+        const msg: IMessage = {
+            event: 'scrolled-to-end'
+        }
+        if(this.search) this.message.sendMessage(msg);
+    }
 }

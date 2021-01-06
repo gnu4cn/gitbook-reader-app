@@ -4,7 +4,12 @@ import {FormControl, FormGroupDirective, NgForm, Validators} from '@angular/form
 import {ErrorStateMatcher} from '@angular/material/core';
 
 import { FetchService } from '../services/fetch.service';
-import { ICloudBook } from '../../vendor';
+import { MessageService } from '../../services/message.service';
+
+import { 
+    ICloudBook,
+    IMessage
+} from '../../vendor';
 
 /** Error when invalid control is dirty, touched, or submitted. */
 export class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -37,24 +42,35 @@ export class SearchComponent implements OnInit {
         icon: 'assets/images/gitlab-seeklogo.com.svg',
     }];
 
+    matcher = new MyErrorStateMatcher();
     keywords: string = '';
     platformSelected: string = 'github.com';
     bookListCount: number;
 
     constructor(
-        private fetchService: FetchService
+        private fetchService: FetchService,
+        private message: MessageService
     ) { }
 
-    ngOnInit() {}
+    ngOnInit() {
+        this.message.getMessage().subscribe(async (msg: IMessage) => {
+            if(msg.event === 'scrolled-to-end'){
+                if(this.bookList.length%20 === 0 && !(/gitlab/.test(this.platformSelected))){
+                    this.search(this.bookList.length/20 + 1);
+                }
+            }
+        });
+    }
 
     clearKeywords = () => {
         this.keywords = '';
-        this.bookList = [].slice();
     }
-
-    search = async () => {
-        const res = await this.fetchService.searchBooks(this.platformSelected, this.keywords, 1) as object[] | object;
-        console.log(res)
+    /*
+     *
+     * @page, 传入 1 表示首次搜索，需要清空原有 bookList 
+     */
+    search = async (page: number) => {
+        const res = await this.fetchService.searchBooks(this.platformSelected, this.keywords, page) as object[] | object;
 
         let _bookList: object[]
         if(/github/.test(this.platformSelected)){
@@ -64,9 +80,10 @@ export class SearchComponent implements OnInit {
             _bookList = (res as object[]).slice();
         }
 
-        this.bookList = [].slice();
+        if(page === 1) this.bookList = [].slice();
         _bookList.map((bookRaw: object) => {
             const book: ICloudBook = {
+                fullName: '',
                 url: '',
                 desc: '',
                 writerName: '',
@@ -76,12 +93,14 @@ export class SearchComponent implements OnInit {
             };
 
             book.desc = bookRaw['description'] ? bookRaw['description'] : '';
+
             if(/gitlab/.test(this.platformSelected)){
                 book.dateUpdated = bookRaw['last_activity_at'];
                 book.writerName = bookRaw['namespace']['name'];
                 book.writerAvatarUrl = bookRaw['namespace']['avatar_url'];
                 book.url = bookRaw['http_url_to_repo'];
                 book.stars = bookRaw['star_count'];
+                book.fullName = bookRaw['path_with_namespace'];
             }
             if(!(/gitlab/.test(this.platformSelected))){
                 book.dateUpdated = bookRaw['updated_at'];
@@ -89,13 +108,10 @@ export class SearchComponent implements OnInit {
                 book.writerAvatarUrl = bookRaw['owner']['avatar_url'];
                 book.url = /github/.test(this.platformSelected) ? bookRaw['clone_url'] : bookRaw['html_url'];
                 book.stars = bookRaw['stargazers_count'];
+                book.fullName = bookRaw['full_name'];
             }
 
             this.bookList.push(book);
         });
-
-        console.log(this.bookList);
     }
-
-    matcher = new MyErrorStateMatcher();
 }

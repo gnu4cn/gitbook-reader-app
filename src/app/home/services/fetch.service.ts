@@ -96,19 +96,19 @@ export class FetchService {
         let header: string;
 
         if(/github/.test(websiteUri)) {
-            const q = encodeURIComponent(keywords + ' gitbook');
+            const q = encodeURIComponent(keywords);
             url = `https://api.github.com/search/repositories?q=${q}&sort=stars&order=desc&per_page=20&page=${page}`;
             header = "Accept: application/vnd.github.v3+json";
         }
 
         if(/gitee/.test(websiteUri)) {
-            const q = encodeURIComponent(keywords+' gitbook');
+            const q = encodeURIComponent(keywords);
             url = `https://gitee.com/api/v5/search/repositories?access_token=${this.tokens.giteeToken}&q=${q}&page=${page}&per_page=20&order=desc&sort=stars_count`;
             header = "Content-Type: application/json;charset=UTF-8";
         }
 
         if(/gitlab/.test(websiteUri)){
-            const q = encodeURIComponent(keywords+' gitbook');
+            const q = encodeURIComponent(keywords);
             url = `https://gitlab.com/api/v4/search?scope=projects&search=${q}`;
             header = `PRIVATE-TOKEN: ${this.tokens.gitlabToken}`;
         }

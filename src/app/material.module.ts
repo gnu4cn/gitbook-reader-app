@@ -17,6 +17,7 @@ import {MatChipsModule} from '@angular/material/chips';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { FormsModule, ReactiveFormsModule }   from '@angular/forms';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatBadgeModule} from '@angular/material/badge';
 
 @NgModule({
     declarations: [],
@@ -26,6 +27,7 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
         MatProgressBarModule,
         MatInputModule,
         MatTooltipModule,
+        MatBadgeModule,
         MatSnackBarModule,
         MatDialogModule,
         MatCardModule,
@@ -56,6 +58,7 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
         MatDividerModule,
         MatTooltipModule,
         MatToolbarModule,
+        MatBadgeModule,
         FlexLayoutModule,
         MatFormFieldModule,
     ]

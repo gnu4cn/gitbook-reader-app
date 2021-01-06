@@ -66,7 +66,10 @@
         </ion-fab>
     </ion-toolbar>
 </ion-header>
-<ion-content padding>
+<ion-content 
+    [scrollEvents]="true"
+    (ionScrollEnd)="onScrollEnd()"
+    padding>
     <section class="book-list">
         <app-book-list [_bookList]="bookList" 
              *ngIf="!search"

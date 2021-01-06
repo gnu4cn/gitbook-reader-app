@@ -1,13 +1,13 @@
 import { Book, Category, Writer, Website, Record } from './models';
 import { ValidatorFn, AbstractControl } from '@angular/forms';
 // typeorm parts
-
 export const sortBy = (list: Array<any>, prop: string, subProp?: string) => {
     return subProp ? list.sort((a, b) => a[prop][subProp] > b[prop][subProp] ? -1 : a[prop][subProp] === b[prop][subProp] ? 0 : 1) 
         : list.sort((a, b) => a[prop] > b[prop] ? -1 : a[prop] === b[prop] ? 0 : 1);
 }
 
 export interface ICloudBook {
+    fullName: string;
     url: string;
     desc: string;
     writerName: string;
@@ -204,26 +204,26 @@ export interface IMessage {
 }
 
 export const join = (start: string, end: string): string => {
-  if (start.length === 0) {
-    return end;
-  }
-  if (end.length === 0) {
-    return start;
-  }
-  let slashes = 0;
-  if (start.endsWith('/')) {
-    slashes++;
-  }
-  if (end.startsWith('/')) {
-    slashes++;
-  }
-  if (slashes === 2) {
-    return start + end.substring(1);
-  }
-  if (slashes === 1) {
-    return start + end;
-  }
-  return start + '/' + end;
+    if (start.length === 0) {
+        return end;
+    }
+    if (end.length === 0) {
+        return start;
+    }
+    let slashes = 0;
+    if (start.endsWith('/')) {
+        slashes++;
+    }
+    if (end.startsWith('/')) {
+        slashes++;
+    }
+    if (slashes === 2) {
+        return start + end.substring(1);
+    }
+    if (slashes === 1) {
+        return start + end;
+    }
+    return start + '/' + end;
 }
 
 
