@@ -1,5 +1,5 @@
 <ion-header>
-    <ion-toolbar slots="end">
+    <ion-toolbar slots="end" class="app-toolbar">
         <ion-title style="position: absolute; left: 150px;">YAGR Gitbook阅读器</ion-title>
         <ion-fab vertical="center" horizontal="end" edge>
             <ion-grid>
@@ -29,8 +29,7 @@
                         <ion-badge color="success" style="position: absolute; right: 0px; top: 0px; overflow: visible!important;">
                             {{currentlyReading}}
                         </ion-badge>
-                        <ion-fab-button 
-                            color="light" (click)="displayBookListCurrentlyReading()" matTooltip="正在看的书">
+                        <ion-fab-button color="light" (click)="displayBookListCurrentlyReading()" matTooltip="正在看的书">
                             <ion-avatar id="avatar-currently-reading">
                                 <img src="assets/images/currently-reading-books.png" />
                             </ion-avatar>
@@ -65,11 +64,50 @@
             </ion-grid>
         </ion-fab>
     </ion-toolbar>
+    <ion-toolbar class="search-toolbar" *ngIf="search">
+        <form>
+            <div fxLayout="row" 
+                 fxLayoutAlign="center center" 
+                 slot="fixed"
+                 fxLayoutGap="10px"> 
+                <mat-form-field class="search-input-form-field" fxFlex="25">
+                    <mat-label>关键字</mat-label>
+                    <input type="text" matInput [formControl]="keywordsFormControl" 
+                           [(ngModel)]="keywords"
+                           [errorStateMatcher]="matcher" />
+                    <button mat-button 
+                            matTooltip="清除关键字"
+                        *ngIf="keywords" matSuffix mat-icon-button aria-label="Clear" (click)="clearKeywords()">
+                        <ion-icon class="remove-search-keywords" name="close-outline"></ion-icon>
+                    </button>
+                    <mat-hint>搜索用到的关键字，以空格分开</mat-hint>
+                    <mat-error *ngIf="keywordsFormControl.hasError('required')">
+                        关键字 <strong>必须提供</strong>
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-radio-group aria-label="Select a platform" 
+                                 fxLayout="row" 
+                                 fxLayoutAlign="space-evenly center" 
+                                 [(ngModel)]="platformSelected" fxLayoutGap="10px">
+                    <mat-radio-button *ngFor="let platform of platforms" [value]="platform.name">
+                        <mat-chip>
+                            <ion-icon [src]="platform.icon"></ion-icon>{{platform.name}}
+                        </mat-chip>
+                    </mat-radio-button>
+                </mat-radio-group>
+
+                <button mat-stroked-button color="primary" 
+                                           (click)="cloudSearch(1)"
+                                           [disabled]="!keywordsFormControl.valid">
+                    <ion-text color="light"><ion-icon name="search-outline"></ion-icon>搜索</ion-text>
+                </button>
+            </div>
+        </form>
+    </ion-toolbar>
 </ion-header>
-<ion-content 
-    [scrollEvents]="true"
-    (ionScroll)="onScroll($event)"
-    padding>
+
+<ion-content [scrollEvents]="true" (ionScroll)="onScroll($event)" padding>
     <section class="book-list">
         <app-book-list [_bookList]="bookList" 
              *ngIf="!search"
@@ -77,6 +115,7 @@
              [beenOpened]="beenOpened" 
              [displayRecycled]="displayRecycled">
         </app-book-list>
-        <app-books-cloud-search *ngIf="search"></app-books-cloud-search>
+        <app-books-cloud-search *ngIf="search" [bookList]="bookListCloud" [searching]="searching">
+        </app-books-cloud-search>
     </section>
 </ion-content>

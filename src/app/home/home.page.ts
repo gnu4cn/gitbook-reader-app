@@ -8,6 +8,11 @@ import {
     MatDialog, 
 } from '@angular/material/dialog';
 
+import {FormControl, FormGroupDirective, NgForm, Validators} from '@angular/forms';
+import {ErrorStateMatcher} from '@angular/material/core';
+
+import { FetchService } from './services/fetch.service';
+
 import {
     MatSnackBar,
     MatSnackBarRef,
@@ -28,6 +33,7 @@ import { NewBookDialog } from './components/new-book-dialog.component';
 import { 
     IProgressMessage,
     IAddBookDialogResData,
+    ICloudBook,
     IFilter,
     filterFn,
     IMessage,
@@ -35,6 +41,14 @@ import {
     TAvatarIds, 
     TBookSortBy,
 } from '../vendor';
+
+/** Error when invalid control is dirty, touched, or submitted. */
+export class MyErrorStateMatcher implements ErrorStateMatcher {
+    isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+        const isSubmitted = form && form.submitted;
+        return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
+    }
+}
 
 @Component({
     selector: 'app-home',
@@ -44,6 +58,9 @@ import {
 export class HomePage implements OnInit, AfterViewInit {
     horizontalPosition: MatSnackBarHorizontalPosition = 'end';
     verticalPosition: MatSnackBarVerticalPosition = 'bottom';
+    keywordsFormControl = new FormControl('', [
+        Validators.required
+    ]);
 
     downloadingList: Array<number> = [];
 
@@ -52,6 +69,22 @@ export class HomePage implements OnInit, AfterViewInit {
     beenOpened: boolean = true;
     bookList: Array<Book>;
     search: boolean = false;
+    matcher = new MyErrorStateMatcher();
+    keywords: string = '';
+    platformSelected: string = 'github.com';
+    bookListCloud: Array<ICloudBook> = [];
+    searching: boolean = false;
+
+    platforms = [{
+        name: 'github.com',
+        icon: 'assets/images/github-favicon.svg',
+    },{
+        name: 'gitee.com',
+        icon: 'assets/images/logo_gitee_g_red.svg',
+    },{
+        name: 'gitlab.com',
+        icon: 'assets/images/gitlab-seeklogo.com.svg',
+    }];
 
     constructor(
         private crud: CrudService,
@@ -59,6 +92,7 @@ export class HomePage implements OnInit, AfterViewInit {
         private dialog: MatDialog,
         private opMessage: OpMessageService,
         private message: MessageService,
+        private fetchService: FetchService,
         private cdr: ChangeDetectorRef,
         private book: BookService,
     ) {
@@ -156,6 +190,7 @@ export class HomePage implements OnInit, AfterViewInit {
 
     displayBookListCurrentlyReading = () => {
         this.search = false;
+        this.bookListCloud = [].slice();
 
         this.displayRecycled = false;
         this.beenOpened = true;
@@ -166,6 +201,7 @@ export class HomePage implements OnInit, AfterViewInit {
 
     displayBookListOnShelf = () => {
         this.search = false;
+        this.bookListCloud = [].slice();
 
         this.displayRecycled = false;
         this.beenOpened = false;
@@ -176,6 +212,7 @@ export class HomePage implements OnInit, AfterViewInit {
 
     displayBookListRecycled = () => {
         this.search = false;
+        this.bookListCloud = [].slice();
 
         this.displayRecycled = true;
         this.sortBy = 'dateUpdated';
@@ -199,6 +236,7 @@ export class HomePage implements OnInit, AfterViewInit {
     }
 
     onScroll = async ($event) => {
+        if(!this.search){return;}
         if($event.target.localName !== 'ion-content') { return; }
 
         const scrollElement = await $event.target.getScrollElement();
@@ -207,11 +245,60 @@ export class HomePage implements OnInit, AfterViewInit {
         const currentScrollDepth = $event.detail.scrollTop;
 
         if(currentScrollDepth === scrollHeight){
-            const msg: IMessage = {
-                event: 'scrolled-to-end'
+            if(this.bookListCloud.length%20 === 0 && !(/gitlab/.test(this.platformSelected))){
+                this.cloudSearch(this.bookList.length/20 + 1);
             }
-            if(this.search) this.message.sendMessage(msg);
-
         }
+    }
+
+    cloudSearch = async (page: number) => {
+        this.searching = true;
+        const res = await this.fetchService.searchBooks(this.platformSelected, this.keywords, page) as object[] | object;
+        this.searching = false;
+
+        let _bookList: object[]
+        if(/github/.test(this.platformSelected)){
+            _bookList = res['items'].slice();
+        } else {
+            _bookList = (res as object[]).slice();
+        }
+
+        if(page === 1) this.bookListCloud = [].slice();
+        _bookList.map((bookRaw: object) => {
+            const book: ICloudBook = {
+                fullName: '',
+                url: '',
+                desc: '',
+                writerName: '',
+                writerAvatarUrl: '',
+                dateUpdated: new Date(),
+                stars: 0
+            };
+
+            book.desc = bookRaw['description'] ? bookRaw['description'] : '';
+
+            if(/gitlab/.test(this.platformSelected)){
+                book.dateUpdated = bookRaw['last_activity_at'];
+                book.writerName = bookRaw['namespace']['name'];
+                book.writerAvatarUrl = bookRaw['namespace']['avatar_url'];
+                book.url = bookRaw['http_url_to_repo'];
+                book.stars = bookRaw['star_count'];
+                book.fullName = bookRaw['path_with_namespace'];
+            }
+            if(!(/gitlab/.test(this.platformSelected))){
+                book.dateUpdated = bookRaw['updated_at'];
+                book.writerName = /github/.test(this.platformSelected) ? bookRaw['owner']['login'] : bookRaw['owner']['name'];
+                book.writerAvatarUrl = bookRaw['owner']['avatar_url'];
+                book.url = /github/.test(this.platformSelected) ? bookRaw['clone_url'] : bookRaw['html_url'];
+                book.stars = bookRaw['stargazers_count'];
+                book.fullName = bookRaw['full_name'];
+            }
+
+            this.bookListCloud.push(book);
+        });
+    }
+
+    clearKeywords = () => {
+        this.keywords = '';
     }
 }

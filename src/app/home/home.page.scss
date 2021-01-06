@@ -1,7 +1,12 @@
 ion-header {
-    ion-toolbar{
+    ion-toolbar.app-toolbar{
         --background: url("/assets/images/BANNER-Books-V2.png") no-repeat;
         --background-size: 100px;
+        --min-height: 80px;
+    }
+
+    ion-toolbar.search-toolbar{
+        --background: #424242;
     }
 }
 
@@ -9,10 +14,14 @@ ion-content {
     --background: lightblue;
 }
 
-ion-toolbar {
-    --min-height: 80px;
-}
-
 ion-badge {
     z-index: 10;
+}
+
+.mat-input-element {
+    color: white;
+}
+
+ion-icon.remove-search-keywords {
+    color: white;
 }
