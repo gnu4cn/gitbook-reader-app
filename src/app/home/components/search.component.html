@@ -1,11 +1,10 @@
-<div fxLayout="column" fxLayoutAlign="start stretch">
-    <form>
-        <div fxLayout="row" 
-             fxLayoutAlign="center center" 
-             class="search-form"
-             slot="fixed"
-             fxLayoutGap="10px" 
-             style="background-color: #424242;">
+<form>
+    <div fxLayout="row" 
+         fxLayoutAlign="center center" 
+         class="search-form"
+         slot="fixed"
+         fxLayoutGap="10px" 
+         style="background-color: #424242; position: relative;">
         <mat-form-field class="search-input-form-field" fxFlex="25">
             <mat-label>关键字</mat-label>
             <input type="text" matInput [formControl]="keywordsFormControl" 
@@ -36,9 +35,10 @@
                                    [disabled]="!keywordsFormControl.valid">
             <ion-text color="light"><ion-icon name="search-outline"></ion-icon>搜索</ion-text>
         </button>
-        </div>
-    </form>
+    </div>
+</form>
 
+<div fxLayout="column" fxLayoutAlign="start stretch">
     <div fxLayout="row" fxLayoutAlign="none stretch" style="background-color: white;">
         <!--搜索结果-->
         <div fxFlex="60" fxLayout="column" 
@@ -49,9 +49,9 @@
             <mat-card class="search-result" *ngFor="let book of bookList">
                 <mat-card-header>
                     <img mat-card-avatar 
-                         uiImageLoader
-                         onErrorSrc="assets/images/avatar.png"
-                         [src]="book.writerAvatarUrl" />
+                      uiImageLoader
+                      onErrorSrc="assets/images/avatar.png"
+                      [src]="book.writerAvatarUrl" />
                     <mat-card-title>
                         {{book.fullName}}
                     </mat-card-title>
