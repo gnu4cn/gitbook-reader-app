@@ -2,6 +2,7 @@ import {
     Component, 
     OnInit, 
     ElementRef, 
+    Inject,
     ViewChild 
 } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
@@ -12,6 +13,7 @@ import { map, startWith } from 'rxjs/operators';
 
 import { 
     MatDialogRef, 
+    MAT_DIALOG_DATA,
 } from '@angular/material/dialog';
 import { MatAutocompleteSelectedEvent, MatAutocomplete} from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
@@ -55,9 +57,10 @@ export class NewBookDialog implements OnInit{
         public dialogRef: MatDialogRef<NewBookDialog>,
         private book: BookService,
         private cate: CateService,
+        @Inject(MAT_DIALOG_DATA) public bookUri: string 
     ) {
+        this.newBook.bookUri = bookUri ? bookUri : '';
         this.cateList = this.cate.list;
-
         this.filteredCateList = this.cateListInputControl.valueChanges.pipe(
             startWith(null),
             map((cateInput: string | null) => cateInput ? this._filter(cateInput) : this.tempCateList.slice())
@@ -68,7 +71,6 @@ export class NewBookDialog implements OnInit{
 
     ngOnInit() {
         this.tempCateList = this.cateList.slice();
-
         this.uriInputControl.setValidators(IsQualifiedAndNotExistedGitRepoValidatorFn(this.book.list.slice()));
     }
 

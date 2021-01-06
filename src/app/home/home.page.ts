@@ -252,7 +252,9 @@ export class HomePage implements OnInit, AfterViewInit {
     }
 
     cloudSearch = async (page: number) => {
+        if(page === 1) this.bookListCloud = [].slice();
         this.searching = true;
+
         const res = await this.fetchService.searchBooks(this.platformSelected, this.keywords, page) as object[] | object;
         this.searching = false;
 
@@ -263,7 +265,6 @@ export class HomePage implements OnInit, AfterViewInit {
             _bookList = (res as object[]).slice();
         }
 
-        if(page === 1) this.bookListCloud = [].slice();
         _bookList.map((bookRaw: object) => {
             const book: ICloudBook = {
                 fullName: '',

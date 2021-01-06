@@ -92,7 +92,7 @@
                                  [(ngModel)]="platformSelected" fxLayoutGap="10px">
                     <mat-radio-button *ngFor="let platform of platforms" [value]="platform.name">
                         <mat-chip>
-                            <ion-icon [src]="platform.icon"></ion-icon>{{platform.name}}
+                            <ion-icon [src]="platform.icon"></ion-icon> {{platform.name}}
                         </mat-chip>
                     </mat-radio-button>
                 </mat-radio-group>
@@ -100,7 +100,7 @@
                 <button mat-stroked-button color="primary" 
                                            (click)="cloudSearch(1)"
                                            [disabled]="!keywordsFormControl.valid">
-                    <ion-text color="light"><ion-icon name="search-outline"></ion-icon>搜索</ion-text>
+                    <ion-text color="light"><ion-icon name="search-outline"></ion-icon>搜 索</ion-text>
                 </button>
             </div>
         </form>

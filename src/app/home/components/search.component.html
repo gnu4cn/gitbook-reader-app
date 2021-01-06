@@ -5,6 +5,9 @@
                      fxLayoutGap="10px" 
                      fxFlexOffset="10px">
         <mat-card class="search-result" *ngFor="let book of bookList">
+            <ion-button color="success" size="small" class="save-cloud-book" (click)="saveCloudBook(book)">
+                <ion-icon name="magnet-outline"></ion-icon>放到书架
+            </ion-button>
             <mat-card-header>
                 <img mat-card-avatar 
                      uiImageLoader
@@ -27,7 +30,7 @@
                     获星<ion-icon name="star"></ion-icon>：<i>{{book.stars}}</i>
                 </ion-label>
                 <ion-label>
-                    更新时间：<i>{{book.dateUpdated | date : 'yyyy-M-d H:mm:ss' : 'GMT+8' }}</i>
+                    更新时间：<i>{{book.dateUpdated | date : 'yyyy-MM-dd HH:mm:ss' : 'GMT+8' }}</i>
                 </ion-label>
             </mat-card-footer>
         </mat-card>
