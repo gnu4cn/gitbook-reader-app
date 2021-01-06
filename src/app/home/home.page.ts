@@ -111,7 +111,7 @@ export class HomePage implements OnInit, AfterViewInit {
 
         this.message.getMessage().subscribe((_: IMessage) => {
             if(_.event === 'book-list-updated') this.bookList = (_.data as Book[]).slice();
-            
+
             this.cdr.detectChanges();
         });
 
@@ -198,10 +198,20 @@ export class HomePage implements OnInit, AfterViewInit {
         });
     }
 
-    onScrollEnd = () => {
-        const msg: IMessage = {
-            event: 'scrolled-to-end'
+    onScroll = async ($event) => {
+        if($event.target.localName !== 'ion-content') { return; }
+
+        const scrollElement = await $event.target.getScrollElement();
+        const scrollHeight = scrollElement.scrollHeight - scrollElement.clientHeight;
+
+        const currentScrollDepth = $event.detail.scrollTop;
+
+        if(currentScrollDepth === scrollHeight){
+            const msg: IMessage = {
+                event: 'scrolled-to-end'
+            }
+            if(this.search) this.message.sendMessage(msg);
+
         }
-        if(this.search) this.message.sendMessage(msg);
     }
 }

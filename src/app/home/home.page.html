@@ -68,7 +68,7 @@
 </ion-header>
 <ion-content 
     [scrollEvents]="true"
-    (ionScrollEnd)="onScrollEnd()"
+    (ionScroll)="onScroll($event)"
     padding>
     <section class="book-list">
         <app-book-list [_bookList]="bookList" 
