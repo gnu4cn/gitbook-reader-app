@@ -1,43 +1,34 @@
-<div fxLayout="row" fxLayoutAlign="none start" style="background-color: white;">
-    <!--搜索结果-->
-    <div fxFlex="65" fxLayout="column" 
-                     fxLayoutAlign="start stretch" 
-                     fxLayoutGap="10px" 
-                     fxFlexOffset="10px">
-        <mat-card class="search-result" *ngFor="let book of bookList">
-            <ion-button color="success" size="small" class="save-cloud-book" (click)="saveCloudBook(book)">
-                <ion-icon name="magnet-outline"></ion-icon>放到书架
-            </ion-button>
-            <mat-card-header>
-                <img mat-card-avatar 
-                     uiImageLoader
-                     onErrorSrc="assets/images/avatar.png"
-                     [src]="book.writerAvatarUrl" />
-                <mat-card-title>
-                    {{book.fullName}}
-                </mat-card-title>
-                <mat-card-subtitle>
-                    {{book.writerName}}
-                </mat-card-subtitle>
-            </mat-card-header>
+<!--搜索结果-->
+<mat-card class="search-result" *ngFor="let book of bookList">
+    <ion-button color="success" size="small" class="save-cloud-book" (click)="saveCloudBook(book)">
+        <ion-icon name="magnet-outline"></ion-icon>放到书架
+    </ion-button>
+    <mat-card-header>
+        <img mat-card-avatar 
+             uiImageLoader
+             onErrorSrc="assets/images/avatar.png"
+             [src]="book.writerAvatarUrl" />
+        <mat-card-title>
+            {{book.fullName}}
+        </mat-card-title>
+        <mat-card-subtitle>
+            {{book.writerName}}
+        </mat-card-subtitle>
+    </mat-card-header>
 
-            <mat-card-content *ngIf="book.desc.length > 0">
-                <mat-label><b>“</b>{{book.desc.length > 256 ? book.desc.slice(0,256)+'...' : book.desc}}<b>”</b></mat-label>
-            </mat-card-content>
+    <mat-card-content *ngIf="book.desc.length > 0">
+        <mat-label><b>“</b>{{book.desc.length > 256 ? book.desc.slice(0,256)+'...' : book.desc}}<b>”</b></mat-label>
+    </mat-card-content>
 
-            <mat-card-footer fxLayout="row" fxLayoutAlign="none stretch" fxLayoutGap="50px">
-                <ion-label>
-                    获星<ion-icon name="star"></ion-icon>：<i>{{book.stars}}</i>
-                </ion-label>
-                <ion-label>
-                    更新时间：<i>{{book.dateUpdated | date : 'yyyy-MM-dd HH:mm:ss' : 'GMT+8' }}</i>
-                </ion-label>
-            </mat-card-footer>
-        </mat-card>
-        <div *ngIf="searching" fxFlexAlign="center">
-            <ion-icon src="assets/images/loader.svg" size="large"></ion-icon>
-        </div>
-    </div>
-    <!--最近搜索条目-->
-    <div></div>
+    <mat-card-footer fxLayout="row" fxLayoutAlign="none stretch" fxLayoutGap="50px">
+        <ion-label>
+            获星<ion-icon name="star"></ion-icon>：<i>{{book.stars}}</i>
+        </ion-label>
+        <ion-label>
+            更新时间：<i>{{book.dateUpdated | date : 'yyyy-MM-dd HH:mm:ss' : 'GMT+8' }}</i>
+        </ion-label>
+    </mat-card-footer>
+</mat-card>
+<div *ngIf="searching" fxFlexAlign="center">
+    <ion-icon src="assets/images/loader.svg" size="large"></ion-icon>
 </div>

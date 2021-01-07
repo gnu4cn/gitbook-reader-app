@@ -77,7 +77,7 @@
                            [errorStateMatcher]="matcher" />
                     <button mat-button 
                             matTooltip="清除关键字"
-                        *ngIf="keywords" matSuffix mat-icon-button aria-label="Clear" (click)="clearKeywords()">
+                            *ngIf="keywords" matSuffix mat-icon-button aria-label="Clear" (click)="clearKeywords()">
                         <ion-icon class="remove-search-keywords" name="close-outline"></ion-icon>
                     </button>
                     <mat-hint>搜索用到的关键字，以空格分开</mat-hint>
@@ -107,15 +107,45 @@
     </ion-toolbar>
 </ion-header>
 
-<ion-content [scrollEvents]="true" (ionScroll)="onScroll($event)" padding>
-    <section class="book-list">
-        <app-book-list [_bookList]="bookList" 
-             *ngIf="!search"
-             [sortBy]="sortBy" 
-             [beenOpened]="beenOpened" 
-             [displayRecycled]="displayRecycled">
-        </app-book-list>
-        <app-books-cloud-search *ngIf="search" [bookList]="bookListCloud" [searching]="searching">
-        </app-books-cloud-search>
-    </section>
+<ion-content [scrollEvents]="true" 
+    (ionScroll)="onScroll($event)" 
+    fxLayout="row"
+    fxLayoutAlign="center start"
+    style="padding: 10px;">
+    <!-- 已下载/保存书籍列表 -->
+    <app-book-list *ngIf="!search"
+        fxLayout="row wrap" 
+        fxLayout.sm="column" 
+        fxLayoutAlign="start end"
+        fxFlex="65"
+        fxLayoutGap="0.5%"
+        fxFlexOffset="10px"
+        [sortBy]="sortBy" 
+        [_bookList]="bookList" 
+        [beenOpened]="beenOpened" 
+        [displayRecycled]="displayRecycled">
+    </app-book-list>
+    <!--标签云-->
+    <div fxFlex="30" 
+         fxFlexOffset="5" 
+         *ngIf="!search"
+         slot="fixed">
+        <h2>标签云</h2>
+    </div>
+    <!-- 搜索到的书籍列表 -->
+    <app-books-cloud-search *ngIf="search" 
+        fxLayout="column"
+        fxLayoutAlign="start start"
+        fxFlex="65"
+        fxLayoutGap="10px"
+        fxFlexOffset="10px"
+        [bookList]="bookListCloud" 
+        [searching]="searching">
+    </app-books-cloud-search>
+    <!--最近搜索项-->
+    <div fxFlex="30" 
+        *ngIf="search"
+        fxFlexOffset="5" slot="fixed">
+        <h2>最近搜索项</h2>
+    </div>
 </ion-content>
