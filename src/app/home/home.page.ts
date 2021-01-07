@@ -245,8 +245,11 @@ export class HomePage implements OnInit, AfterViewInit {
         const currentScrollDepth = $event.detail.scrollTop;
 
         if(currentScrollDepth === scrollHeight){
-            if(this.bookListCloud.length%20 === 0 && !(/gitlab/.test(this.platformSelected))){
-                this.cloudSearch(this.bookList.length/20 + 1);
+            if(
+                this.bookListCloud.length%20 === 0 
+                && !(/gitlab/.test(this.platformSelected))
+            ){
+                this.cloudSearch(this.bookListCloud.length/20 + 1);
             }
         }
     }

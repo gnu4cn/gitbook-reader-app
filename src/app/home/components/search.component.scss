@@ -9,3 +9,20 @@ ion-button.save-cloud-book {
     display: none;
 }
 
+mat-card {
+    margin-top: 10px;
+      width: 95%;
+}
+
+@media screen and (min-width: 960px) {
+  mat-card {
+      width: 85%;
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  mat-card {
+      width: 75%;
+  }
+}
+

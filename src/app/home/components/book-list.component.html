@@ -1,9 +1,8 @@
 <mat-card class="book-card" *ngFor="let book of bookList"
-        fxFlex.lg="0 1 calc(25% - 0.5%)"
-        fxFlex.gt-md="0 1 calc(33% - 0.5%)"
-        fxFlex="0 1 calc(50% - 0.5%)"
-        style="margin-top: 10px; max-width: 100vw"
-        > 
+        fxFlex.gt-md="0 1 calc(25% - 10px)"
+        fxFlex.xl="0 1 calc(10% - 10px)"
+        fxFlex.gt-sm="0 1 calc(33% - 10px)"
+        fxFlex="0 1 calc(50% - 10px)"> 
     <ion-badge color="warning" 
                style="position: absolute; right: -5px; top: -10px;" 
                *ngIf="book.recordList && book.recordList.length > 0">

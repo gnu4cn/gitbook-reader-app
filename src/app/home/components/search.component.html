@@ -1,5 +1,6 @@
 <!--搜索结果-->
-<mat-card class="search-result" *ngFor="let book of bookList">
+<mat-card 
+    class="search-result" *ngFor="let book of bookList">
     <ion-button color="success" size="small" class="save-cloud-book" (click)="saveCloudBook(book)">
         <ion-icon name="magnet-outline"></ion-icon>放到书架
     </ion-button>
@@ -9,7 +10,7 @@
              onErrorSrc="assets/images/avatar.png"
              [src]="book.writerAvatarUrl" />
         <mat-card-title>
-            {{book.fullName}}
+            {{book.fullName.length > 48 ? book.fullName.slice(0, 47)+'...' : book.fullName}}
         </mat-card-title>
         <mat-card-subtitle>
             {{book.writerName}}
@@ -21,7 +22,7 @@
     </mat-card-content>
 
     <mat-card-footer fxLayout="row" fxLayoutAlign="none stretch" fxLayoutGap="50px">
-        <ion-label>
+        <ion-label fxFlexOffset="5">
             获星<ion-icon name="star"></ion-icon>：<i>{{book.stars}}</i>
         </ion-label>
         <ion-label>

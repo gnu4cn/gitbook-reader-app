@@ -115,37 +115,25 @@
     <!-- 已下载/保存书籍列表 -->
     <app-book-list *ngIf="!search"
         fxLayout="row wrap" 
-        fxLayout.sm="column" 
-        fxLayoutAlign="start end"
-        fxFlex="65"
-        fxLayoutGap="0.5%"
-        fxFlexOffset="10px"
+        fxLayoutAlign="start start"
+        fxFill
         [sortBy]="sortBy" 
         [_bookList]="bookList" 
         [beenOpened]="beenOpened" 
         [displayRecycled]="displayRecycled">
     </app-book-list>
-    <!--标签云-->
-    <div fxFlex="30" 
-         fxFlexOffset="5" 
-         *ngIf="!search"
-         slot="fixed">
-        <h2>标签云</h2>
-    </div>
     <!-- 搜索到的书籍列表 -->
     <app-books-cloud-search *ngIf="search" 
         fxLayout="column"
-        fxLayoutAlign="start start"
+        fxLayoutAlign="start end"
         fxFlex="65"
-        fxLayoutGap="10px"
-        fxFlexOffset="10px"
         [bookList]="bookListCloud" 
         [searching]="searching">
     </app-books-cloud-search>
     <!--最近搜索项-->
-    <div fxFlex="30" 
-        *ngIf="search"
-        fxFlexOffset="5" slot="fixed">
+    <div *ngIf="search"
+         class="right-side-bar"
+         slot="fixed">
         <h2>最近搜索项</h2>
     </div>
 </ion-content>
