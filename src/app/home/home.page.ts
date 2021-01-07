@@ -74,6 +74,7 @@ export class HomePage implements OnInit, AfterViewInit {
     platformSelected: string = 'github.com';
     bookListCloud: Array<ICloudBook> = [];
     searching: boolean = false;
+    searchEnd: boolean = false;
 
     platforms = [{
         name: 'github.com',
@@ -236,7 +237,8 @@ export class HomePage implements OnInit, AfterViewInit {
     }
 
     onScroll = async ($event) => {
-        if(!this.search){return;}
+        if(!this.search || this.searchEnd){return;}
+
         if($event.target.localName !== 'ion-content') { return; }
 
         const scrollElement = await $event.target.getScrollElement();
@@ -255,10 +257,20 @@ export class HomePage implements OnInit, AfterViewInit {
     }
 
     cloudSearch = async (page: number) => {
-        if(page === 1) this.bookListCloud = [].slice();
+        if(page === 1) {
+            this.searchEnd = false;
+            this.bookListCloud = [].slice();
+        };
+
         this.searching = true;
 
         const res = await this.fetchService.searchBooks(this.platformSelected, this.keywords, page) as object[] | object;
+
+        if((res as object[]).length === 0){
+            this.searchEnd = true;
+            return;
+        }
+
         this.searching = false;
 
         let _bookList: object[]
