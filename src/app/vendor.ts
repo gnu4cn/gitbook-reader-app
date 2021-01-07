@@ -33,6 +33,11 @@ export const getReadableDate = (date: Date): string => {
     return `${minutes} 分钟前`;
 }
 
+export interface ISearchHistory {
+    keywords: string;
+    platform: string;
+    date: Date
+}
 
 export interface ICloudBook {
     fullName: string;

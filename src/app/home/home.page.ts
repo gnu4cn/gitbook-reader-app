@@ -34,6 +34,7 @@ import {
     IProgressMessage,
     IAddBookDialogResData,
     ICloudBook,
+    ISearchHistory,
     IFilter,
     filterFn,
     IMessage,
@@ -75,6 +76,7 @@ export class HomePage implements OnInit, AfterViewInit {
     bookListCloud: Array<ICloudBook> = [];
     searching: boolean = false;
     searchEnd: boolean = false;
+    searchHistory: Array<ISearchHistory> = [];
 
     platforms = [{
         name: 'github.com',
@@ -138,6 +140,20 @@ export class HomePage implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
+        const histories = localStorage.getItem('searchHistory');
+
+        if(histories){
+            histories.split('|').map(history => {
+                const _history = history.split('::');
+
+                this.searchHistory.push({
+                    keywords: _history[0],
+                    platform: _history[1],
+                    date: new Date(_history[2])
+                })
+            });
+        }
+
         this.crud.ipcRenderer.on('book-updated', (ev, msg: IQueryResult) => {
             this.opMessage.newMsg(msg.message);
             this.book.listUpdated(msg.data as Book);
@@ -256,10 +272,29 @@ export class HomePage implements OnInit, AfterViewInit {
         }
     }
 
-    cloudSearch = async (page: number) => {
+    cloudSearch = async (page: number, fromHistory?: boolean) => {
         if(page === 1) {
             this.searchEnd = false;
             this.bookListCloud = [].slice();
+
+            if(!fromHistory) {
+                if(this.searchHistory.length === 20) {
+                    this.searchHistory.splice(0,1);
+                }
+                this.searchHistory.push({
+                    keywords: this.keywords,
+                    platform: this.platformSelected,
+                    date: new Date()
+                });
+
+                const historyStr = this.searchHistory.reduce((acc: string, history: ISearchHistory): string => {
+                    return history 
+                        ? acc.concat(`${history.keywords}::${history.platform}::${history.date.toString()}|`) 
+                        : acc;
+                }, '');
+
+                localStorage.setItem('searchHistory', historyStr.replace(/\|$/, ''));
+            }
         };
 
         this.searching = true;
