@@ -6,15 +6,6 @@ import {
     ElementRef, 
 } from '@angular/core';
 
-import {
-    differenceInYears,
-    differenceInMonths,
-    differenceInWeeks,
-    differenceInDays,
-    differenceInHours,
-    differenceInMinutes
-} from 'date-fns';
-
 import { 
     MatDialogRef, 
     MAT_DIALOG_DATA 
@@ -26,6 +17,7 @@ import { MessageService } from '../../services/message.service';
 import { 
     IBookWithPath, 
     sortBy, 
+    getReadableDate,
     IMessage,
 } from '../../vendor';
 
@@ -60,22 +52,6 @@ export class ReadingRecordDialog implements OnInit{
         return sortBy(this._recordList, 'dateCreated');
     } 
 
-    getReadableDate = (date: Date): string => {
-        const now = new Date();
-        const years = differenceInYears(now, date);
-        const months = differenceInMonths(now, date);
-        const weeks = differenceInWeeks(now, date);
-        const days = differenceInDays(now, date);
-        const hours = differenceInHours(now, date);
-        const minutes = differenceInMinutes(now, date);
-
-        if(years > 0) return `${years} 年前`;
-        if(months > 0) return `${months} 个月前`;
-        if(weeks > 0) return `${weeks} 周前`;
-        if(days > 0) return `${days} 天前`;
-        if(hours > 0) return `${hours} 小时前`;
-        return `${minutes} 分钟前`;
-    }
     ngOnInit() {
         this.message.getMessage().subscribe((msg: IMessage) => {
             if(msg.event === 'book-list-updated'){
@@ -86,6 +62,10 @@ export class ReadingRecordDialog implements OnInit{
                 this.cdr.detectChanges();
             }
         });
+    }
+
+    readableDate = (date: Date) => {
+        return getReadableDate(date);
     }
 
     moveTo = (path: string, sectionAnchor?: string) => {

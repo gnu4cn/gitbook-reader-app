@@ -8,7 +8,7 @@
                 style="height: 40px; padding: 0">
                 <ion-label color="dark" class="ion-float-left" style="width: 360px;">
                     <ion-text class="ion-float-left" style="width: 350px;">
-                        <b>{{getReadableDate(record.dateCreated)}}</b> - <i>{{record.dateCreated | date : 'yyyy-MM-dd HH:mm:ss' : 'GMT+8' }}</i>
+                        <b>{{readableDate(record.dateCreated)}}</b> - <i>{{record.dateCreated | date : 'yyyy-MM-dd HH:mm:ss' : 'GMT+8' }}</i>
                     </ion-text>
                 </ion-label>
             </mgl-timeline-entry-header>

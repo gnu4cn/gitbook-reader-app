@@ -1,10 +1,38 @@
 import { Book, Category, Writer, Website, Record } from './models';
 import { ValidatorFn, AbstractControl } from '@angular/forms';
+
+import {
+    differenceInYears,
+    differenceInMonths,
+    differenceInWeeks,
+    differenceInDays,
+    differenceInHours,
+    differenceInMinutes
+} from 'date-fns';
+
 // typeorm parts
 export const sortBy = (list: Array<any>, prop: string, subProp?: string) => {
     return subProp ? list.sort((a, b) => a[prop][subProp] > b[prop][subProp] ? -1 : a[prop][subProp] === b[prop][subProp] ? 0 : 1) 
         : list.sort((a, b) => a[prop] > b[prop] ? -1 : a[prop] === b[prop] ? 0 : 1);
 }
+
+export const getReadableDate = (date: Date): string => {
+    const now = new Date();
+    const years = differenceInYears(now, date);
+    const months = differenceInMonths(now, date);
+    const weeks = differenceInWeeks(now, date);
+    const days = differenceInDays(now, date);
+    const hours = differenceInHours(now, date);
+    const minutes = differenceInMinutes(now, date);
+
+    if(years > 0) return `${years} 年前`;
+    if(months > 0) return `${months} 个月前`;
+    if(weeks > 0) return `${weeks} 周前`;
+    if(days > 0) return `${days} 天前`;
+    if(hours > 0) return `${hours} 小时前`;
+    return `${minutes} 分钟前`;
+}
+
 
 export interface ICloudBook {
     fullName: string;

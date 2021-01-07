@@ -1,8 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
 
+import { parseISO } from 'date-fns';
 import { 
     ICloudBook,
     IAddBookDialogResData,
+    getReadableDate,
 } from '../../vendor';
 
 import { NewBookDialog } from './new-book-dialog.component';
@@ -38,5 +40,9 @@ export class SearchComponent implements OnInit {
             if(res) this.book.save(res);
         });
 
+    }
+
+    readableDate = (date: Date) => {
+        return getReadableDate(parseISO(date.toString()));
     }
 }
