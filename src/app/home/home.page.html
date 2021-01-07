@@ -9,7 +9,7 @@
                         <ion-fab-button color="light" (click)="openAddBookDialog()" matTooltip="从已知Git repo添加一本书" >
                             <ion-avatar>
                                 <ion-icon name="add-outline" style="position: absolute; right: 5px; bottom: 10px;"></ion-icon>
-                                <img src="assets/images/closed-book-clipart-12-512x512.png" />
+                            <img src="assets/images/closed-book-clipart-12-512x512.png" />
                             </ion-avatar>
                         </ion-fab-button>
                     </ion-col>
@@ -19,7 +19,7 @@
                         <ion-fab-button color="light" (click)="openSearchPage()" matTooltip="打开搜索页面" >
                             <ion-avatar id="avatar-cloud-search">
                                 <ion-icon name="search-outline" style="position: absolute; right: 5px; bottom: 10px;"></ion-icon>
-                                <img src="assets/images/books-cloud.png" />
+                            <img src="assets/images/books-cloud.png" />
                             </ion-avatar>
                         </ion-fab-button>
                     </ion-col>
@@ -76,8 +76,8 @@
                            [(ngModel)]="keywords"
                            [errorStateMatcher]="matcher" />
                     <button mat-button 
-                            matTooltip="清除关键字"
-                            *ngIf="keywords" matSuffix mat-icon-button aria-label="Clear" (click)="clearKeywords()">
+                           matTooltip="清除关键字"
+                           *ngIf="keywords" matSuffix mat-icon-button aria-label="Clear" (click)="clearKeywords()">
                         <ion-icon class="remove-search-keywords" name="close-outline"></ion-icon>
                     </button>
                     <mat-hint>搜索用到的关键字，以空格分开</mat-hint>
@@ -131,9 +131,16 @@
         [searching]="searching">
     </app-books-cloud-search>
     <!--最近搜索项-->
-    <div *ngIf="search"
-         class="right-side-bar"
-         slot="fixed">
-        <h2>最近搜索项（<i>最近20条记录</i>）</h2>
+    <div *ngIf="search" class="right-side-bar" slot="fixed" 
+        fxLayout="column" fxLayoutGap="10px">
+        <h2>最近搜索项 - <i>20条</i></h2>
+        <ion-button color="medium" (click)="historySearch(history.keywords, history.platform)"
+                    style="width: 85%"
+                    size="small"
+            *ngFor="let history of searchHistory">
+            <span>
+                <ion-icon name="search-outline"></ion-icon>"{{history.keywords}}" @{{history.platform}} - <i>{{readableDate(history.date)}}</i>
+            </span>
+        </ion-button>
     </div>
 </ion-content>

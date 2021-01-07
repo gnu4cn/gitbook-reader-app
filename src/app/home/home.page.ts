@@ -37,6 +37,8 @@ import {
     ISearchHistory,
     IFilter,
     filterFn,
+    sortBy,
+    getReadableDate,
     IMessage,
     IQueryResult,
     TAvatarIds, 
@@ -76,7 +78,7 @@ export class HomePage implements OnInit, AfterViewInit {
     bookListCloud: Array<ICloudBook> = [];
     searching: boolean = false;
     searchEnd: boolean = false;
-    searchHistory: Array<ISearchHistory> = [];
+    private _searchHistory: Array<ISearchHistory> = [];
 
     platforms = [{
         name: 'github.com',
@@ -100,6 +102,10 @@ export class HomePage implements OnInit, AfterViewInit {
         private book: BookService,
     ) {
         this.bookList = book.list;
+    }
+
+    get searchHistory () {
+        return sortBy(this._searchHistory, 'date'); 
     }
 
     private changeFabButton = (button: TAvatarIds) => {
@@ -146,7 +152,7 @@ export class HomePage implements OnInit, AfterViewInit {
             histories.split('|').map(history => {
                 const _history = history.split('::');
 
-                this.searchHistory.push({
+                this._searchHistory.push({
                     keywords: _history[0],
                     platform: _history[1],
                     date: new Date(_history[2])
@@ -272,22 +278,29 @@ export class HomePage implements OnInit, AfterViewInit {
         }
     }
 
+    historySearch = (keywords: string, platform: string) => {
+        this.keywords = keywords;
+        this.platformSelected = platform;
+
+        this.cloudSearch(1, true);
+    }
+
     cloudSearch = async (page: number, fromHistory?: boolean) => {
         if(page === 1) {
             this.searchEnd = false;
             this.bookListCloud = [].slice();
 
             if(!fromHistory) {
-                if(this.searchHistory.length === 20) {
-                    this.searchHistory.splice(0,1);
+                if(this._searchHistory.length === 20) {
+                    this._searchHistory.splice(0,1);
                 }
-                this.searchHistory.push({
+                this._searchHistory.push({
                     keywords: this.keywords,
                     platform: this.platformSelected,
                     date: new Date()
                 });
 
-                const historyStr = this.searchHistory.reduce((acc: string, history: ISearchHistory): string => {
+                const historyStr = this._searchHistory.reduce((acc: string, history: ISearchHistory): string => {
                     return history 
                         ? acc.concat(`${history.keywords}::${history.platform}::${history.date.toString()}|`) 
                         : acc;
@@ -299,7 +312,8 @@ export class HomePage implements OnInit, AfterViewInit {
 
         this.searching = true;
 
-        const res = await this.fetchService.searchBooks(this.platformSelected, this.keywords, page) as object[] | object;
+        const res = await this.fetchService
+            .searchBooks(this.platformSelected, this.keywords, page) as object[] | object;
 
         if((res as object[]).length === 0){
             this.searchEnd = true;
@@ -351,5 +365,9 @@ export class HomePage implements OnInit, AfterViewInit {
 
     clearKeywords = () => {
         this.keywords = '';
+    }
+
+    readableDate = (date: Date) => {
+        return getReadableDate(date);
     }
 }
