@@ -1,6 +1,7 @@
 import { ConnectionManager, Connection } from 'typeorm';
 
 import { Book, Category, Writer, Website, Record } from './models';
+import { join } from 'path';
 
 import { 
     TTableName, 
@@ -13,14 +14,14 @@ import {
 export class CRUD {
     conn: Connection;
 
-    constructor () {
+    constructor (appDir: string) {
         const connectionManager = new ConnectionManager();
         this.conn = connectionManager.create({
             type: 'sqlite',
             synchronize: true,
             logging: false,
             logger: 'simple-console',
-            database: 'db.sqlite',
+            database: join(appDir, 'db.sqlite'),
             entities: [ Category, Website, Writer, Book, Record ],
         });
 

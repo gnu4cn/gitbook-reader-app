@@ -19,9 +19,8 @@ import {
 import { Book, Record } from './models';
 
 export class BookBackend {
-    crud = new CRUD();
-
     constructor (
+        private crud: CRUD,
         private booksDir: string, 
         private book: Book, 
         private insideWindow: BrowserWindow, 

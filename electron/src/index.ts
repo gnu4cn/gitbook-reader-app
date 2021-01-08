@@ -27,7 +27,8 @@ export default class Main {
     static myCapacitorApp = createCapacitorElectronApp();
     static winChildren: Array<Electron.BrowserWindow> = [];
     static processChildren: Array<ChildProcess> = [];
-    static crud = new CRUD();
+    static booksDir = join(app.getPath('appData'), 'gbr_books'); 
+    static crud = new CRUD(Main.booksDir);
 
     // This method will be called when Electron has finished
     // initialization and is ready to create browser windows.
@@ -63,8 +64,7 @@ export default class Main {
 
         Main.myCapacitorApp.init();
 
-        const booksDir = join(app.getPath('appData'), 'gbr_books'); 
-        const serverProcess: ChildProcess = fork(join(__dirname, 'server.js'), ['-d', booksDir]);
+        const serverProcess: ChildProcess = fork(join(__dirname, 'server.js'), ['-d', Main.booksDir]);
         Main.processChildren.push(serverProcess);
 
         const mainWindow = Main.myCapacitorApp.getMainWindow();
@@ -88,17 +88,17 @@ export default class Main {
         });
 
         ipcMain.on('open-book', (event, book: Book) => {
-            const _book = new BookBackend(booksDir, book, mainWindow, loadingWin)
+            const _book = new BookBackend(Main.crud, Main.booksDir, book, mainWindow, loadingWin)
             _book.open(w => Main.winChildren.push(w));
         });
 
         ipcMain.on('open-book-with-path', (event, msg: IBookWithPath) => {
-            const book = new BookBackend(booksDir, msg.book, mainWindow, loadingWin, msg.path)
+            const book = new BookBackend(Main.crud, Main.booksDir, msg.book, mainWindow, loadingWin, msg.path)
             book.open(w => Main.winChildren.push(w));
         });
 
         ipcMain.on('download-book', (event, book: Book) => {
-            const _book = new BookBackend(booksDir, book, mainWindow, loadingWin);
+            const _book = new BookBackend(Main.crud, Main.booksDir, book, mainWindow, loadingWin);
             _book.download(cp => Main.processChildren.push(cp));
         });
 
@@ -121,7 +121,7 @@ export default class Main {
 
             if(query.table === 'Book'){
                 const book = query.item as Book;
-                const bookDir = join(booksDir, book.website.uri, book.writer.name, book.name);
+                const bookDir = join(Main.booksDir, book.website.uri, book.writer.name, book.name);
                 await remove(bookDir)
                     .then(() => res.message.push('，已成功从文件系统移除'))
                     .catch((e: Error) => res.message.push(e.message));
