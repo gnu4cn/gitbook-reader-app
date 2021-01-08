@@ -34,7 +34,7 @@ export class EditOnGithubComponent implements OnInit {
     }
 
     get href() {
-        return this.docEditBase + (/^\//.test(this.path) ? this.path : '/'+this.path);
+        return join(this.docEditBase, this.path);
     }
 
     constructor(
