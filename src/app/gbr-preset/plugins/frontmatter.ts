@@ -37,7 +37,7 @@ export function readMatter(): Transformer {
 
 export function getTitle(): Transformer {
     return (tree: Root, file: VFile) => {
-        if(tree.children[0].type === 'heading' && tree.children[0].depth !== 1 ){
+        if(tree.children[0] && tree.children[0].type === 'heading' && tree.children[0].depth !== 1 ){
             tree.children[0].depth = 1;
         }
 
