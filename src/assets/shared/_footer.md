@@ -2,5 +2,4 @@
 
 ---
 
-<made-with-docspa url="https://ccna60d.xfoss.com" size="1" name="ccna60d.xfoss.com">
-</made-with-docspa>
+<made-with-docspa size="1"></made-with-docspa>

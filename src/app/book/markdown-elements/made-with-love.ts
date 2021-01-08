@@ -1,25 +1,28 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { SettingsService } from '../services/settings.service';
+
+import { join } from '../shared/utils';
 
 @Component({
-  selector: 'made-with-docspa', // tslint:disable-line
-  template: `
+    selector: 'made-with-docspa', // tslint:disable-line
+    template: `
     <ng-template #noUrl>
-      by
+    by
       <ng-content></ng-content>
       <slot></slot>
       {{name}}
     </ng-template>
     <span [style.font-size.em]="size">
       <ng-container *ngIf="url && url.length > 0; else noUrl">
-        By <a [attr.href]="url" target="_blank" [style.color]="color" rel="noopener">
+        作者： <a [attr.href]="url" target="_blank" [style.color]="color" rel="noopener">
           <ng-content></ng-content>
           <slot></slot>
           {{name}}
-        </a>
+        </a>({{url}})
       </ng-container>
     </span>
   `,
-  styles: [`
+    styles: [`
   :host {
     span {
       a {
@@ -31,23 +34,33 @@ import { Component, Input, OnInit } from '@angular/core';
   `]
 })
 export class MadeWithDocSPAComponent implements OnInit {
-  static readonly is = 'made-with-docspa';
+    static readonly is = 'made-with-docspa';
 
-  @Input()
-  public name: string;
+    @Input()
+    public color = 'red';
 
-  @Input()
-  public url: string;
+    @Input()
+    public size = 0.5;
 
-  @Input()
-  public color = 'red';
+    constructor (
+        private settings: SettingsService
+    ) {}
 
-  @Input()
-  public size = 0.5;
-
-  ngOnInit() {
-    if (!this.name || this.name.length === 0) {
-      console.error(`Name attribute must be provided!`);
+    get bookPath () {
+        return this.settings.bookPath;
     }
-  }
+
+    get name () {
+        return this.bookPath.replace(/^\//, '').replace(/\/$/, '').split('/')[1];
+    }
+
+    get url () {
+        return join('https://', this.bookPath.replace(/\/$/, '').replace(/\/[^\/]{1,254}$/, ''));
+    }
+
+    ngOnInit() {
+        if (!this.name || this.name.length === 0) {
+            console.error(`Name attribute must be provided!`);
+        }
+    }
 }
