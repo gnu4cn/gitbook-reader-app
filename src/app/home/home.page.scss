@@ -1,3 +1,16 @@
+body  {
+    .docsify-copy-code-button {
+        &, &:after {
+            background: var(--copycode-background, #ccc);
+            color: var(--copycode-color, #fff);      
+        }
+    }
+
+    .medium-zoom-overlay {
+        background: var(--zoomimage-overlay-background, rgb(255, 255, 255)) !important;
+    }
+}
+
 ion-header {
     ion-toolbar.app-toolbar{
         --background: url("/assets/images/BANNER-Books-V2.png") no-repeat;

@@ -136,14 +136,14 @@
         <h2>搜索历史</h2>
         <div fxLayout="column" fxFill fxLayoutGap="10px">
             <mat-card matButton (click)="historySearch(history.keywords, history.platform)"
-                      style="width: 85%"
+                      style="width: 95%"
                 *ngFor="let history of searchHistory">
                 <mat-card-title>“{{history.keywords}}”</mat-card-title>
                 <mat-card-subtitle>@{{history.platform}} - <i>{{readableDate(history.date)}}</i></mat-card-subtitle>
             </mat-card>
         </div>
         <mat-paginator [length]="_searchHistory.length"
-                      style="width: 85%"
+                      style="width: 95%"
                       class="align-self-bottom"
                [pageSize]="5"
                [pageSizeOptions]="[5]"

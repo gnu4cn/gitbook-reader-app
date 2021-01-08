@@ -8,7 +8,7 @@
                *ngIf="book.recordList && book.recordList.length > 0">
         {{book.recordList.length}}次阅读
     </ion-badge>
-    <mat-card-title>{{book.name | uppercase}}</mat-card-title>
+    <mat-card-title>{{(book.name.length > 24 ? book.name.slice(0,23)+'...' : book.name) | uppercase}}</mat-card-title>
 
     <!-- 作者和来源 -->
     <mat-card-header>
