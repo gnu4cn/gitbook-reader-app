@@ -17,6 +17,7 @@ import { Book } from '../../models';
 @Component({
     selector: 'readme-dialog',
     templateUrl: 'readme.dialog.html',
+    styleUrls: ['./readme.dialog.scss'],
 })
 export class ReadmeDialog implements OnInit{
     constructor(
