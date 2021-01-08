@@ -221,11 +221,18 @@ export class ReadPage implements OnInit, AfterViewInit, OnDestroy {
 
         await this.activatedRoute.queryParamMap.subscribe(params => {
             const commit = params.get('bookCommit');
+            const defaultBranch = params.get('defaultBranch');
 
-            const _commit = localStorage.getItem(this.storageId) || '';
+            const _commit = localStorage.getItem(this.storageId+':commit') || '';
+            const _defaultBranch = localStorage.getItem(this.storageId+':defaultBranch') || '';
+
+            if (defaultBranch && _defaultBranch !== defaultBranch) {
+                localStorage.setItem(this.storageId+':defaultBranch', defaultBranch);
+            }
+
             if (commit && commit !== _commit) {
                 this.settings.updated = true;
-                localStorage.setItem(this.storageId, commit);
+                localStorage.setItem(this.storageId+':commit', commit);
             }
             else this.settings.updated = false;
         });
@@ -235,7 +242,7 @@ export class ReadPage implements OnInit, AfterViewInit, OnDestroy {
         combineLatest([this.activatedRoute.url, this.activatedRoute.fragment])
             .subscribe(() => {
 
-                //                this.routerService.activateRoute(this.activatedRoute.snapshot);
+                // this.routerService.activateRoute(this.activatedRoute.snapshot);
                 this.routerService.activateRoute();
             });
 
