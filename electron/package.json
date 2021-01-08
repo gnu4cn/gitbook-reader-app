@@ -1,6 +1,6 @@
 {
   "name": "yet-another-gitbook-reader",
-  "version": "0.8.0",
+  "version": "0.8.2",
   "description": "Gitbook 阅读器，60天通过CCNA考试 - ccna60d.xfoss.com",
   "main": "./build/index.js",
   "scripts": {
@@ -75,14 +75,14 @@
       "icon": "./assets/appIcon.png"
     },
     "nsis": {
-      "artifactName": "Yet-another-Gitbook-Reader-${version}-setup.${ext}"
+      "artifactName": "Yet-Another-Gitbook-Reader-${version}-setup.${ext}"
     },
     "portable": {
-      "artifactName": "Yet-another-Gitbook-Reader-${version}-portable.${ext}"
+      "artifactName": "Yet-Another-Gitbook-Reader-${version}-portable.${ext}"
     },
     "linux": {
       "target": "AppImage",
-      "artifactName": "Yet-another-Gitbook-Reader-${version}-${arch}.${ext}",
+      "artifactName": "Yet-Another-Gitbook-Reader-${version}-${arch}.${ext}",
       "icon": "./assets/appIcon.png"
     }
   },
