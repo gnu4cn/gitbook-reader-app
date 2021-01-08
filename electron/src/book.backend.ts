@@ -43,7 +43,7 @@ export class BookBackend {
     get bookUrl () {
         // capacitor-electron://-/#/home
         const url = this.path ? 
-            _join(this.bookPath, `${this.path}?bookCommit=${this.book.commit}`)
+            _join(this.bookPath, `${this.path}?bookCommit=${this.book.commit}&defaultBranch=${this.book.defaultBranch}`)
             : `${this.bookPath}?bookCommit=${this.book.commit}&defaultBranch=${this.book.defaultBranch}`;
 
         return _join('capacitor-electron://-/#/', url); 
