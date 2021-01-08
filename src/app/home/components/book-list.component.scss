@@ -17,8 +17,13 @@ mat-card:hover {
 
 mat-card-actions {
     border-bottom: 1px;
+    visibility: hidden;
 }
 
 mat-card {
     margin: 10px 5px 5px 5px;
+}
+
+mat-card:hover mat-card-actions {
+    visibility: visible;
 }
