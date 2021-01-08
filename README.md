@@ -2,8 +2,19 @@
 
 网上基于 Markdown 的书籍很多，通常在GitHub、GitLab、Gitee等代码托管与社会化编程网站上都能找到，其中大部分都是高质量的技术文档。本项目基于Electron、Angular、UnifiedJS等既有框架，目标是得到一个稳定、易于使用的Gitbook阅读器。
 
+本项目使用了 `typeorm`, `electron`, `angular`, `@swimlane/docspa-core` 等项目代码。
+
+![屏幕截图](yagr-screenshot.png)
+
 
 ## 开发日志
+
++ 2021-1-8
+
+    - 完善了搜索界面、阅读器界面
+    - 重写了Electron 后端，实现 CRUD 实例的重用，从而改善了性能，并将数据库文件调整到 `appDir` 目录
+    - 尚未完成：按类别、作者、平台过滤书籍，后期建立账号系统
+
 
 + 2021-1-2
 
