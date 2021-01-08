@@ -6,6 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import {MatIconModule} from '@angular/material/icon';
 import {MatCardModule} from '@angular/material/card';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatPaginatorModule} from '@angular/material/paginator';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import {MatToolbarModule} from '@angular/material/toolbar';
@@ -26,6 +27,7 @@ import {MatBadgeModule} from '@angular/material/badge';
         MatFormFieldModule,
         MatProgressBarModule,
         MatInputModule,
+        MatPaginatorModule,
         MatTooltipModule,
         MatBadgeModule,
         MatSnackBarModule,
@@ -51,6 +53,7 @@ import {MatBadgeModule} from '@angular/material/badge';
         MatCardModule,
         MatAutocompleteModule,
         MatSnackBarModule,
+        MatPaginatorModule,
         MatRadioModule,
         FormsModule,
         MatIconModule,

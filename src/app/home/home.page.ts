@@ -10,6 +10,7 @@ import {
 
 import {FormControl, FormGroupDirective, NgForm, Validators} from '@angular/forms';
 import {ErrorStateMatcher} from '@angular/material/core';
+import {PageEvent} from '@angular/material/paginator';
 
 import { FetchService } from './services/fetch.service';
 
@@ -78,7 +79,8 @@ export class HomePage implements OnInit, AfterViewInit {
     bookListCloud: Array<ICloudBook> = [];
     searching: boolean = false;
     searchEnd: boolean = false;
-    private _searchHistory: Array<ISearchHistory> = [];
+    _searchHistory: Array<ISearchHistory> = [];
+    pageEvent: PageEvent;
 
     platforms = [{
         name: 'github.com',
@@ -105,7 +107,8 @@ export class HomePage implements OnInit, AfterViewInit {
     }
 
     get searchHistory () {
-        return sortBy(this._searchHistory, 'date'); 
+        const firstItemIndex: number = this.pageEvent ? this.pageEvent.pageIndex*5 : 0;
+        return sortBy(this._searchHistory, 'date').slice(firstItemIndex, firstItemIndex+5); 
     }
 
     private changeFabButton = (button: TAvatarIds) => {
@@ -291,9 +294,6 @@ export class HomePage implements OnInit, AfterViewInit {
             this.bookListCloud = [].slice();
 
             if(!fromHistory) {
-                if(this._searchHistory.length === 20) {
-                    this._searchHistory.splice(0,1);
-                }
                 this._searchHistory.push({
                     keywords: this.keywords,
                     platform: this.platformSelected,

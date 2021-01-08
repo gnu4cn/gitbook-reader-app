@@ -32,9 +32,6 @@ div.right-side-bar {
     width: 32%;
 }
 
-ion-button{
-    span{
-        text-align:left;
-        width:100%;
-    }
+mat-card:hover {
+    cursor: pointer;
 }
