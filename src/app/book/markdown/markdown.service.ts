@@ -37,7 +37,7 @@ import { FetchService } from '../services/fetch.service';
 
 import { links, images, removeLinks } from '../shared/links';
 import lazyInitialize from '../shared/lazy-init';
-import { join } from '../shared/utils';
+import { join, isAbsolutePath } from '../shared/utils';
 
 import { VFile, isVfile, Preset, TOCOptions, TOCData, SectionData } from '../shared/vfile';
 import type { Link } from '../shared/ast';
@@ -263,7 +263,8 @@ export class MarkdownService {
             map((_: any) => {
                 return _.data.tocSearch.reduce((acc: Array<string>, __: any): Array<string> => {
                     return __ 
-                        && (/\.md$/.test(__.url.split('#')[0])) 
+                        && /\.md$/.test(__.url.split('#')[0]) 
+                        && !isAbsolutePath(__.url) 
                         && (acc.findIndex(path => path === resolve('/', decodeURI(__.url.split('#')[0]))) < 0)
                         ? [...acc, resolve('/', decodeURI(__.url.split('#')[0]))] 
                         : acc;
