@@ -73,7 +73,7 @@ export class ReadPage implements OnInit, AfterViewInit, OnDestroy {
             url: parse(this.routerService.url).pathname,
             title: this.subTitle,
             sections: Array.from(this.inScrollHashes),
-            bookCommit: localStorage.getItem(this.storageId)
+            bookCommit: localStorage.getItem(this.storageId+':commit')
         } as IReadingProgress;
     }
 
