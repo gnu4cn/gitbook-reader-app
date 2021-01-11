@@ -46,11 +46,17 @@
             "readTimes": "Readings",
             "modify": "Modify",
             "readingRecord": "Reading Record",
-            "read": "Read",
-            "download": "Download",
-            "remove": "Remove",
-            "operation": "Operation",
-            "cloneErrorMsg": " - Error occured during downloading, Please remove it"
+            "actions": {
+                "read": "Read",
+                "download": "Download",
+                "remove": "Remove",
+                "operation": "Operation"
+            },
+            "cloneErrorMsg": " - Error occured during downloading, Please remove it",
+            "tooltip": {
+                "remove": "Recycle/Remove this book",
+                "operation": "Put this book back on shelf, or remove it"
+            }
         },
         "deleteBook": {
             "remove": "Delete - ",

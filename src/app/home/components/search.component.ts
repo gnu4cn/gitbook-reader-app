@@ -45,6 +45,6 @@ export class SearchComponent implements OnInit {
     }
 
     readableDate = (date: Date) => {
-        return getReadableDate(parseISO(date.toString()));
+        return getReadableDate(parseISO(date.toString()), this.i18n.browserLang);
     }
 }

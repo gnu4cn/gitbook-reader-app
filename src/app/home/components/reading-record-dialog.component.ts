@@ -67,7 +67,7 @@ export class ReadingRecordDialog implements OnInit{
     }
 
     readableDate = (date: Date) => {
-        return getReadableDate(date);
+        return getReadableDate(date, this.i18n.browserLang);
     }
 
     moveTo = (path: string, sectionAnchor?: string) => {

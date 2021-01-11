@@ -51,20 +51,25 @@
             <ion-icon name="compass-outline"></ion-icon>README
         </button>
         <button class="action-button" mat-button *ngIf="book.downloaded" (click)="openBook(book)">
-            <ion-icon name="book-outline"></ion-icon>{{'home.bookList.read' | translate}}
+            <ion-icon name="book-outline"></ion-icon>{{'home.bookList.actions.read' | translate}}
         </button>
         <button class="action-button" id="{{ 'download-book-' + book.id }}" mat-button 
                 *ngIf="!book.downloaded" (click)="startDownload(book)">
-            <ion-icon name="cloud-download-outline"></ion-icon>{{'home.bookList.download' | translate}}
+            <ion-icon name="cloud-download-outline"></ion-icon>{{'home.bookList.actions.download' | translate}}
         </button>
         <button class="action-button" 
+                matTooltip="{{'home.bookList.tooltip.remove' | translate}}"
                 id="{{ 'delete-book-' + book.id }}" mat-button (click)="openDeleteBookDialog(book)" 
                 *ngIf="!book.downloaded || !book.recycled"
                 [disabled]="book.recycled">
-            <ion-icon name="close-outline" sizme="small"></ion-icon>{{'home.bookList.remove' | translate}}
+            <ion-icon name="close-outline" sizme="small"></ion-icon>{{'home.bookList.actions.remove' | translate}}
         </button>
-        <button class="action-button" mat-button *ngIf="book.recycled" (click)="openDeleteBookDialog(book)">
-            <ion-icon name="cog-outline" sizme="small"></ion-icon>{{'home.bookList.operation' | translate}}
+        <button class="action-button" 
+                matTooltip="{{'home.bookList.tooltip.operation' | translate}}"
+                mat-button 
+                *ngIf="book.recycled" 
+                (click)="openDeleteBookDialog(book)">
+            <ion-icon name="cog-outline" sizme="small"></ion-icon>{{'home.bookList.actions.operation' | translate}}
         </button>
     </mat-card-actions>
 

@@ -45,7 +45,7 @@ export class MatPaginatorIntlHans extends MatPaginatorIntl {
     };
 }
 
-export const getReadableDate = (date: Date): string => {
+export const getReadableDate = (date: Date, locale: string): string => {
     const now = new Date();
     const years = differenceInYears(now, date);
     const months = differenceInMonths(now, date);
@@ -54,12 +54,13 @@ export const getReadableDate = (date: Date): string => {
     const hours = differenceInHours(now, date);
     const minutes = differenceInMinutes(now, date);
 
-    if(years > 0) return `${years} 年前`;
-    if(months > 0) return `${months} 个月前`;
-    if(weeks > 0) return `${weeks} 周前`;
-    if(days > 0) return `${days} 天前`;
-    if(hours > 0) return `${hours} 小时前`;
-    return `${minutes} 分钟前`;
+    const isHans: boolean = /zh/.test(locale);
+    if(years > 0) return `${years} ${isHans ? '年前' : 'years ago'}`;
+    if(months > 0) return `${months} ${isHans ? '个月前' : 'months ago'}`;
+    if(weeks > 0) return `${weeks} ${isHans ? '周前' : 'weeks ago'}`;
+    if(days > 0) return `${days} ${isHans ? '天前' : 'days ago'}`;
+    if(hours > 0) return `${hours} ${isHans ? '小时前': 'hours ago'}`;
+    return `${minutes} ${isHans ? '分钟前' : 'minutes ago'}`;
 }
 
 export interface ISearchHistory {

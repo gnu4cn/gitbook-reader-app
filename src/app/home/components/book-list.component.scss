@@ -15,14 +15,6 @@ mat-card:hover {
     background-color: #4f4f4f;
 }
 
-.action-button {
-    visibility: hidden;
-}
-
-mat-card-actions:hover .action-button{
-    visibility: visible;
-}
-
 .cate-chip:hover {
     cursor: pointer;
 }

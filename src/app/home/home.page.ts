@@ -371,6 +371,6 @@ export class HomePage implements OnInit, AfterViewInit {
     }
 
     readableDate = (date: Date) => {
-        return getReadableDate(date);
+        return getReadableDate(date, this.i18n.browserLang);
     }
 }
