@@ -1,3 +1,6 @@
+import { HttpClient } from '@angular/common/http';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+
 import { Book, Category, Writer, Website, Record } from './models';
 import { ValidatorFn, AbstractControl } from '@angular/forms';
 import { Injectable } from '@angular/core';
@@ -11,6 +14,10 @@ import {
     differenceInHours,
     differenceInMinutes
 } from 'date-fns';
+
+export const createTranslateHttpLoader = (http: HttpClient) => {
+    return new TranslateHttpLoader(http, 'assets/i18n/', '.json');
+}
 
 // typeorm parts
 export const sortBy = (list: Array<any>, prop: string, subProp?: string) => {

@@ -4,6 +4,8 @@ import { Component,
     AfterViewInit
 } from '@angular/core';
 
+import { TranslateService } from '@ngx-translate/core';
+
 import { 
     MatDialog, 
 } from '@angular/material/dialog';
@@ -100,10 +102,15 @@ export class HomePage implements OnInit, AfterViewInit {
         private opMessage: OpMessageService,
         private message: MessageService,
         private fetchService: FetchService,
+        private translate: TranslateService,
         private cdr: ChangeDetectorRef,
         private book: BookService,
     ) {
         this.bookList = book.list;
+
+        translate.addLangs(['zh', 'en']);
+        translate.setDefaultLang('en');
+        translate.use('en');
     }
 
     get searchHistory () {
@@ -149,6 +156,7 @@ export class HomePage implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
+
         const histories = localStorage.getItem('searchHistory');
 
         if(histories){

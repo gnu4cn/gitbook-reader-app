@@ -4,6 +4,9 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
+import { HttpClient } from '@angular/common/http';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { MaterialModule } from '../material.module';
 import { MglTimelineModule } from 'angular-mgl-timeline';
@@ -25,7 +28,7 @@ import { WriterService } from './services/writer.service';
 import { OpMessageService } from './services/op-message.service';
 import { FetchService } from './services/fetch.service';
 import { PrivateTokensService } from './services/private-tokens.service';
-import { MatPaginatorIntlHans } from '../vendor';
+import { MatPaginatorIntlHans, createTranslateHttpLoader } from '../vendor';
 
 import { HomePageRoutingModule } from './home-routing.module';
 import { HomePage } from './home.page';
@@ -36,6 +39,13 @@ import { HomePage } from './home.page';
         FormsModule,
         IonicModule,
         BookPageModule,
+        TranslateModule.forRoot({
+            loader: {
+                provide: TranslateLoader,
+                useFactory: (createTranslateHttpLoader),
+                deps: [HttpClient]
+            }
+        }),
         MglTimelineModule,
         MaterialModule,
         HomePageRoutingModule

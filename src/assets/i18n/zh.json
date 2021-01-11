@@ -1,0 +1,23 @@
+{
+    "header": {
+        "appName": "YAGR Gitbook阅读器",
+        "tooltip": {
+            "addBooK": "从已知Git repo添加一本书",
+            "openSearchPage": "打开搜索页面",
+            "bookList": {
+                "currentlyReading": "正在看的书",
+                "onShelf": "书架上的书",
+                "recycled": "暂存在回收站的书"
+            }
+        }
+    },
+    "search": {
+        "keywords": "关键字",
+        "tooltip": {
+            "clearKeywords": "清除关键字"
+        },
+        "hint": "搜索用到的关键字，以空格分开",
+        "required": "必须提供",
+        "searchSubmit": "搜 索"
+    }
+}

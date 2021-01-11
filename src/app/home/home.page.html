@@ -1,12 +1,12 @@
 <ion-header>
     <ion-toolbar slots="end" class="app-toolbar">
-        <ion-title style="position: absolute; left: 150px;">YAGR Gitbook阅读器</ion-title>
+        <ion-title style="position: absolute; left: 150px;">{{'header.appName' | translate}}</ion-title>
         <ion-fab vertical="center" horizontal="end" edge>
             <ion-grid>
                 <ion-row>
                     <!-- 添加一本书 -->
                     <ion-col>
-                        <ion-fab-button color="light" (click)="openAddBookDialog()" matTooltip="从已知Git repo添加一本书" >
+                        <ion-fab-button color="light" (click)="openAddBookDialog()" matTooltip="{{'header.tooltip.addBook' | translate}}" >
                             <ion-avatar>
                                 <ion-icon name="add-outline" style="position: absolute; right: 5px; bottom: 10px;"></ion-icon>
                                 <img src="assets/images/closed-book-clipart-12-512x512.png" />
@@ -16,7 +16,7 @@
 
                     <!-- 云上书籍 -->
                     <ion-col>
-                        <ion-fab-button color="light" (click)="openSearchPage()" matTooltip="打开搜索页面" >
+                        <ion-fab-button color="light" (click)="openSearchPage()" matTooltip="{{'header.tooltip.openSearchPage' | translate}}" >
                             <ion-avatar id="avatar-cloud-search">
                                 <ion-icon name="search-outline" style="position: absolute; right: 5px; bottom: 10px;"></ion-icon>
                                 <img src="assets/images/books-cloud.png" />
@@ -29,7 +29,8 @@
                         <ion-badge color="success" style="position: absolute; right: 0px; top: 0px; overflow: visible!important;">
                             {{currentlyReading}}
                         </ion-badge>
-                        <ion-fab-button color="light" (click)="displayBookListCurrentlyReading()" matTooltip="正在看的书">
+                        <ion-fab-button color="light" (click)="displayBookListCurrentlyReading()" 
+                            matTooltip="{{'header.tooltip.bookList.currentlyReading' | translate}}">
                             <ion-avatar id="avatar-currently-reading">
                                 <img src="assets/images/currently-reading-books.png" />
                             </ion-avatar>
@@ -41,7 +42,8 @@
                         <ion-badge color="success" style="position: absolute; right: 0px; top: 0px; overflow: visible!important;">
                             {{onShelf}}
                         </ion-badge>
-                        <ion-fab-button color="light" (click)="displayBookListOnShelf()" matTooltip="书架上的书">
+                        <ion-fab-button color="light" (click)="displayBookListOnShelf()" 
+                            matTooltip="{{'header.tooltip.bookList.onShelf' | translate}}">
                             <ion-avatar id="avatar-on-shelf">
                                 <img src="assets/images/bookshelf-512.png" />
                             </ion-avatar>
@@ -54,7 +56,8 @@
                             {{recycled}}
                         </ion-badge>
 
-                        <ion-fab-button color="light" (click)="displayBookListRecycled()" matTooltip="暂存在回收站的书">
+                        <ion-fab-button color="light" (click)="displayBookListRecycled()" 
+                            matTooltip="{{'header.tooltip.bookList.recycled' | translate}}">
                             <ion-avatar id="avatar-recycled">
                                 <img src="assets/images/trash_full_512x512.png" />
                             </ion-avatar>
@@ -71,18 +74,18 @@
                  slot="fixed"
                  fxLayoutGap="10px"> 
                 <mat-form-field class="search-input-form-field" fxFlex="25">
-                    <mat-label>关键字</mat-label>
+                    <mat-label>{{'search.keywords' | translate}}</mat-label>
                     <input type="text" matInput [formControl]="keywordsFormControl" 
                            [(ngModel)]="keywords"
                            [errorStateMatcher]="matcher" />
                     <button mat-button 
-                            matTooltip="清除关键字"
+                            matTooltip="{{'search.tooltip.clearKeywords' | translate}}"
                             *ngIf="keywords" matSuffix mat-icon-button aria-label="Clear" (click)="clearKeywords()">
                         <ion-icon class="remove-search-keywords" name="close-outline"></ion-icon>
                     </button>
-                    <mat-hint>搜索用到的关键字，以空格分开</mat-hint>
+                    <mat-hint>{{'search.hint' | translate}}</mat-hint>
                     <mat-error *ngIf="keywordsFormControl.hasError('required')">
-                        关键字 <strong>必须提供</strong>
+                        {{'search.keywords' | translate}}<strong>{{'search.required' | translate}}</strong>
                     </mat-error>
                 </mat-form-field>
 
@@ -100,7 +103,7 @@
                 <button mat-stroked-button color="primary" 
                                            (click)="cloudSearch(1)"
                                            [disabled]="!keywordsFormControl.valid">
-                    <ion-text color="light"><ion-icon name="search-outline"></ion-icon>搜 索</ion-text>
+                    <ion-text color="light"><ion-icon name="search-outline"></ion-icon>{{'search.searchSubmit' | translate}}</ion-text>
                 </button>
             </div>
         </form>
