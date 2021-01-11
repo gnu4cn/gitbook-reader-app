@@ -8,6 +8,12 @@ ion-header {
     ion-toolbar.search-toolbar{
         --background: #424242;
     }
+
+    ion-title {
+        position: absolute; 
+        left: 100px;
+        top: 30px;
+    }
 }
 
 ion-content {

@@ -1,6 +1,6 @@
 <ion-header>
     <ion-toolbar slots="end" class="app-toolbar">
-        <ion-title style="position: absolute; left: 150px;">{{'header.appName' | translate}}</ion-title>
+        <ion-title>{{'header.appName' | translate}}</ion-title>
         <ion-fab vertical="center" horizontal="end" edge>
             <ion-grid>
                 <ion-row>
@@ -137,7 +137,7 @@
     <!--最近搜索项-->
     <div *ngIf="search" class="right-side-bar" slot="fixed" 
         fxLayout="column" fxLayoutGap="10px">
-        <h2>{{search.histories}}</h2>
+        <h2>{{'search.histories' | translate}}</h2>
         <div fxLayout="column" fxFill fxLayoutGap="10px">
             <mat-card matButton (click)="historySearch(history.keywords, history.platform)"
                       style="width: 95%"

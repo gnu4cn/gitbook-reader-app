@@ -2,8 +2,8 @@
     "header": {
         "appName": "YAGR - Yet Another Gitbook Reader",
         "tooltip": {
-            "addBooK": "Add a book from known git repository",
             "openSearchPage": "Open the search page",
+            "addBook": "Add a book from known git repository",
             "bookList": {
                 "currentlyReading": "Books currently reading",
                 "onShelf": "Books on shelf",

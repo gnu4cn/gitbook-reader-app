@@ -2,7 +2,7 @@
     "header": {
         "appName": "YAGR Gitbook阅读器",
         "tooltip": {
-            "addBooK": "从已知Git repo添加一本书",
+            "addBook": "从已知Git repo添加一本书",
             "openSearchPage": "打开搜索页面",
             "bookList": {
                 "currentlyReading": "正在看的书",
