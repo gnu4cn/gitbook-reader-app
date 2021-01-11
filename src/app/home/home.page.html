@@ -137,7 +137,7 @@
     <!--最近搜索项-->
     <div *ngIf="search" class="right-side-bar" slot="fixed" 
         fxLayout="column" fxLayoutGap="10px">
-        <h2>搜索历史</h2>
+        <h2>{{search.histories}}</h2>
         <div fxLayout="column" fxFill fxLayoutGap="10px">
             <mat-card matButton (click)="historySearch(history.keywords, history.platform)"
                       style="width: 95%"

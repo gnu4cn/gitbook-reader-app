@@ -18,6 +18,7 @@
         },
         "hint": "搜索用到的关键字，以空格分开",
         "required": "必须提供",
-        "searchSubmit": "搜 索"
+        "searchSubmit": "搜 索",
+        "histories": "搜索历史"
     }
 }
