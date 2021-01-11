@@ -4,8 +4,6 @@ import { Component,
     AfterViewInit
 } from '@angular/core';
 
-import { TranslateService } from '@ngx-translate/core';
-
 import { 
     MatDialog, 
 } from '@angular/material/dialog';
@@ -15,6 +13,7 @@ import {ErrorStateMatcher} from '@angular/material/core';
 import {PageEvent} from '@angular/material/paginator';
 
 import { FetchService } from './services/fetch.service';
+import { I18nService } from '../i18n/i18n.service';
 
 import {
     MatSnackBar,
@@ -102,15 +101,11 @@ export class HomePage implements OnInit, AfterViewInit {
         private opMessage: OpMessageService,
         private message: MessageService,
         private fetchService: FetchService,
-        private translate: TranslateService,
+        private i18n: I18nService,
         private cdr: ChangeDetectorRef,
         private book: BookService,
     ) {
         this.bookList = book.list;
-
-        translate.addLangs(['zh', 'en']);
-        translate.setDefaultLang('en');
-        translate.use('en');
     }
 
     get searchHistory () {

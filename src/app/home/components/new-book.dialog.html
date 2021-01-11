@@ -1,30 +1,29 @@
-<h1 mat-dialog-title>添加新书</h1>
+<h1 mat-dialog-title>{{'home.newBook.title' | translate}}</h1>
 <div mat-dialog-content>
-    <p>Git repo 地址格式通常为(来自Github的示例)：</p>
+    <p>{{'home.newBook.content.title' | translate}}</p>
     <ul>
         <li><code>https://github.com/gnu4cn/ccna60d[.git]</code></li>
         <li><code>git@github.com:gnu4cn/ccna60d[.git]</code></li>
     </ul>
-    <p>也可以从Gitlab、Gitee 等处下载到使用Markdown编写的书籍...</p>
+    <p>{{'home.newBook.content.content' | translate}}</p>
     <form>
         <!-- bookUriInput -->
         <mat-form-field fxFill style="font-size: 16px">
-            <mat-label>书籍Git Repo地址</mat-label>
+            <mat-label>{{'home.newBook.repo.label' | translate}}</mat-label>
             <input matInput [formControl]="uriInputControl" required [(ngModel)]="newBook.bookUri" />
             <mat-error *ngIf="uriInputControl.invalid">{{getErrorMsg()}}</mat-error>
         </mat-form-field>
 
         <!-- bookCateListInput -->
         <mat-form-field fxFill style="font-size: 16px">
-            <mat-label>书籍分类(<b>不能为空</b>)</mat-label>
+            <mat-label>{{'home.newBook.cateList.label.prefix' | translate}}(<b>{{'home.newBook.cateList.label.required' | translate}}</b>)</mat-label>
             <mat-chip-list #chipList aria-label="Book cate selection">
                 <mat-chip [selectable]="selectable" [removable]="removable" *ngFor="let cate of newBook.cateList"
                         (removed)="remove(cate)">
                     {{cate.name}}
                     <ion-icon matChipRemove *ngIf="removable" name="close-circle"></ion-icon>
                 </mat-chip>
-                <input 
-                        placeholder="加入类别(以逗号，回车结束)"
+                <input placeholder="{{'home.newBook.cateList.input.placeholder' | translate}}"
                        #cateInput
                        [formControl]="cateListInputControl"
                        [matAutocomplete]="auto"
@@ -41,6 +40,8 @@
     </form>
 </div>
 <div mat-dialog-actions>
-    <button mat-button matDialogClose>暂不添加</button>
-    <button mat-button [disabled]="!uriInputControl.valid || newBook.cateList.length === 0" [mat-dialog-close]="newBook">添加</button>
+    <button mat-button matDialogClose>{{'home.newBook.actions.cancel' | translate}}</button>
+    <button mat-button [disabled]="!uriInputControl.valid || newBook.cateList.length === 0" 
+            [mat-dialog-close]="newBook">{{'home.newBook.actions.add' | translate}}
+    </button>
 </div>

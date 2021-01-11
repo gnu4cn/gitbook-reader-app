@@ -10,6 +10,8 @@ import {
     MAT_DIALOG_DATA 
 } from '@angular/material/dialog';
 
+import { I18nService } from '../../i18n/i18n.service';
+
 import { 
     IDeleteBookDialogResData,
 } from '../../vendor';
@@ -23,6 +25,7 @@ import { Book } from '../../models';
 export class DeleteBookDialog implements OnInit{
     constructor(
         public dialogRef: MatDialogRef<DeleteBookDialog>,
+        private i18n: I18nService,
         @Inject(MAT_DIALOG_DATA) public data: Book
     ) {}
 
@@ -45,8 +48,4 @@ export class DeleteBookDialog implements OnInit{
     }
 
     ngOnInit() {}
-
-    onNoClick(): void {
-        this.dialogRef.close();
-    }
 }

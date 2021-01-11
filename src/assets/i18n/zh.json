@@ -20,5 +20,120 @@
         "required": "必须提供",
         "searchSubmit": "搜 索",
         "histories": "搜索历史"
+    },
+    "book": {
+        "tocPagination": {
+            "lastChapter": "上个部分",
+            "nextChapter": "下一部分"
+        },
+        "rightSideBar": {
+            "printThisPage": "打印此页面",
+            "editThisPage": "编辑此页面",
+            "content": "内容"
+        },
+        "footer": {
+            "writer": "作者："
+        }
+    },
+    "read": {
+        "search": {
+            "placeholder": "搜索项",
+            "notFound": "未找到"
+        }
+    },
+    "home": {
+        "bookList": {
+            "readTimes": "次阅读",
+            "modify": "修改",
+            "readingRecord": "阅读记录",
+            "read": "阅读",
+            "download": "下载",
+            "remove": "删除",
+            "operation": "操作",
+            "cloneErrorMsg": " - 无法下载，建议删除"
+        },
+        "deleteBook": {
+            "remove": "删除 - ",
+            "precautions": "删除注意事项：",
+            "recycleRemind": {
+                "prefix": "选择放入“回收站”，将 ",
+                "important": "删除该书籍的阅读记录",
+                "last": "，可在回收站中查看并恢复删除的书籍"
+            },
+            "deleteRemind": {
+                "prefix": "选择彻底删除，",
+                "important": "系统将删除下载的该书籍所有文件，并从数据库中移除书籍与该书籍的阅读记录"
+            },
+            "closeDialogRemind": "关闭此对话框，将不进行任何操作",
+            "actions": {
+                "cancel": "放弃",
+                "recycle": "放入回收站",
+                "putItBack": "重新放回书架",
+                "remove": "彻底删除"
+            },
+            "tooltip": {
+                "recycle": "将本书放入回收站",
+                "putItBack": "将本书重新放回书架"
+            }
+        },
+        "editCateList": {
+            "title": {
+                "prefix": "修改书籍 “",
+                "last": "” 类别"
+            },
+            "label": {
+                "prefix": "书籍分类",
+                "required": "不能为空"
+            },
+            "input": {
+                "placeholder": "加入类别(以逗号，回车结束)"
+            },
+            "actions": {
+                "cancel": "放弃修改",
+                "modify": "修改"
+            }
+        },
+        "newBook": {
+            "title": "添加新书",
+            "content": {
+                "title": "Git repo 地址格式通常为(来自Github的示例)：",
+                "content": "也可以从Gitlab、Gitee 等处下载到使用Markdown编写的书籍..."
+            },
+            "repo": {
+                "label": "书籍Git Repo地址"
+            },
+            "cateList": {
+                "label": {
+                    "prefix": "书籍分类",
+                    "required": "不能为空"
+                },
+                "input": {
+                    "placeholder": "加入类别(以逗号，回车结束)"
+                }
+            },
+            "actions": {
+                "cancel": "暂不添加",
+                "add": "添加"
+            }
+        },
+        "readingRecord": {
+            "title": {
+                "prefix": " 阅读记录 - 共 ",
+                "last": " 条"
+            },
+            "actions": {
+                "cancel": "关闭"
+            }
+        },
+        "readme": {
+            "actions": {
+                "cancel": "关闭"
+            }
+        },
+        "search": {
+            "putItOnShelf": "放到书架",
+            "stars": "获星",
+            "dateUpdated": "更新时间："
+        }
     }
 }

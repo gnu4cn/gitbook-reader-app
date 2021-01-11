@@ -7,6 +7,7 @@ import {
     getReadableDate,
 } from '../../vendor';
 
+import { I18nService } from '../../i18n/i18n.service';
 import { NewBookDialog } from './new-book-dialog.component';
 import { BookService } from '../services/book.service';
 
@@ -25,6 +26,7 @@ export class SearchComponent implements OnInit {
 
     constructor(
         private dialog: MatDialog,
+        private i18n: I18nService,
         private book: BookService
     ) {}
 

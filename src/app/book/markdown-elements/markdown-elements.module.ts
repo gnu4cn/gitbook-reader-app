@@ -7,6 +7,8 @@ import visit from 'unist-util-visit';
 import * as MDAST from 'mdast';
 import * as UNIFIED from 'unified';
 
+import { I18nModule } from '../../i18n/i18n.module';
+
 import { customSmartCodes } from '../shared/shortcodes';
 import { MarkdownService } from '../markdown/markdown.service';
 import { LocationService } from '../services/location.service';
@@ -37,6 +39,7 @@ const elements = [
 @NgModule({
     imports: [
         CommonModule,
+        I18nModule,
         RouterModule
     ],
     exports: [

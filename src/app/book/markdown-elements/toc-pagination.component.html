@@ -3,7 +3,7 @@
         <a class="prev" [routerLink]="prev.link">
 
             <div class="pagination-item-label">
-                <span>« 上个部分</span>
+                <span>« {{'book.tocPagination.lastChapter' | translate}}</span>
             </div>
             <div class="pagination-item-title">{{prev.title}}</div>
         </a>
@@ -11,7 +11,7 @@
     <div class="pagination-item pagination-item--next" *ngIf="next">
         <a class="next" [routerLink]="next.link">
             <div class="pagination-item-label">
-                <span>下一部分 »</span>
+                <span>{{'book.tocPagination.nextChapter' | translate}} »</span>
             </div>
             <div class="pagination-item-title">{{next.title}}</div>
         </a>

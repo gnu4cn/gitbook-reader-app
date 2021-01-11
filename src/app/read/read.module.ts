@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
+import { I18nModule } from '../i18n/i18n.module';
 import { BookPageModule } from '../book/book.module';
 
 import { ReadPageRoutingModule } from './read-routing.module';
@@ -14,6 +15,7 @@ import { ReadPage } from './read.page';
         CommonModule,
         FormsModule,
         IonicModule,
+        I18nModule,
         BookPageModule,
         ReadPageRoutingModule
     ],

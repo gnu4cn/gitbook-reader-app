@@ -9,7 +9,18 @@ import { join as _join } from 'path';
 
 @Component({
     selector: 'docspa-edit-on-github', // tslint:disable-line
-    template: `<a [attr.href]="href" target="_blank"><ng-content></ng-content></a>`,
+    template: `<a [attr.href]="href" target="_blank">
+        <small>
+            <ion-icon name="create-outline" size="small"></ion-icon>{{'book.rightSideBar.editThisPage' | translate}}
+        </small>
+        </a>
+
+    <br />
+
+    <small>
+        <object type="image/svg+xml" data="assets/icon/content.svg"></object>{{'book.rightSideBar.content' | translate}}
+    </small>
+    `,
     styles: []
 })
 export class EditOnGithubComponent implements OnInit {

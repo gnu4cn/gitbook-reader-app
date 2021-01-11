@@ -12,6 +12,7 @@ import {
     MatDialog, 
 } from '@angular/material/dialog';
 
+import { I18nService } from '../../i18n/i18n.service';
 import { CrudService } from '../../services/crud.service';
 import { Book, Category } from '../../models';
 import { BookService } from '../services/book.service';
@@ -54,6 +55,7 @@ export class BookListComponent implements OnInit, OnChanges {
         private crud: CrudService,
         private dialog: MatDialog,
         private book: BookService,
+        private i18n: I18nService,
         private cdr: ChangeDetectorRef,
         private opMessage: OpMessageService
     ) {}

@@ -35,7 +35,7 @@
                     type="search"
                     value=""
                     (searchOutput)="searchResults = $event"
-                    placeholder="搜索项"
+                    placeholder="{{'read.search.placeholder' | translate}}"
                     class="form-control"
                     id="search-input"
                     aria-label="Search topics">
@@ -49,7 +49,7 @@
             </div>
 
             <div class="results-panel" [class.show]="searchResults">
-                <p class="empty" *ngIf="searchResults?.length === 0">未找到!</p>
+                <p class="empty" *ngIf="searchResults?.length === 0">{{'read.search.notFound' | translate}}</p>
                 <div class="matching-post" *ngFor="let result of searchResults | slice:0:9">
                     <a [routerLink]="result.link" [fragment]="result.fragment" (click)="clearSearchResults()">
                         <h2 [innerHTML]="result.name"></h2>
@@ -80,7 +80,7 @@
 
     <aside *ngIf="rightSidebarPage" class="sidebar right-sidebar" [listCollapse]="inScrollHashes">
         <a href="javascript: void(0)" (click)="print()">
-            <small><ion-icon name="print-outline" size="small"></ion-icon> 打印此页面</small>
+            <small><ion-icon name="print-outline" size="small"></ion-icon>{{'book.rightSideBar.printThisPage' | translate}}</small>
         </a>
         <docspa-md-include class="sidebar-nav" [path]="rightSidebarPage" [safe]="true"></docspa-md-include>
     </aside>

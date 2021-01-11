@@ -9,6 +9,8 @@ import frontmatter from 'remark-frontmatter';
 import RegexEscape from 'regex-escape';
 
 import { RouterService } from '../services/router.service';
+
+import { I18nService } from '../../i18n/i18n.service';
 import { MarkdownService } from '../markdown/markdown.service';
 import { SearchService } from '../services/search.service';
 import { LocationService } from '../services/location.service';
@@ -43,6 +45,7 @@ export class TOCPaginationComponent implements OnInit, OnChanges {
         private fetchService: FetchService,
         private routerService: RouterService,
         private markdownService: MarkdownService,
+        private i18n: I18nService,
         private locationService: LocationService,
     ) {}
 

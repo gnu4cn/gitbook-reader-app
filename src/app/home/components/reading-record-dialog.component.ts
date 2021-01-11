@@ -11,6 +11,7 @@ import {
     MAT_DIALOG_DATA 
 } from '@angular/material/dialog';
 
+import { I18nService } from '../../i18n/i18n.service';
 import { Book, Record } from '../../models';
 import { CrudService } from '../../services/crud.service';
 import { MessageService } from '../../services/message.service';
@@ -41,6 +42,7 @@ export class ReadingRecordDialog implements OnInit{
     constructor(
         private dialogRef: MatDialogRef<ReadingRecordDialog>,
         private crud: CrudService,
+        private i18n: I18nService,
         private cdr: ChangeDetectorRef,
         private message: MessageService,
         @Inject(MAT_DIALOG_DATA) public data: Book

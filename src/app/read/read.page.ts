@@ -11,6 +11,8 @@ import { ActivatedRoute } from '@angular/router';
 import { combineLatest } from 'rxjs';
 import { parse } from 'url';
 
+import { I18nService } from '../i18n/i18n.service';
+
 import { HooksService } from '../book/services/hooks.service';
 import { RouterService } from '../book/services/router.service';
 import { SettingsService } from '../book/services/settings.service';
@@ -58,6 +60,7 @@ export class ReadPage implements OnInit, AfterViewInit, OnDestroy {
         private hooks: HooksService,
         private activatedRoute: ActivatedRoute,
         private message: MessageService,
+        private i18n: I18nService,
         private printService: PrintService,
         private crud: CrudService,
     ) {

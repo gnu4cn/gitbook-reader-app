@@ -1,9 +1,11 @@
-<h1 mat-dialog-title>修改书籍 "{{data.name}}" 类别</h1>
+<h1 mat-dialog-title>{{'home.editCateList.title.prefix' | translate}}{{data.name}}{{'home.editCateList.title.last' | translate}}</h1>
 <div mat-dialog-content>
     <form>
         <!-- bookCateListInput -->
         <mat-form-field fxFill style="font-size: 16px">
-            <mat-label>书籍分类(<b>不能为空</b>)</mat-label>
+            <mat-label>
+                {{'home.editCateList.label.prefix' | translate}}(<b>{{'home.editCateList.label.required' | translate}}</b>)
+            </mat-label>
             <mat-chip-list #chipList aria-label="Book cate selection">
                 <mat-chip
                     *ngFor="let cate of data.cateList"
@@ -14,7 +16,7 @@
                     <ion-icon matChipRemove *ngIf="removable" name="close-circle"></ion-icon>
                 </mat-chip>
                 <input
-                        placeholder="加入类别(以逗号，回车结束)"
+                    placeholder="{{'home.editCateList.input.placeholder' | translate}}"
                     #cateInput
                     [formControl]="cateListInputControl"
                     [matAutocomplete]="auto"
@@ -31,6 +33,8 @@
     </form>
 </div>
 <div mat-dialog-actions>
-    <button mat-button matDialogClose>放弃修改</button>
-    <button mat-button [disabled]="data.cateList.length === 0" [mat-dialog-close]="data">修改</button>
+    <button mat-button matDialogClose>{{'home.editCateList.actions.cancel' | translate}}</button>
+    <button mat-button [disabled]="data.cateList.length === 0" [mat-dialog-close]="data">
+        {{'home.editCateList.actions.modify' | translate}}
+    </button>
 </div>

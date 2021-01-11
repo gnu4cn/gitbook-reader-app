@@ -10,6 +10,7 @@ import { IonicModule } from '@ionic/angular';
 import { MarkdownElementsModule } from './markdown-elements/markdown-elements.module';
 import { MarkdownModule } from './markdown/markdown.module';
 import { DocsifyPluginsModule } from './docsify-plugins.module';
+import { I18nModule } from '../i18n/i18n.module';
 
 import { MARKDOWN_CONFIG_TOKEN } from './markdown/markdown.service';
 
@@ -48,6 +49,7 @@ import { UiImageLoaderDirective } from './directives/ui-image-loader.directive';
         FormsModule,
         IonicModule,
         RouterModule,
+        I18nModule,
         HttpClientModule,
         MarkdownModule,
         MarkdownElementsModule,

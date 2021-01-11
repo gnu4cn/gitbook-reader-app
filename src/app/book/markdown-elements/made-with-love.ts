@@ -14,7 +14,7 @@ import { join } from '../shared/utils';
     </ng-template>
     <span [style.font-size.em]="size">
       <ng-container *ngIf="url && url.length > 0; else noUrl">
-        作者：<a [attr.href]="url" target="_blank" [style.color]="color" rel="noopener">
+        {{'book.footer.writer' | translate}}<a [attr.href]="url" target="_blank" [style.color]="color" rel="noopener">
           <ng-content></ng-content>
           <slot></slot>
           {{name}}

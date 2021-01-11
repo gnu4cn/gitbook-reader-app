@@ -17,8 +17,123 @@
             "clearKeywords": "Clear keywords"
         },
         "hint": "Keywords for searching",
-        "required": "Required",
+        "required": " Required",
         "searchSubmit": "Search",
         "histories": "Search histories"
+    },
+    "book": {
+        "tocPagination": {
+            "lastChapter": "Previous",
+            "nextChapter": "Next"
+        },
+        "rightSideBar": {
+            "printThisPage": "Print this page",
+            "editThisPage": "Edit this page",
+            "content": "Content"
+        },
+        "footer": {
+            "writer": "By "
+        }
+    },
+    "read": {
+        "search": {
+            "placeholder": "Search items",
+            "notFound": "Not Found"
+        }
+    },
+    "home": {
+        "bookList": {
+            "readTimes": "Readings",
+            "modify": "Modify",
+            "readingRecord": "Reading Record",
+            "read": "Read",
+            "download": "Download",
+            "remove": "Remove",
+            "operation": "Operation",
+            "cloneErrorMsg": " - Error occured during downloading, Please remove it"
+        },
+        "deleteBook": {
+            "remove": "Delete - ",
+            "precautions": "Precautions",
+            "recycleRemind": {
+                "prefix": "If chose recycle the book, ",
+                "important": "this will remove reading record of the book",
+                "last": "You can found the book in recycling bin"
+            },
+            "deleteRemind": {
+                "prefix": "If chose remove the book, ",
+                "important": "This will delete all the book files, and the book and its' reading record data will be removed from database"
+            },
+            "closeDialogRemind": "Close this dialog box to do nothing",
+            "actions": {
+                "cancel": "Cancel",
+                "recycle": "Recycle",
+                "putItBack": "Put back",
+                "remove": "Remove"
+            },
+            "tooltip": {
+                "recycle": "Put it in recycling bin",
+                "putItBack": "Put it back on the shelf"
+            }
+        },
+        "editCateList": {
+            "title": {
+                "prefix": "Modify book ",
+                "last": " Categories "
+            },
+            "label": {
+                "prefix": "Book categories",
+                "required": " Required"
+            },
+            "input": {
+                "placeholder": "Add categories(divided with SPACE/COMMA, ends with ENTER)"
+            },
+            "actions": {
+                "cancel": "Cancel",
+                "modify": "Change"
+            }
+        },
+        "newBook": {
+            "title": "Add book",
+            "content": {
+                "title": "Git repo uri format looks like this:",
+                "content": "You can download books from Gitlab、Gitee and other git platforms"
+            },
+            "repo": {
+                "label": "Book git repo uri"
+            },
+            "cateList": {
+                "label": {
+                    "prefix": "Book Categories",
+                    "required": " Required"
+                },
+                "input": {
+                    "placeholder": "Add categories(divided with space, comma)"
+                }
+            },
+            "actions": {
+                "cancel": "Cancel",
+                "add": "Add"
+            }
+        },
+        "readingRecord": {
+            "title": {
+                "prefix": " Reading records - totally ",
+                "last": " items"
+            },
+            "actions": {
+                "cancel": "Close"
+            }
+        },
+        "readme": {
+            "actions": {
+                "cancel": "Close"
+            }
+        },
+        "search": {
+            "putItOnShelf": "Put it on shelf",
+            "stars": "Star ",
+            "dateUpdated": "Date updated: "
+        }
     }
 }

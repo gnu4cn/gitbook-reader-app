@@ -6,7 +6,7 @@
     <ion-badge color="warning" 
                style="position: absolute; right: -5px; top: -10px;" 
                *ngIf="book.recordList && book.recordList.length > 0">
-        {{book.recordList.length}}次阅读
+        {{book.recordList.length}} {{'home.bookList.readTimes' | translate}}
     </ion-badge>
     <mat-card-title>{{(book.name.length > 24 ? book.name.slice(0,23)+'...' : book.name) | uppercase}}</mat-card-title>
 
@@ -36,7 +36,7 @@
                 <ion-label>{{cate.name}}</ion-label>
             </mat-chip>
             <button class="modify-cate-list" (click)="openEditBookCateListDialog(book)" mat-button>
-                <ion-icon name="cog-outline"></ion-icon>修改
+                <ion-icon name="cog-outline"></ion-icon>{{'home.bookList.modify' | translate}}
             </button>
         </mat-chip-list>
     </mat-card-content>
@@ -45,30 +45,30 @@
     <mat-card-actions fxLayout="row" fxLayoutGap="0px">
         <button class="action-button" mat-button *ngIf="book.recordList && book.recordList.length > 0" 
                 (click)="openReadingRecordDialog(book)">
-            <ion-icon name="list-outline"></ion-icon>阅读记录
+            <ion-icon name="list-outline"></ion-icon>{{'home.bookList.readingRecord' | translate}}
         </button>
         <button class="action-button" mat-button *ngIf="book.downloaded" (click)="openReadmeDialog(book)">
             <ion-icon name="compass-outline"></ion-icon>README
         </button>
         <button class="action-button" mat-button *ngIf="book.downloaded" (click)="openBook(book)">
-            <ion-icon name="book-outline"></ion-icon>阅读
+            <ion-icon name="book-outline"></ion-icon>{{'home.bookList.read' | translate}}
         </button>
         <button class="action-button" id="{{ 'download-book-' + book.id }}" mat-button 
                 *ngIf="!book.downloaded" (click)="startDownload(book)">
-            <ion-icon name="cloud-download-outline"></ion-icon>下载
+            <ion-icon name="cloud-download-outline"></ion-icon>{{'home.bookList.download' | translate}}
         </button>
         <button class="action-button" 
                 id="{{ 'delete-book-' + book.id }}" mat-button (click)="openDeleteBookDialog(book)" 
                 *ngIf="!book.downloaded || !book.recycled"
                 [disabled]="book.recycled">
-            <ion-icon name="close-outline" sizme="small"></ion-icon>删除
+            <ion-icon name="close-outline" sizme="small"></ion-icon>{{'home.bookList.remove' | translate}}
         </button>
         <button class="action-button" mat-button *ngIf="book.recycled" (click)="openDeleteBookDialog(book)">
-            <ion-icon name="cog-outline" sizme="small"></ion-icon>操作
+            <ion-icon name="cog-outline" sizme="small"></ion-icon>{{'home.bookList.operation' | translate}}
         </button>
     </mat-card-actions>
 
     <mat-card-content *ngIf="book.errMsg">
-        <ion-text color="danger">{{book.errMsg}} - 无法下载，建议删除</ion-text>
+        <ion-text color="danger">{{book.errMsg}}{{'home.bookList.cloneErrorMsg' | translate}}</ion-text>
     </mat-card-content>
 </mat-card>

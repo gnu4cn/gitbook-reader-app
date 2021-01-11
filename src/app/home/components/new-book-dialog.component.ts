@@ -18,6 +18,8 @@ import {
 import { MatAutocompleteSelectedEvent, MatAutocomplete} from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 
+import { I18nService } from '../../i18n/i18n.service';
+
 import { Category } from '../../models';
 import { 
     IsQualifiedAndNotExistedGitRepoValidatorFn,
@@ -55,6 +57,7 @@ export class NewBookDialog implements OnInit{
 
     constructor(
         public dialogRef: MatDialogRef<NewBookDialog>,
+        private i18n: I18nService,
         private book: BookService,
         private cate: CateService,
         @Inject(MAT_DIALOG_DATA) public bookUri: string 

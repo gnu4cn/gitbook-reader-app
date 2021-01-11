@@ -1,13 +1,2 @@
-<md-edit-on-github>
-    <small>
-        <ion-icon name="create-outline" size="small"></ion-icon>编辑此页面
-    </small>
-</md-edit-on-github>
-
-<br />
-
-<small>
-    <object type="image/svg+xml" data="assets/icon/content.svg"></object>内容
-</small>
-
+<md-edit-on-github></md-edit-on-github>
 <md-toc class="collapsible" min-depth="2"><md-toc>

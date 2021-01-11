@@ -18,6 +18,7 @@ import {
 import { MatAutocompleteSelectedEvent, MatAutocomplete} from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 
+import { I18nService } from '../../i18n/i18n.service';
 import { 
     Category, 
     Book,
@@ -48,6 +49,7 @@ export class EditBookCateListDialog implements OnInit{
     constructor(
         public dialogRef: MatDialogRef<EditBookCateListDialog>,
         private cate: CateService,
+        private i18n: I18nService,
         @Inject(MAT_DIALOG_DATA) public data: Book
     ) {
         this.filteredCateList = this.cateListInputControl.valueChanges.pipe(

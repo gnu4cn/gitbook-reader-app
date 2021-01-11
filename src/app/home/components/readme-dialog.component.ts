@@ -12,6 +12,7 @@ import {
 
 import { join } from 'path';
 
+import { I18nService } from '../../i18n/i18n.service';
 import { Book } from '../../models';
 
 @Component({
@@ -22,6 +23,7 @@ import { Book } from '../../models';
 export class ReadmeDialog implements OnInit{
     constructor(
         private dialogRef: MatDialogRef<ReadmeDialog>,
+        private i18n: I18nService,
         @Inject(MAT_DIALOG_DATA) public data: Book
     ) {}
 
