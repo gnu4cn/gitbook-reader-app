@@ -7,23 +7,30 @@ ion-toolbar, ion-header {
     --min-height: 80px;
 }
 
-mat-chip.cate-chip:hover {
-    cursor: pointer;
+mat-card {
+    margin: 10px 5px 5px 5px;
 }
 
 mat-card:hover {
     background-color: #4f4f4f;
 }
 
-mat-card-actions {
-    border-bottom: 1px;
+.action-button {
     visibility: hidden;
 }
 
-mat-card {
-    margin: 10px 5px 5px 5px;
+mat-card-actions:hover .action-button{
+    visibility: visible;
 }
 
-mat-card:hover mat-card-actions {
+.cate-chip:hover {
+    cursor: pointer;
+}
+
+.modify-cate-list {
+    visibility: hidden;
+}
+
+.cate-list:hover .modify-cate-list {
     visibility: visible;
 }
