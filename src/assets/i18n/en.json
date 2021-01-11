@@ -18,6 +18,7 @@
         },
         "hint": "Keywords for searching",
         "required": "Required",
-        "searchSubmit": "Search"
+        "searchSubmit": "Search",
+        "histories": "Search histories"
     }
 }
