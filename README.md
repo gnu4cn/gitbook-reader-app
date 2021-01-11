@@ -1,13 +1,25 @@
-# Gitbook 阅读器
+# YAGR - Yet Another Gitbook READER
+
+There are a lot of books resource written in markdown language on the Internet, you can find from GitHub, GitLab, Gitee... platforms, and most of these books are high quality tech documents. This project is based upon Eletron, Angular, TypeORM, UnifiedJS, NodeGit and other project, the target is a stable, easy to use gitbook reader.
+
+You can Fork and contribute to this project.
 
 网上基于 Markdown 的书籍很多，通常在GitHub、GitLab、Gitee等代码托管与社会化编程网站上都能找到，其中大部分都是高质量的技术文档。本项目基于Electron、Angular、UnifiedJS等既有框架，目标是得到一个稳定、易于使用的Gitbook阅读器。
+
 
 本项目使用了 `nodegit`, `typeorm`, `electron`, `angular`, `@swimlane/docspa-core` 等项目/代码。
 
 ![屏幕截图](yagr-screenshot.png)
 
 
-## 开发日志
+## 开发日志/Dev Logs
+
++ 2021-1-12
+
+    - With `@ngx-translate/core` and `@ngx-translate/http-loader`, now this project supports multilingual UI
+    + Todos:
+        - Optimize I18n
+        - List books under categories
 
 + 2021-1-8
 

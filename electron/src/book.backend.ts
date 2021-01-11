@@ -64,7 +64,7 @@ export class BookBackend {
         });
 
         bookWindow.setMaximizable(true);
-        bookWindow.setMaximizable(true);
+        bookWindow.setMinimizable(true);
         bookWindow.setMinimumSize(1024, 600);
         const webContents = bookWindow.webContents;
         //webContents.openDevTools();
