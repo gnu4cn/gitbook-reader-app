@@ -40,7 +40,6 @@ import {
     IFilter,
     filterFn,
     sortBy,
-    getReadableDate,
     IMessage,
     IQueryResult,
     TAvatarIds, 
@@ -368,9 +367,5 @@ export class HomePage implements OnInit, AfterViewInit {
 
     clearKeywords = () => {
         this.keywords = '';
-    }
-
-    readableDate = (date: Date) => {
-        return getReadableDate(date, this.i18n.browserLang);
     }
 }

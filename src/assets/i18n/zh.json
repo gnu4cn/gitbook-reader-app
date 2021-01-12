@@ -141,5 +141,25 @@
             "stars": "获星",
             "dateUpdated": "更新时间："
         }
+    },
+    "paginationCtrl": {
+        "itemsPerPageLabel": "每页条数",
+        "nextPageLabel": "下一页",
+        "previousPageLabel": "上一页",
+        "of": " 之 "
+    },
+    "readableDate": {
+        "yearsAgo": "年前",
+        "yearAgo": "年前",
+        "monthsAgo": "个月前",
+        "monthAgo": "个月前",
+        "weeksAgo": "个星期前",
+        "weekAgo": "个星期前",
+        "daysAgo": "天前",
+        "dayAgo": "天前",
+        "hoursAgo": "小时前",
+        "hourAgo": "小时前",
+        "minutesAgo": "分钟前",
+        "minuteAgo": "分钟前"
     }
 }

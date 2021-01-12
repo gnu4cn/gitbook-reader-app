@@ -30,6 +30,8 @@ import { MatPaginatorIntlHans } from '../vendor';
 
 import { HomePageRoutingModule } from './home-routing.module';
 import { HomePage } from './home.page';
+import { ReadableDatePipe } from './pipes/readable-date.pipe';
+import { StringToDatePipe } from './pipes/string-to-date.pipe';
 
 @NgModule({
     imports: [
@@ -50,7 +52,9 @@ import { HomePage } from './home.page';
         ReadmeDialog,
         ReadingRecordDialog,
         SnackbarComponent,
-        SearchComponent
+        SearchComponent,
+        ReadableDatePipe,
+        StringToDatePipe
     ],
     providers: [
         BookService,
@@ -59,6 +63,8 @@ import { HomePage } from './home.page';
         CateService,
         OpMessageService,
         PrivateTokensService,
+        ReadableDatePipe,
+        StringToDatePipe,
         FetchService,
         { provide: MatPaginatorIntl, useClass: MatPaginatorIntlHans}
     ]

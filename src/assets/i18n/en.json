@@ -141,5 +141,25 @@
             "stars": "Star ",
             "dateUpdated": "Date updated: "
         }
+    },
+    "paginationCtrl": {
+        "itemsPerPageLabel": "Items per page",
+        "nextPageLabel": "Next",
+        "previousPageLabel": "Previous",
+        "of": " of "
+    },
+    "readableDate": {
+        "yearsAgo": "years ago",
+        "yearAgo": "year ago",
+        "monthsAgo": "months ago",
+        "monthAgo": "month ago",
+        "weeksAgo": "weeks ago",
+        "weekAgo": "week ago",
+        "daysAgo": "days ago",
+        "dayAgo": "day ago",
+        "hoursAgo": "hours ago",
+        "hourAgo": "hour ago",
+        "minutesAgo": "minutes ago",
+        "minuteAgo": "minute ago"
     }
 }

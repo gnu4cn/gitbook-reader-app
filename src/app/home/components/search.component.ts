@@ -4,7 +4,6 @@ import { parseISO } from 'date-fns';
 import { 
     ICloudBook,
     IAddBookDialogResData,
-    getReadableDate,
 } from '../../vendor';
 
 import { I18nService } from '../../i18n/i18n.service';
@@ -41,10 +40,5 @@ export class SearchComponent implements OnInit {
         dialogRef.afterClosed().subscribe((res: IAddBookDialogResData) => {
             if(res) this.book.save(res);
         });
-
-    }
-
-    readableDate = (date: Date) => {
-        return getReadableDate(parseISO(date.toString()), this.i18n.browserLang);
     }
 }

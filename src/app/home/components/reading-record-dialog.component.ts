@@ -18,7 +18,6 @@ import { MessageService } from '../../services/message.service';
 import { 
     IBookWithPath, 
     sortBy, 
-    getReadableDate,
     IMessage,
 } from '../../vendor';
 
@@ -64,10 +63,6 @@ export class ReadingRecordDialog implements OnInit{
                 this.cdr.detectChanges();
             }
         });
-    }
-
-    readableDate = (date: Date) => {
-        return getReadableDate(date, this.i18n.browserLang);
     }
 
     moveTo = (path: string, sectionAnchor?: string) => {

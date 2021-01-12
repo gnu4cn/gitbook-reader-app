@@ -1,19 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { TranslateService } from '@ngx-translate/core';
 
 import { Book, Category, Writer, Website, Record } from './models';
 import { ValidatorFn, AbstractControl } from '@angular/forms';
 import { Injectable } from '@angular/core';
 import { MatPaginatorIntl } from '@angular/material/paginator';
-
-import {
-    differenceInYears,
-    differenceInMonths,
-    differenceInWeeks,
-    differenceInDays,
-    differenceInHours,
-    differenceInMinutes
-} from 'date-fns';
 
 export const createTranslateHttpLoader = (http: HttpClient) => {
     return new TranslateHttpLoader(http, 'assets/i18n/', '.json');
@@ -27,11 +19,20 @@ export const sortBy = (list: Array<any>, prop: string, subProp?: string) => {
 
 @Injectable()
 export class MatPaginatorIntlHans extends MatPaginatorIntl {
-    itemsPerPageLabel = '每页条数';
-    nextPageLabel     = '下一页';
-    previousPageLabel = '前一页';
+    constructor (
+        private translate: TranslateService,
+    ) {
+        super();
 
-    getRangeLabel = function (page, pageSize, length) {
+        translate.get('paginationCtrl.itemsPerPageLabel')
+            .subscribe(_ => this.itemsPerPageLabel = _);
+        translate.get('paginationCtrl.nextPageLabel')
+            .subscribe(_ => this.nextPageLabel = _);
+        translate.get('paginationCtrl.previousPageLabel')
+            .subscribe(_ => this.previousPageLabel = _);
+    }
+
+    getRangeLabel = (page, pageSize, length) => {
         if (length === 0 || pageSize === 0) {
             return '0 od ' + length;
         }
@@ -39,28 +40,11 @@ export class MatPaginatorIntlHans extends MatPaginatorIntl {
         const startIndex = page * pageSize;
         // If the start index exceeds the list length, do not try and fix the end index to the end.
         const endIndex = startIndex < length ?
-            Math.min(startIndex + pageSize, length) :
-            startIndex + pageSize;
-        return startIndex + 1 + ' - ' + endIndex + ' 之 ' + length;
-    };
-}
+            Math.min(startIndex + pageSize, length) 
+            : startIndex + pageSize;
 
-export const getReadableDate = (date: Date, locale: string): string => {
-    const now = new Date();
-    const years = differenceInYears(now, date);
-    const months = differenceInMonths(now, date);
-    const weeks = differenceInWeeks(now, date);
-    const days = differenceInDays(now, date);
-    const hours = differenceInHours(now, date);
-    const minutes = differenceInMinutes(now, date);
-
-    const isHans: boolean = /zh/.test(locale);
-    if(years > 0) return `${years} ${isHans ? '年前' : 'years ago'}`;
-    if(months > 0) return `${months} ${isHans ? '个月前' : 'months ago'}`;
-    if(weeks > 0) return `${weeks} ${isHans ? '周前' : 'weeks ago'}`;
-    if(days > 0) return `${days} ${isHans ? '天前' : 'days ago'}`;
-    if(hours > 0) return `${hours} ${isHans ? '小时前': 'hours ago'}`;
-    return `${minutes} ${isHans ? '分钟前' : 'minutes ago'}`;
+        return startIndex + 1 + ' - ' + endIndex + ' of ' + length;
+    }
 }
 
 export interface ISearchHistory {

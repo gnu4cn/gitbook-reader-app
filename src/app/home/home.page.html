@@ -143,7 +143,7 @@
                       style="width: 95%"
                 *ngFor="let history of searchHistory">
                 <mat-card-title>“{{history.keywords}}”</mat-card-title>
-                <mat-card-subtitle>@{{history.platform}} - <i>{{readableDate(history.date)}}</i></mat-card-subtitle>
+                <mat-card-subtitle>@{{history.platform}} - <i>{{history.date | readableDate | async}}</i></mat-card-subtitle>
             </mat-card>
         </div>
         <mat-paginator [length]="_searchHistory.length"

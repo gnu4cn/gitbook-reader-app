@@ -26,7 +26,7 @@
             {{'home.search.stars' | translate}}<ion-icon name="star"></ion-icon>：<i>{{book.stars}}</i>
         </ion-label>
         <ion-label>
-            {{'home.search.dateUpdated' | translate}}<i><b>{{readableDate(book.dateUpdated)}}</b> - {{book.dateUpdated | date : 'yyyy-MM-dd HH:mm:ss' : 'GMT+8' }}</i>
+            {{'home.search.dateUpdated' | translate}}<i><b>{{book.dateUpdated | stringToDate | readableDate | async}}</b> - {{book.dateUpdated | date : 'yyyy-MM-dd HH:mm:ss' : 'GMT+8' }}</i>
         </ion-label>
     </mat-card-footer>
 </mat-card>

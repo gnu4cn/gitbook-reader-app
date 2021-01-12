@@ -13,8 +13,8 @@ export class I18nService {
     ) {
         translate.addLangs(this.languages);
         translate.setDefaultLang('en');
-        translate.use(this.browserLang.match(/zh|en/) ? this.browserLang : 'en');
-        //translate.use('en');
+        //translate.use(this.browserLang.match(/zh|en/) ? this.browserLang : 'en');
+        translate.use('en');
     }
 
     get browserLang () {
