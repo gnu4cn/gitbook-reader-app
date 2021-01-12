@@ -272,5 +272,3 @@ export const join = (start: string, end: string): string => {
     }
     return start + '/' + end;
 }
-
-

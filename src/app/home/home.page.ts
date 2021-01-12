@@ -150,7 +150,6 @@ export class HomePage implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
-
         const histories = localStorage.getItem('searchHistory');
 
         if(histories){
@@ -264,8 +263,7 @@ export class HomePage implements OnInit, AfterViewInit {
     }
 
     onScroll = async ($event) => {
-        if(!this.search || this.searchEnd){return;}
-
+        if(!this.search || this.searchEnd){ return; }
         if($event.target.localName !== 'ion-content') { return; }
 
         const scrollElement = await $event.target.getScrollElement();
@@ -317,11 +315,6 @@ export class HomePage implements OnInit, AfterViewInit {
         const res = await this.fetchService
             .searchBooks(this.platformSelected, this.keywords, page) as object[] | object;
 
-        if((res as object[]).length === 0){
-            this.searchEnd = true;
-            return;
-        }
-
         this.searching = false;
 
         let _bookList: object[]
@@ -329,6 +322,11 @@ export class HomePage implements OnInit, AfterViewInit {
             _bookList = res['items'].slice();
         } else {
             _bookList = (res as object[]).slice();
+        }
+
+        if(_bookList.length === 0){
+            this.searchEnd = true;
+            return;
         }
 
         _bookList.map((bookRaw: object) => {
