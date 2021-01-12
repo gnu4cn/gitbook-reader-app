@@ -1,11 +1,13 @@
+import { Injectable } from '@angular/core';
+import { ValidatorFn, AbstractControl } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+
+import { MatPaginatorIntl } from '@angular/material/paginator';
+
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateService } from '@ngx-translate/core';
 
 import { Book, Category, Writer, Website, Record } from './models';
-import { ValidatorFn, AbstractControl } from '@angular/forms';
-import { Injectable } from '@angular/core';
-import { MatPaginatorIntl } from '@angular/material/paginator';
 
 export const createTranslateHttpLoader = (http: HttpClient) => {
     return new TranslateHttpLoader(http, 'assets/i18n/', '.json');
@@ -34,7 +36,7 @@ export class MatPaginatorIntlHans extends MatPaginatorIntl {
 
     getRangeLabel = (page, pageSize, length) => {
         if (length === 0 || pageSize === 0) {
-            return '0 od ' + length;
+            return '0 of ' + length;
         }
         length = Math.max(length, 0);
         const startIndex = page * pageSize;
@@ -137,8 +139,6 @@ export const REGEXP_SITE = new RegExp(/(([a-zA-Z0-9][a-zA-Z0-9\_\-]{0,252}\.){1,
 export const REGEXP_LOC = new RegExp(/[a-zA-Z0-9][a-zA-Z0-9\_\-\.]{1,253}[a-zA-Z0-9]\/[a-zA-Z0-9][a-zA-Z0-9\_\-\.]{1,253}[a-zA-Z0-9]/);
 
 export const REGEXP_GIT_URI = new RegExp(/^(((https?\:\/\/)(((([a-zA-Z0-9][a-zA-Z0-9\-\_]{0,252})\.){1,8}[a-zA-Z]{2,63})(\:([1-9][0-9]{1,3}|[1-5][0-9]{1,4}|6[1-4][0-9]{0,3}|65[0-4][0-9]{0,2}|655[1-2]?[0-9]?|6553[0-5]?))?\/))|((ssh\:\/\/)?git\@)(((([a-zA-Z0-9][a-zA-Z0-9\-\_]{0,252})\.){1,8}[a-zA-Z]{2,63})(\:([1-9][0-9]{1,3}|[1-5][0-9]{1,4}|6[1-4][0-9]{0,3}|65[0-4][0-9]{0,2}|655[1-2]?[0-9]?|6553[0-5]?))?\:))([a-zA-Z0-9][a-zA-Z0-9\_\-\.]{1,253}[a-zA-Z0-9])(\/)([a-zA-Z0-9][a-zA-Z0-9\_\-\.]{1,253}[a-zA-Z0-9])((\.git)?)$/);
-
-export const asciiSpecialCharRegEx = new RegExp(/\.|\,|\:|\?|\;|\'|\"|\\|\/|\!|\@|\$|\%|\^|\&|\*|\(|\)|\#/, 'g');
 
 export interface Location {
     path: string;

@@ -70,8 +70,6 @@ export function join(start: string, end: string): string {
     return start + '/' + end;
 }
 
-export const asciiSpecialCharRegEx = new RegExp(/\.|\,|\:|\?|\;|\'|\"|\\|\/|\!|\@|\$|\%|\^|\&|\*|\(|\)|\#/, 'g');
-
 export type TTableName = "Book" | "Writer" | "Category" | "Website" | "Record";
 
 export type IItem = Book|Writer|Category|Website|Record;

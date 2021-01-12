@@ -2,7 +2,10 @@ import { ipcMain, BrowserWindow, shell } from 'electron';
 import { resolve, join } from 'path';
 import { fork, ChildProcess } from 'child_process';
 
-import { escapeFileNames, getMdList } from './fs-ops';
+import { 
+    getMdList 
+} from './fs-ops';
+
 import { CRUD } from './crud';
 import { 
     IError, 
