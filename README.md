@@ -1,4 +1,4 @@
-# YAGR - Yet Another Gitbook READER
+# YAGR - Yet Another Gitbook Reader
 
 There are a lot of books resource written in markdown language on the Internet, you can find from GitHub, GitLab, Gitee... platforms, and most of these books are high quality tech documents. This project is based upon Eletron, Angular, TypeORM, UnifiedJS, NodeGit and other project, the target is a stable, easy to use gitbook reader.
 
