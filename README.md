@@ -9,6 +9,8 @@ You can Fork and contribute to this project.
 
 本项目使用了 `nodegit`, `typeorm`, `electron`, `angular`, `@swimlane/docspa-core` 等项目/代码。
 
+![YAGR architecture - dia chart](yagr-architecture-dia.png)
+
 ![屏幕截图](yagr-screenshot.png)
 
 
