@@ -64,7 +64,7 @@
             "precautions": "Precautions",
             "recycleRemind": {
                 "prefix": "If chose recycle the book, ",
-                "important": "this will remove reading record of the book",
+                "important": "this will remove reading record of the book, ",
                 "last": "You can found the book in recycling bin"
             },
             "deleteRemind": {

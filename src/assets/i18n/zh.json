@@ -63,9 +63,9 @@
             "remove": "删除 - ",
             "precautions": "删除注意事项：",
             "recycleRemind": {
-                "prefix": "选择放入“回收站”，将 ",
-                "important": "删除该书籍的阅读记录",
-                "last": "，可在回收站中查看并恢复删除的书籍"
+                "prefix": "选择放入“回收站”，",
+                "important": "将删除该书籍的阅读记录，",
+                "last": "可在回收站中查看并恢复删除的书籍"
             },
             "deleteRemind": {
                 "prefix": "选择彻底删除，",
