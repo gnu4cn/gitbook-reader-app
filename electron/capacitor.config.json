@@ -1,6 +1,6 @@
 {
-    "appId": "com.xfoss.ccna60d",
-    "appName": "Gitbook-Reader-CCNA60D",
+    "appId": "com.xfoss.yagr",
+    "appName": "Yet-Another-Gitbook-Reader",
     "bundledWebRuntime": false,
     "npmClient": "npm",
     "webDir": "www",

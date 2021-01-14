@@ -1,4 +1,11 @@
-import { app, Menu, BrowserWindow, ipcMain, session } from "electron";
+import { 
+    app, 
+    Menu, 
+    BrowserWindow, 
+    ipcMain, 
+    session 
+} from "electron";
+
 import { createCapacitorElectronApp } from "@capacitor-community/electron";
 import { fork, ChildProcess } from 'child_process';
 import { remove } from 'fs-extra';
@@ -24,7 +31,8 @@ import { loadingWindow } from './window.children';
 export default class Main {
     static application: Electron.App;
 
-    static myCapacitorApp = createCapacitorElectronApp();
+
+    static myCapacitorApp = createCapacitorElectronApp({});
     static winChildren: Array<Electron.BrowserWindow> = [];
     static processChildren: Array<ChildProcess> = [];
     static booksDir = join(app.getPath('appData'), 'gbr_books'); 

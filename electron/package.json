@@ -47,7 +47,6 @@
       "preloader.js",
       "plugins/*",
       "capacitor.config.json",
-      "db.sqlite",
       "app/**"
     ],
     "mac": {

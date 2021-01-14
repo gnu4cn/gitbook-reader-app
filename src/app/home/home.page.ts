@@ -1,4 +1,5 @@
-import { Component, 
+import { 
+    Component, 
     ChangeDetectorRef,
     OnInit,
     AfterViewInit
