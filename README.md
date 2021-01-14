@@ -16,6 +16,10 @@ You can Fork and contribute to this project.
 
 ## 开发日志/Dev Logs
 
++ 2021-1-14
+
+    - Optimized the `search.component`, refactored the UI and added search tips and empty messages.
+
 + 2021-1-12
 
     - With `@ngx-translate/core` and `@ngx-translate/http-loader`, now this project supports multilingual UI
