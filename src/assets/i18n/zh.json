@@ -55,7 +55,8 @@
             "cloneErrorMsg": " - 无法下载，建议删除",
             "tooltip": {
                 "remove": "将本书移入回收站/删除",
-                "operation": "将本书重新放回书架/彻底删除"
+                "operation": "将本书重新放回书架/彻底删除",
+                "readme": "打开 README.md"
             }
         },
         "deleteBook": {

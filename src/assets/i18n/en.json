@@ -55,7 +55,8 @@
             "cloneErrorMsg": " - Error occured during downloading, Please remove it",
             "tooltip": {
                 "remove": "Recycle/Remove this book",
-                "operation": "Put this book back on shelf, or remove it"
+                "operation": "Put this book back on shelf, or remove it",
+                "readme": "Open the README.md file"
             }
         },
         "deleteBook": {
