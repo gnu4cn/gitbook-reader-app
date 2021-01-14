@@ -1,12 +1,15 @@
 <!--搜索结果-->
-<mat-tab-group mat-align-tabs="start" *ngIf="showPrompt" fxFill style="margin-left: 20px">
+<mat-tab-group mat-align-tabs="start" *ngIf="showPrompt">
     <mat-tab label="{{'search.tips.title' | translate}}">
         <p *ngIf="showTips">{{'search.tips.description' | translate}}</p>
         <ul *ngIf="showTips">
             <li *ngFor="let tip of tips">{{tip}}</li>
         </ul>
         <p *ngIf="showNotFound">
-            {{'search.notFoundPrompt.prefix' | translate}} "{{keywords}}" {{'search.notFoundPrompt.notFound' | translate}}
+        {{'search.notFoundPrompt.prefix' | translate}} 
+        <ion-text color="danger">
+            "{{keywords}}" {{'search.notFoundPrompt.notFound' | translate}}
+        </ion-text>
         </p>
     </mat-tab>
 </mat-tab-group>

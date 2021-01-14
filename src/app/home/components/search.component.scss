@@ -11,18 +11,30 @@ ion-button.save-cloud-book {
 
 mat-card {
     margin-top: 10px;
-      width: 95%;
+    width: 95%;
+}
+
+mat-tab-group {
+    width: 95%;
 }
 
 @media screen and (min-width: 960px) {
-  mat-card {
-      width: 85%;
-  }
+    mat-card {
+        width: 85%;
+    }
+
+    mat-tab-group {
+        width: 85%;
+    }
 }
 
 @media screen and (min-width: 1280px) {
-  mat-card {
-      width: 75%;
-  }
+    mat-card {
+        width: 75%;
+    }
+
+    mat-tab-group {
+        width: 75%;
+    }
 }
 
