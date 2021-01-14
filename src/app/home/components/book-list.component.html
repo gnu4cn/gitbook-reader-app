@@ -26,8 +26,11 @@
         </mat-card-subtitle>
     </mat-card-header>
 
-    <mat-card-content *ngIf="book.desc.length > 0">
+    <mat-card-content *ngIf="book.desc.length > 0" class="description">
         <mat-label><b>“</b>{{book.desc.length > 256 ? book.desc.slice(0,256)+'...' : book.desc}}<b>”</b></mat-label>
+        <button class="readme-button" mat-button *ngIf="book.downloaded" (click)="openReadmeDialog(book)" size="small">
+            <ion-icon name="logo-markdown"></ion-icon>README.md
+        </button>
     </mat-card-content>
 
     <mat-card-content fxLayout="row" fxLayoutGap="5px" class="cate-list">
@@ -46,9 +49,6 @@
         <button class="action-button" mat-button *ngIf="book.recordList && book.recordList.length > 0" 
                 (click)="openReadingRecordDialog(book)">
             <ion-icon name="list-outline"></ion-icon>{{'home.bookList.readingRecord' | translate}}
-        </button>
-        <button class="action-button" mat-button *ngIf="book.downloaded" (click)="openReadmeDialog(book)">
-            <ion-icon name="compass-outline"></ion-icon>README
         </button>
         <button class="action-button" mat-button *ngIf="book.downloaded" (click)="openBook(book)">
             <ion-icon name="book-outline"></ion-icon>{{'home.bookList.actions.read' | translate}}
