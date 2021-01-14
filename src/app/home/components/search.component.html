@@ -1,6 +1,17 @@
 <!--搜索结果-->
-<mat-card 
-    class="search-result" *ngFor="let book of bookList">
+<mat-tab-group mat-align-tabs="start" *ngIf="showPrompt" fxFill style="margin-left: 20px">
+    <mat-tab label="{{'search.tips.title' | translate}}">
+        <p *ngIf="showTips">{{'search.tips.description' | translate}}</p>
+        <ul *ngIf="showTips">
+            <li *ngFor="let tip of tips">{{tip}}</li>
+        </ul>
+        <p *ngIf="showNotFound">
+            {{'search.notFoundPrompt.prefix' | translate}} "{{keywords}}" {{'search.notFoundPrompt.notFound' | translate}}
+        </p>
+    </mat-tab>
+</mat-tab-group>
+
+<mat-card class="search-result" *ngFor="let book of bookList">
     <ion-button color="success" size="small" class="save-cloud-book" (click)="saveCloudBook(book)">
         <ion-icon name="magnet-outline"></ion-icon>{{'home.search.putItOnShelf' | translate}}
     </ion-button>
@@ -26,7 +37,8 @@
             {{'home.search.stars' | translate}}<ion-icon name="star"></ion-icon>：<i>{{book.stars}}</i>
         </ion-label>
         <ion-label>
-            {{'home.search.dateUpdated' | translate}}<i><b>{{book.dateUpdated | stringToDate | readableDate | async}}</b> - {{book.dateUpdated | date : 'yyyy-MM-dd HH:mm:ss' : 'GMT+8' }}</i>
+            {{'home.search.dateUpdated' | translate}}<i>
+                <b>{{book.dateUpdated | stringToDate | readableDate | async}}</b> - {{book.dateUpdated | date : 'yyyy-MM-dd HH:mm:ss' : 'GMT+8' }}</i>
         </ion-label>
     </mat-card-footer>
 </mat-card>

@@ -32,7 +32,7 @@ ion-icon.remove-search-keywords {
     color: white;
 }
 
-div.right-side-bar {
+.right-side-bar {
     top: 10px;
     right: 10px;
     width: 32%;
@@ -40,4 +40,9 @@ div.right-side-bar {
 
 mat-card:hover {
     cursor: pointer;
+}
+
+.mat-tab-items {
+    margin-top: 10px;
+    width: 95%;
 }

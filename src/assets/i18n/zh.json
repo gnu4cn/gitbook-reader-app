@@ -19,7 +19,20 @@
         "hint": "搜索用到的关键字，以空格分开",
         "required": "必须提供",
         "searchSubmit": "搜 索",
-        "histories": "搜索历史"
+        "histories": "搜索历史",
+        "tips": {
+            "title": "搜索技巧",
+            "description": "要搜索到自己想要的书，请注意以下几点：",
+            "items": {
+                "withGitbook": "使用 关键字 + 'gitbook'，比如 'go 教程 gitbook'，这样可以搜索到有关 Go 语言教程的书籍",
+                "findFromResults": "从搜索结果中找出你需要的书籍。搜索结果并非都是 Gitbook 的书籍，你需要自己从给出的描述信息中找出你需要的书籍",
+                "moreKeywordsLessResults": "关键字越多，搜索到的结果越少。因此在没有你需要的结果时，请尝试更换关键字，或减少关键字"
+            }
+        },
+        "notFoundPrompt": {
+            "prefix": "搜索：",
+            "notFound": "，没有返回结果，请更换关键字"
+        }
     },
     "book": {
         "tocPagination": {

@@ -19,7 +19,20 @@
         "hint": "Keywords for searching",
         "required": " Required",
         "searchSubmit": "Search",
-        "histories": "Search histories"
+        "histories": "Search histories",
+        "tips": {
+            "title": "Search skills",
+            "description": "Please pay attention to the followings for getting books you want",
+            "items": {
+                "withGitbook": "Use keyword + 'gitbook'，Such as 'go tutorial gitbook'，this may give you results about go language tutorial books",
+                "findFromResults": "You need to identify gitbooks from search results, as the results are not all gitbooks written in markdown language",
+                "moreKeywordsLessResults": "More keyworks less results, if the search has no or few results, you should change or reduce keywords to search again"
+            }
+        },
+        "notFoundPrompt": {
+            "prefix": "Search for: ",
+            "notFound": "，has no results, please change the keywords"
+        }
     },
     "book": {
         "tocPagination": {

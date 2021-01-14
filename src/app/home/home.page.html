@@ -30,7 +30,7 @@
                             {{currentlyReading}}
                         </ion-badge>
                         <ion-fab-button color="light" (click)="displayBookListCurrentlyReading()" 
-                            matTooltip="{{'header.tooltip.bookList.currentlyReading' | translate}}">
+                                        matTooltip="{{'header.tooltip.bookList.currentlyReading' | translate}}">
                             <ion-avatar id="avatar-currently-reading">
                                 <img src="assets/images/currently-reading-books.png" />
                             </ion-avatar>
@@ -43,7 +43,7 @@
                             {{onShelf}}
                         </ion-badge>
                         <ion-fab-button color="light" (click)="displayBookListOnShelf()" 
-                            matTooltip="{{'header.tooltip.bookList.onShelf' | translate}}">
+                                        matTooltip="{{'header.tooltip.bookList.onShelf' | translate}}">
                             <ion-avatar id="avatar-on-shelf">
                                 <img src="assets/images/bookshelf-512.png" />
                             </ion-avatar>
@@ -57,7 +57,7 @@
                         </ion-badge>
 
                         <ion-fab-button color="light" (click)="displayBookListRecycled()" 
-                            matTooltip="{{'header.tooltip.bookList.recycled' | translate}}">
+                                        matTooltip="{{'header.tooltip.bookList.recycled' | translate}}">
                             <ion-avatar id="avatar-recycled">
                                 <img src="assets/images/trash_full_512x512.png" />
                             </ion-avatar>
@@ -132,26 +132,25 @@
         fxLayoutAlign="start end"
         fxFlex="65"
         [bookList]="bookListCloud" 
+        [keywords]="keywords"
         [searching]="searching">
     </app-books-cloud-search>
     <!--最近搜索项-->
-    <div *ngIf="search" class="right-side-bar" slot="fixed" 
-        fxLayout="column" fxLayoutGap="10px">
-        <h2>{{'search.histories' | translate}}</h2>
-        <div fxLayout="column" fxFill fxLayoutGap="10px">
-            <mat-card matButton (click)="historySearch(history.keywords, history.platform)"
-                      style="width: 95%"
-                *ngFor="let history of searchHistory">
-                <mat-card-title>“{{history.keywords}}”</mat-card-title>
-                <mat-card-subtitle>@{{history.platform}} - <i>{{history.date | readableDate | async}}</i></mat-card-subtitle>
-            </mat-card>
-        </div>
-        <mat-paginator [length]="_searchHistory.length"
-                      style="width: 95%"
-                      class="align-self-bottom"
-               [pageSize]="5"
-               [pageSizeOptions]="[5]"
-               (page)="pageEvent = $event">
-        </mat-paginator>
-    </div>
+    <mat-tab-group mat-align-tabs="start" *ngIf="search" class="right-side-bar" slot="fixed">
+        <mat-tab label="{{'search.histories' | translate}}"
+                 fxLayout="column" fxLayoutAlign="space-between start">
+                 <mat-card matButton (click)="historySearch(history.keywords, history.platform)"
+                           class="mat-tab-items"
+                           *ngFor="let history of searchHistory">
+                     <mat-card-title>“{{history.keywords}}”</mat-card-title>
+                     <mat-card-subtitle>@{{history.platform}} - <i>{{history.date | readableDate | async}}</i></mat-card-subtitle>
+                 </mat-card>
+                 <mat-paginator [length]="_searchHistory.length"
+                               class="mat-tab-items"
+                               [pageSize]="5"
+                               [pageSizeOptions]="[5]"
+                               (page)="pageEvent = $event">
+                 </mat-paginator>
+        </mat-tab>
+    </mat-tab-group>
 </ion-content>

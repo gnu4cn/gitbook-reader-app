@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import {MatIconModule} from '@angular/material/icon';
+import { MatTabsModule} from '@angular/material/tabs';
+import { MatIconModule} from '@angular/material/icon';
 import {MatCardModule} from '@angular/material/card';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatPaginatorModule} from '@angular/material/paginator';
@@ -32,6 +33,7 @@ import {MatBadgeModule} from '@angular/material/badge';
         MatBadgeModule,
         MatSnackBarModule,
         MatDialogModule,
+        MatTabsModule,
         MatCardModule,
         MatRadioModule,
         MatToolbarModule,
@@ -55,6 +57,7 @@ import {MatBadgeModule} from '@angular/material/badge';
         MatSnackBarModule,
         MatPaginatorModule,
         MatRadioModule,
+        MatTabsModule,
         FormsModule,
         MatIconModule,
         MatProgressBarModule,
