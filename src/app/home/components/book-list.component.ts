@@ -144,4 +144,8 @@ export class BookListComponent implements OnInit, OnChanges {
             if(res) this.book.recycleRecoverDelete(res);
         });
     }                        
+
+    onImageError = (event) => {
+        event.target.src = "assets/images/avatar.png";
+    }
 }

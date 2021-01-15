@@ -30,7 +30,6 @@ import { HomePageRoutingModule } from './home-routing.module';
 import { HomePage } from './home.page';
 import { ReadableDatePipe } from './pipes/readable-date.pipe';
 import { StringToDatePipe } from './pipes/string-to-date.pipe';
-import { ImageLoaderDirective } from './directives/image-loader.directive';
 
 @NgModule({
     imports: [
@@ -52,7 +51,6 @@ import { ImageLoaderDirective } from './directives/image-loader.directive';
         SearchComponent,
         ReadableDatePipe,
         StringToDatePipe,
-        ImageLoaderDirective
     ],
     providers: [
         BookService,

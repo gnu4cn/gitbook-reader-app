@@ -77,4 +77,8 @@ export class SearchComponent implements OnInit, OnChanges {
             if(res) this.book.save(res);
         });
     }
+
+    onImageError = (event) => {
+        event.target.src = "assets/images/avatar.png";
+    }
 }

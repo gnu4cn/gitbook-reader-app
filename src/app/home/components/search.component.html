@@ -20,8 +20,7 @@
     </ion-button>
     <mat-card-header>
         <img mat-card-avatar 
-             uiImageLoader
-             onErrorSrc="assets/images/avatar.png"
+             (error)="onImageError($event)"
              [src]="book.writerAvatarUrl" />
         <mat-card-title>
             {{book.fullName.length > 48 ? book.fullName.slice(0, 47)+'...' : book.fullName}}
