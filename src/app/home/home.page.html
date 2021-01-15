@@ -110,9 +110,10 @@
     </ion-toolbar>
 </ion-header>
 
-<ion-content 
+<ion-content [scrollEvents]="true"
     fxLayout="row"
     fxLayoutAlign="center start"
+    (ionScroll)="onScroll($event)" 
     style="padding: 10px;">
     <!-- 已下载/保存书籍列表 -->
     <app-book-list *ngIf="!search"
