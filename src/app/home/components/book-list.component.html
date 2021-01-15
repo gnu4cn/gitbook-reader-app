@@ -13,10 +13,7 @@
     <!-- 作者和来源 -->
     <mat-card-header>
         <img mat-card-avatar 
-             uiImageLoader
-             onErrorSrc="assets/images/avatar.png"
-             [src]="book.isFromMainstreamPlatform ? book.writer.avatarUrl : 'assets/images/avatar.png'" 
-             />
+             [src]="book.isFromMainstreamPlatform ? book.writer.avatarUrl : 'assets/images/avatar.png'" />
         <mat-card-title>
             {{book.writer.fullName.length > 0 ? book.writer.fullName : book.writer.name}}
         </mat-card-title>
@@ -28,13 +25,6 @@
 
     <mat-card-content *ngIf="book.desc.length > 0" class="description">
         <mat-label><b>“</b>{{book.desc.length > 256 ? book.desc.slice(0,256)+'...' : book.desc}}<b>”</b></mat-label>
-        <button class="readme-button" mat-button 
-                *ngIf="book.downloaded" 
-                matTooltip="{{'home.bookList.tooltip.readme' | translate}}"
-                (click)="openReadmeDialog(book)" 
-                size="small">
-            <ion-icon name="logo-markdown"></ion-icon>README.md
-        </button>
     </mat-card-content>
 
     <mat-card-content fxLayout="row" fxLayoutGap="5px" class="cate-list">

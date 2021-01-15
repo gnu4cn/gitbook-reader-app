@@ -1,6 +1,5 @@
 import { 
     Component, 
-    ChangeDetectorRef,
     OnInit,
     AfterViewInit
 } from '@angular/core';
@@ -108,7 +107,6 @@ export class HomePage implements OnInit, AfterViewInit {
         private message: MessageService,
         private fetchService: FetchService,
         private i18n: I18nService,
-        private cdr: ChangeDetectorRef,
         private book: BookService,
     ) {
         this.bookList = book.list;
@@ -179,8 +177,6 @@ export class HomePage implements OnInit, AfterViewInit {
 
         this.message.getMessage().subscribe((_: IMessage) => {
             if(_.event === 'book-list-updated') this.bookList = (_.data as Book[]).slice();
-
-            this.cdr.detectChanges();
         });
 
         this.crud.ipcRenderer.on('error-occured', (ev, book: Book) => {
@@ -202,8 +198,6 @@ export class HomePage implements OnInit, AfterViewInit {
             if(index < 0){
                 this.downloadingList.push(msg.book.id);
             }
-
-            this.cdr.detectChanges();
         });
 
         this.crud.ipcRenderer.on('book-downloaded', (ev, msg: IProgressMessage) => {

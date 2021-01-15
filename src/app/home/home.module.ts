@@ -9,13 +9,11 @@ import { MaterialModule } from '../material.module';
 import { MglTimelineModule } from 'angular-mgl-timeline';
 
 import { I18nModule } from '../i18n/i18n.module';
-import { BookPageModule } from '../book/book.module';
 import { BookListComponent } from './components/book-list.component';
 import { NewBookDialog } from './components/new-book-dialog.component';
 import { DeleteBookDialog } from './components/delete-book-dialog.component';
 import { SnackbarComponent } from './components/snackbar.component';
 import { EditBookCateListDialog } from './components/edit-book-cate-list.component';
-import { ReadmeDialog } from './components/readme-dialog.component';
 import { ReadingRecordDialog } from './components/reading-record-dialog.component';
 import { SearchComponent } from './components/search.component';
 
@@ -32,6 +30,7 @@ import { HomePageRoutingModule } from './home-routing.module';
 import { HomePage } from './home.page';
 import { ReadableDatePipe } from './pipes/readable-date.pipe';
 import { StringToDatePipe } from './pipes/string-to-date.pipe';
+import { ImageLoaderDirective } from './directives/image-loader.directive';
 
 @NgModule({
     imports: [
@@ -39,7 +38,6 @@ import { StringToDatePipe } from './pipes/string-to-date.pipe';
         FormsModule,
         IonicModule,
         I18nModule,
-        BookPageModule,
         MglTimelineModule,
         MaterialModule,
         HomePageRoutingModule
@@ -49,12 +47,12 @@ import { StringToDatePipe } from './pipes/string-to-date.pipe';
         NewBookDialog,
         DeleteBookDialog,
         EditBookCateListDialog,
-        ReadmeDialog,
         ReadingRecordDialog,
         SnackbarComponent,
         SearchComponent,
         ReadableDatePipe,
-        StringToDatePipe
+        StringToDatePipe,
+        ImageLoaderDirective
     ],
     providers: [
         BookService,

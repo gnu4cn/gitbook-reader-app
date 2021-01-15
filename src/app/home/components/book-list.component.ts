@@ -2,7 +2,6 @@ import {
     Component, 
     OnInit, 
     OnChanges,
-    ChangeDetectorRef,
     SimpleChanges,
     Input
 } from '@angular/core';
@@ -21,7 +20,6 @@ import { OpMessageService } from '../services/op-message.service';
 
 import { DeleteBookDialog } from './delete-book-dialog.component';
 import { EditBookCateListDialog } from './edit-book-cate-list.component';
-import { ReadmeDialog } from './readme-dialog.component';
 import { ReadingRecordDialog } from './reading-record-dialog.component';
 
 import { 
@@ -56,7 +54,6 @@ export class BookListComponent implements OnInit, OnChanges {
         private dialog: MatDialog,
         private book: BookService,
         private i18n: I18nService,
-        private cdr: ChangeDetectorRef,
         private opMessage: OpMessageService
     ) {}
 
@@ -120,13 +117,6 @@ export class BookListComponent implements OnInit, OnChanges {
 
     listBooksUnderCate = (cate: Category) => {
         console.log(cate)
-    }
-
-    openReadmeDialog = (book: Book) => {
-        this.dialog.open(ReadmeDialog, {
-            width: '640px',
-            data: book
-        });
     }
 
     openBook = (book: Book) => {
