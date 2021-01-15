@@ -263,25 +263,6 @@ export class HomePage implements OnInit, AfterViewInit {
         });
     }
 
-    onScroll = async ($event) => {
-        if(!this.search || this.searchEnd){ return; }
-        if($event.target.localName !== 'ion-content') { return; }
-
-        const scrollElement = await $event.target.getScrollElement();
-        const scrollHeight = scrollElement.scrollHeight - scrollElement.clientHeight;
-
-        const currentScrollDepth = $event.detail.scrollTop;
-
-        if(currentScrollDepth === scrollHeight){
-            if(
-                this.bookListCloud.length%20 === 0 
-                && !(/gitlab/.test(this.platformSelected))
-            ){
-                this.cloudSearch(this.bookListCloud.length/20 + 1);
-            }
-        }
-    }
-
     historySearch = (keywords: string, platform: string) => {
         this.keywords = keywords;
         this.platformSelected = platform;
