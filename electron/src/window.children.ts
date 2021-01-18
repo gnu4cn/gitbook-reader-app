@@ -15,7 +15,7 @@ export function loadingWindow(parentWin, cb) {
     });
 
     loadingWindow.loadURL(format({
-        pathname: join(__dirname, 'resources/loading.html'), // important
+        pathname: join(__dirname, '../assets/loading.html'), // important
         protocol: 'file:',
         slashes: true,
         // baseUrl: 'dist'

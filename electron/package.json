@@ -4,7 +4,7 @@
   "description": "Gitbook 阅读器，60天通过CCNA考试 - ccna60d.xfoss.com",
   "main": "./build/index.js",
   "scripts": {
-    "build": "tsc && cp -r ./src/resources/ ./build/",
+    "build": "tsc",
     "electron:start": "npm run build && electron .",
     "electron:pack": "npm run build && electron-builder build --dir",
     "dist:win": "npm run build && electron-builder build --win",
@@ -42,7 +42,7 @@
     "npmRebuild": false,
     "productName": "Gitbook-阅读器",
     "files": [
-      "assets/*",
+      "assets/**/*",
       "build/**/*",
       "preloader.js",
       "plugins/*",

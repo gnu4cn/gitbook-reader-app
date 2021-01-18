@@ -6,7 +6,6 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "deploy:github.io": "ng deploy --base-href=/gitbook-reader/",
     "build:copy": "ionic build --prod&&npx cap copy",
     "build": "ng build --prod",
     "test": "ng test",
